@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+    	
+	<TextView  android:id="@+id/userTimelineAddMessage"
+    	android:text="Add tweeter message"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:textStyle="bold"
+		android:textSize="18dp"
+	/>
+
+</LinearLayout>
