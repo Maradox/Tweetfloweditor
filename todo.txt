@@ -1,0 +1,7 @@
+Toleranzbereich fuer move bewegungen
+kein view reload, wenn eh in der aktuellen view
+zeichnnen optimieren, wenn objekt komplett auszerhalb von bildschirm ist
+zoom/scale
+highlight state fuer elemente
+
+linien zeichnen
