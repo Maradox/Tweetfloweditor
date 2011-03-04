@@ -1,8 +1,17 @@
-Toleranzbereich fuer move bewegungen
-kein view reload, wenn eh in der aktuellen view
-zeichnnen optimieren, wenn objekt komplett auszerhalb von bildschirm ist
-zoom/scale
-highlight state fuer elemente
+- Toleranzbereich fuer move bewegungen
+- kein view reload, wenn eh in der aktuellen view
+- zeichnnen optimieren, wenn objekt komplett auszerhalb von bildschirm ist
+- zoom/scale + verwendung der touch-pointer-id um springende elemente bei
+gleichzeitiger beruehrung mit mehreren fingern zu verhindern
+- highlight state fuer elemente
+- beschreibung und lizenz in README
 
-linien zeichnen
-reihenfolge für elemente, damit zu letzt angeklicktes immer im fordergrund ist
+- linien zeichnen
+- reihenfolge für elemente, damit zu letzt angeklicktes immer im vordergrund ist
+
+? wenn mehrere elemente selected sind, wie/wann sollen sie wieder deselected werden?
+    - bei touch auf freien space
+    - interaktion != select auf ein freies element (zb. move eines einzelnen freien elements)
+    - nur über long-touch-menue
+
+

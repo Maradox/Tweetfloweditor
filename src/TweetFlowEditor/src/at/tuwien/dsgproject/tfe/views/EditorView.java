@@ -1,3 +1,24 @@
+
+/* 
+ *  Tweetfloweditor - a graphical editor to create Tweetflows
+ *  
+ *  Copyright (C) 2011  Matthias Neumayr
+ *  Copyright (C) 2011  Martin Perebner
+ *  
+ *  Tweetfloweditor is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Tweetfloweditor is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tweetfloweditor.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package at.tuwien.dsgproject.tfe.views;
 
 import java.util.HashMap;
@@ -25,12 +46,14 @@ public class EditorView extends View {
 	private AbstractElement mTouchElement = null;
 	
 	private enum TouchMode {	
-		FREE,  		//no touch event
-		TOUCH_VOID, // touch event on free space
-		SELECTED,   //touch event on element
-		MOVE_SELECTED, 	 //move selected elements
-		MOVE_SINGLE,	 //move currently touched element
-		MOVE_ALL	//move all elements
+		FREE,  			//no touch event
+		TOUCH_VOID, 	//touch event on free space
+		SELECTED,   	//touch event on element
+		MOVE_SELECTED, 	//move selected elements
+		MOVE_SINGLE,	//move currently touched element
+		MOVE_ALL,		//move all elements
+		NEW_ELEMENT, 	//a new element has been inserted
+		ELEMENT_MENU 	//after long touch on element
 	}
 	
 	private TouchMode mCurrMode = TouchMode.FREE;
@@ -41,19 +64,39 @@ public class EditorView extends View {
 		mElemCounter = 0;
 		mElements = new HashMap<Integer, AbstractElement>();
 		
-		addRectangle(100,100,50,50);
-		addRectangle(200,100,50,50);
-		addRectangle(300,300,50,50);
+		addRectangle(100,100);
+		addRectangle(200,100);
+		addRectangle(300,300);
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
 		
-		this.setOnLongClickListener(onLongClickListener);
+		this.setOnLongClickListener(mOnLongClickListener);
 		
 	}
 	
-	private void addRectangle(int x, int y, int height, int width) {
+	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
+		    public boolean onLongClick(View v) {
+		    	if(mCurrMode == TouchMode.TOUCH_VOID) {
+		    		addRectangle(mOldX, mOldY);
+		    		Toast.makeText(EditorView.this.getContext(), "Long Click on void", Toast.LENGTH_SHORT).show();	
+		    	} else if(mCurrMode == TouchMode.SELECTED) {
+		    		mCurrMode = TouchMode.ELEMENT_MENU;
+		    		// show element menu mTouchElement
+		    		Toast.makeText(EditorView.this.getContext(), "Long Click on element", Toast.LENGTH_SHORT).show();	
+		    	}
+	    			
+		    	return false;
+		    }
+		};
+	    
+	    
+	
+	private void addRectangle(int x, int y) {
 		mElemCounter++;
-		mElements.put(mElemCounter, new Rectangle(mElemCounter, x, y, width, height));
+		//ugly hack to insert rectangle centered on touch event
+		//maybe x and y should be the center of AbstractElements instead of the upper left corner
+		mElements.put(mElemCounter, new Rectangle(mElemCounter, x-25, y-25, 50, 50));
+		invalidate();
 	}
 	
 	
@@ -80,7 +123,7 @@ public class EditorView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
-		//AbstractElement elem;
+		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
 		}
@@ -129,8 +172,6 @@ public class EditorView extends View {
     				invalidate();
     			} 	
     		} else {
-        		Toast.makeText(this.getContext(), "Nothing Selected", Toast.LENGTH_SHORT).show();
-    			//TODO: long touch adds element
         		mCurrMode = TouchMode.TOUCH_VOID;
         	}
     		
@@ -144,22 +185,32 @@ public class EditorView extends View {
     private void onActionUp(int x, int y) {
     	if(mTouchElement != null) {
     		
-	    	if(mCurrMode == TouchMode.MOVE_SINGLE) { // deselect item if it was the only one that has been moved			
-				deselect(mTouchElement);
-				invalidate();			
-			} else if(mCurrMode == TouchMode.SELECTED) { 
-				int id = mTouchElement.getId();
+    		switch(mCurrMode) {
+    		case MOVE_SINGLE:
+    			//fallthrough
+    			
+    		case ELEMENT_MENU:
+    			mTouchElement.deHighlight();
+				invalidate();
+				break;
+				
+    		case SELECTED:
+    			int id = mTouchElement.getId();
 				if(!mSelected.containsKey(id)) { // add to selected elements, on first click
 					mSelected.put(id, mTouchElement);
 				} else { // deselect item on 2nd click
 					mSelected.remove(id);
 					mTouchElement.deHighlight();
-					mTouchElement = null;
+					//mTouchElement = null;
 					invalidate();
 				}
-				mTouchElement = null;
+				break;
 				
-			}
+			default:
+				//TODO: (Toast)/Logging
+					
+    		}
+    		mTouchElement = null;
     	} else {
 			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();
 		}
@@ -171,10 +222,9 @@ public class EditorView extends View {
 		int offY = y - mOldY;
 		
 		switch(mCurrMode) {
-		case FREE:
+		case TOUCH_VOID:
 			mCurrMode = TouchMode.MOVE_ALL;
-			moveAll(offX, offY);
-			break;
+			//fallthrough
 			
 		case MOVE_ALL:
 			moveAll(offX, offY);
@@ -215,18 +265,7 @@ public class EditorView extends View {
 		mOldY = y;
     }
     
-    OnLongClickListener onLongClickListener = new OnLongClickListener() {
-	    public boolean onLongClick(View v) {
-	    	if(mCurrMode == TouchMode.TOUCH_VOID) {
-	    		Toast.makeText(EditorView.this.getContext(), "Long Click on void", Toast.LENGTH_SHORT).show();	
-	    	}
-	    	else if(mCurrMode == TouchMode.SELECTED) {
-	    		Toast.makeText(EditorView.this.getContext(), "Long Click on element", Toast.LENGTH_SHORT).show();	
-	    	}
-	    			
-	        return false;
-	    }
-    };
+   
     
     private void moveAll(int offX, int offY) {
 		for(AbstractElement e : mElements.values()) {
@@ -247,14 +286,14 @@ public class EditorView extends View {
     
     
     
-    private void select(AbstractElement e) {
-    	mSelected.put(e.getId(), e);
-		e.highlight();
-    }
-    
-    private void deselect(AbstractElement e) {
-		mSelected.remove(e.getId());
-		e.deHighlight();
-    }
+//    private void select(AbstractElement e) {
+//    	mSelected.put(e.getId(), e);
+//		e.highlight();
+//    }
+//    
+//    private void deselect(AbstractElement e) {
+//		mSelected.remove(e.getId());
+//		e.deHighlight();
+//    }
   
 }
