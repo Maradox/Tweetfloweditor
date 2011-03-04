@@ -22,15 +22,59 @@
 package at.tuwien.dsgproject.tfe.activities;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class Editor extends ActionbarActivity {
+	
+	EditorView editorView;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.editor); 
+        
+        editorView = (EditorView) findViewById(R.id.editor_view);
+    }	
+    
+ 
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	super.onCreateOptionsMenu(menu);
+         
+        MenuItem menuItem;
+        
+        menuItem = menu.add("Redo");
+        menuItem.setIcon(R.drawable.editor_menue_undo);
+          
+        menuItem = menu.add("Undo");
+        menuItem.setIcon(R.drawable.editor_menue_undo);
+        
+        menuItem = menu.add("Deselect");
+        menuItem.setIcon(R.drawable.editor_menue_deselect);
+        
+        menuItem = menu.add("Save");
+        menuItem.setIcon(R.drawable.editor_menue_save);
+        
+        menuItem = menu.add("Open");
+        menuItem.setIcon(R.drawable.editor_menue_save);
+        
+		return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+    	if (menuItem.hasSubMenu() == false) {
+    		if(menuItem.getTitle().equals("Deselect")) {
+    			editorView.delesectAll();
+    			editorView.redraw();
+    		}
+    		
+    		else
+    			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+    	}
+    	return true;  
     }	
 }

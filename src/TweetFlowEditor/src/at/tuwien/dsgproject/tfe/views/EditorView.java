@@ -22,6 +22,7 @@
 package at.tuwien.dsgproject.tfe.views;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -285,6 +286,17 @@ public class EditorView extends View {
     }
     
     
+    public void delesectAll() {
+    	for(Entry<Integer, AbstractElement> e : mSelected.entrySet()) {
+    		e.getValue().deHighlight();
+    	}
+    	mSelected = new HashMap<Integer, AbstractElement>();
+    	mCurrMode = TouchMode.FREE;
+    }
+    
+    public void redraw() {
+    	invalidate();
+    }
     
 //    private void select(AbstractElement e) {
 //    	mSelected.put(e.getId(), e);
@@ -295,5 +307,7 @@ public class EditorView extends View {
 //		mSelected.remove(e.getId());
 //		e.deHighlight();
 //    }
+    
+    
   
 }
