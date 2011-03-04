@@ -25,7 +25,8 @@ public class EditorView extends View {
 	private AbstractElement mTouchElement = null;
 	
 	private enum TouchMode {	
-		FREE,  		//no touch event, or touch event on "free" space
+		FREE,  		//no touch event
+		TOUCH_VOID, // touch event on free space
 		SELECTED,   //touch event on element
 		MOVE_SELECTED, 	 //move selected elements
 		MOVE_SINGLE,	 //move currently touched element
@@ -45,6 +46,9 @@ public class EditorView extends View {
 		addRectangle(300,300,50,50);
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
+		
+		this.setOnLongClickListener(onLongClickListener);
+		
 	}
 	
 	private void addRectangle(int x, int y, int height, int width) {
@@ -94,6 +98,7 @@ public class EditorView extends View {
     	
     	if (state == MotionEvent.ACTION_DOWN) {
     		onActionDown(eventX, eventY);
+    		super.onTouchEvent(event); //For onLongClick
     		
     	} else if (state == MotionEvent.ACTION_UP) {	
     		onActionUp(eventX, eventY);
@@ -109,7 +114,7 @@ public class EditorView extends View {
     		
     	}
     	
-    	return true;
+    	return true;	//TODO
     }
     
     private void onActionDown(int x, int y) {
@@ -126,6 +131,7 @@ public class EditorView extends View {
     		} else {
         		Toast.makeText(this.getContext(), "Nothing Selected", Toast.LENGTH_SHORT).show();
     			//TODO: long touch adds element
+        		mCurrMode = TouchMode.TOUCH_VOID;
         	}
     		
     		mOldX = x;
@@ -208,6 +214,19 @@ public class EditorView extends View {
 		mOldX = x;
 		mOldY = y;
     }
+    
+    OnLongClickListener onLongClickListener = new OnLongClickListener() {
+	    public boolean onLongClick(View v) {
+	    	if(mCurrMode == TouchMode.TOUCH_VOID) {
+	    		Toast.makeText(EditorView.this.getContext(), "Long Click on void", Toast.LENGTH_SHORT).show();	
+	    	}
+	    	else if(mCurrMode == TouchMode.SELECTED) {
+	    		Toast.makeText(EditorView.this.getContext(), "Long Click on element", Toast.LENGTH_SHORT).show();	
+	    	}
+	    			
+	        return false;
+	    }
+    };
     
     private void moveAll(int offX, int offY) {
 		for(AbstractElement e : mElements.values()) {

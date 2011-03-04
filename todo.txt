@@ -5,3 +5,4 @@ zoom/scale
 highlight state fuer elemente
 
 linien zeichnen
+reihenfolge für elemente, damit zu letzt angeklicktes immer im fordergrund ist
