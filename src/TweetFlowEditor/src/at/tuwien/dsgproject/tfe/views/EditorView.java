@@ -66,6 +66,7 @@ public class EditorView extends View {
 		MOVE_SELECTED, 	//move selected elements
 		MOVE_SINGLE,	//move currently touched element
 		MOVE_ALL,		//move all elements
+		MOVE_ALL_GRID,	//move all elements on a grid
 		NEW_ELEMENT, 	//a new element has been inserted
 		ELEMENT_MENU 	//after long touch on element
 	}
@@ -213,7 +214,8 @@ public class EditorView extends View {
     
     private void onActionDown(int x, int y) {
 		
-    	if(mCurrMode == TouchMode.FREE) {
+    	int xGrid;
+		if(mCurrMode == TouchMode.FREE) {
     		mTouchElement = elementAt(x, y);	
     		
     		if (mTouchElement != null) {
@@ -222,9 +224,13 @@ public class EditorView extends View {
     				mTouchElement.highlight();
     				invalidate();
     			} 	
-    		} else {
-        		mCurrMode = TouchMode.TOUCH_VOID;
+    		}   	
+    		else if(snapMode == SnapMode.GRID && rasterOn && ((xGrid = getTouchOnGrid(x)) != -111)) {
+    			selectElementsOnGrid(xGrid);
+    			mCurrMode = TouchMode.MOVE_ALL_GRID;			
         	}
+    		else
+				mCurrMode = TouchMode.TOUCH_VOID;
     		
     		mOldX = x;
     		mOldY = y;
@@ -233,9 +239,8 @@ public class EditorView extends View {
     }
     
     
-    private void onActionUp(int x, int y) {
+    private void onActionUp(int x, int y) {  
     	if(mTouchElement != null) {
-    		
     		switch(mCurrMode) {
     		case MOVE_SINGLE:
     			if(snapMode == SnapMode.RASTER) {
@@ -267,14 +272,23 @@ public class EditorView extends View {
 				}
 				break;
 				
+    		case MOVE_ALL_GRID:	
+    			delesectAll();
+    			invalidate();
+				
 			default:
 				//TODO: (Toast)/Logging
 					
     		}
     		mTouchElement = null;
     	} else {
-			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();
-		}
+    		switch(mCurrMode) {
+	    		case MOVE_ALL_GRID:	
+	    			delesectAll();
+	    			invalidate();
+    		}			
+    	}
+			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();		
     	mCurrMode = TouchMode.FREE;
     }
     
@@ -314,12 +328,13 @@ public class EditorView extends View {
 			break;
 		
 		case MOVE_SELECTED:
+		case MOVE_ALL_GRID:	
 			moveSelected(offX, offY);
 			break;
 			
 		default:
 			//should not come here ...
-			Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
+			Toast.makeText(this.getContext(), "!! invalid move mode: "+ mCurrMode, Toast.LENGTH_SHORT).show();	
 		}
 		
 		invalidate();
@@ -376,7 +391,6 @@ public class EditorView extends View {
     }
     
     public int findGridHorizontal(int x) {
-    	
     	int xDiff = Integer.MAX_VALUE;
     	int xNew = -111;
     	
@@ -391,12 +405,44 @@ public class EditorView extends View {
 			}					
 		}
     	
-    	if(xDiff < 30) 
+    	if(xDiff < 15) 
     		return xNew;
     	
     	return -111;
     }
 
+    
+    public int getTouchOnGrid(int x) {
+    	int xDiff = Integer.MAX_VALUE;
+    	int xNew = -111;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if((Math.abs(x - e.getMiddleX())) < xDiff) {
+					xDiff = Math.abs(x - e.getMiddleX());
+					xNew = e.getMiddleX();		
+				}
+			}
+    	}	
+    	
+		if(xDiff < 30) 
+	    	return xNew;
+    	
+		return -111;
+    }
+    
+    public void selectElementsOnGrid(int x) {
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(e.getMiddleX() == x) {
+					mSelected.put(e.getId(), e);
+					e.highlight();
+				}
+			}
+    	}
+    }
+    
+    
 	public TouchMode getmCurrMode() {
 		return mCurrMode;
 	}
