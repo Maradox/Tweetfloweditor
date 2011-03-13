@@ -27,6 +27,8 @@ import java.util.Map.Entry;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +38,8 @@ import at.tuwien.dsgproject.tfe.entities.Rectangle;
 
 public class EditorView extends View {
 		
+	private static int RASTER_HORIZONTAL_WIDTH = 70;
+	
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
 	
@@ -45,6 +49,15 @@ public class EditorView extends View {
 	
 	//private int mTouchElementId;
 	private AbstractElement mTouchElement = null;
+
+	private boolean setRaster = false;
+	private int horizontalRasterCT;
+	
+	private boolean rasterOn = true;
+	private SnapMode snapMode = SnapMode.NOTHING;
+	
+	private int xGlobalOffset = 0;
+		
 	
 	private enum TouchMode {	
 		FREE,  			//no touch event
@@ -55,6 +68,12 @@ public class EditorView extends View {
 		MOVE_ALL,		//move all elements
 		NEW_ELEMENT, 	//a new element has been inserted
 		ELEMENT_MENU 	//after long touch on element
+	}
+	
+	public enum SnapMode {	
+		NOTHING,
+		RASTER,
+		GRID
 	}
 	
 	private TouchMode mCurrMode = TouchMode.FREE;
@@ -124,10 +143,41 @@ public class EditorView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
+
+		if(rasterOn) {
+			if(!setRaster) {
+				setRaster = true;
+				horizontalRasterCT = (canvas.getWidth() / RASTER_HORIZONTAL_WIDTH) + 3;
+			}
+			
+			Paint paint = new Paint();
+			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
+			
+			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
+				paint.setColor(Color.BLUE);
+			
+				for(int i=0; i<horizontalRasterCT; i++) {
+					int x = (i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
+					canvas.drawLine(x, 0, x, canvas.getHeight(), paint);
+				}
+			}	
+			
+			if(snapMode == SnapMode.GRID) {
+				paint.setColor(Color.RED);
+		
+				for(AbstractElement e : mElements.values()) {
+					if(e instanceof Rectangle) {
+						canvas.drawLine(e.getMiddleX(), 0, e.getMiddleX(), canvas.getHeight(), paint);
+					}					
+				}
+			}
+		}	
+		
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
 		}
+		
 	}
 	
 	
@@ -188,6 +238,16 @@ public class EditorView extends View {
     		
     		switch(mCurrMode) {
     		case MOVE_SINGLE:
+    			if(snapMode == SnapMode.RASTER) {
+	    			int rasterX = findRasterHorizontal(mOldX);
+	    			moveSingleOn(rasterX, y);
+    			}	
+    			
+    			else if(snapMode == SnapMode.GRID) {
+	    			int gridX = findGridHorizontal(mOldX);
+	    			if(gridX != -111)
+	    				moveSingleOn(gridX, y);
+    			}	
     			//fallthrough
     			
     		case ELEMENT_MENU:
@@ -229,6 +289,7 @@ public class EditorView extends View {
 			
 		case MOVE_ALL:
 			moveAll(offX, offY);
+			xGlobalOffset += offX;
 			break;
 		
 		case SELECTED:
@@ -285,6 +346,11 @@ public class EditorView extends View {
     		mTouchElement.move(offX, offY);
     }
     
+    private void moveSingleOn(int x, int y) {
+    	if(mTouchElement != null)
+    		mTouchElement.moveOn(x, y);
+    }
+    
     
     public void delesectAll() {
     	for(Entry<Integer, AbstractElement> e : mSelected.entrySet()) {
@@ -297,6 +363,77 @@ public class EditorView extends View {
     public void redraw() {
     	invalidate();
     }
+    
+    public int findRasterHorizontal(int x) {
+    	int xCT = x / RASTER_HORIZONTAL_WIDTH;
+    	int xRaster1 = (xCT * RASTER_HORIZONTAL_WIDTH) +  (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + (xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
+    	int xRaster2 = ((xCT+1) * RASTER_HORIZONTAL_WIDTH) +  (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + (xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
+		
+    	if(Math.abs(x - xRaster1) < Math.abs(x - xRaster2))
+    		return xRaster1;
+    	else
+    		return xRaster2;
+    }
+    
+    public int findGridHorizontal(int x) {
+    	
+    	int xDiff = Integer.MAX_VALUE;
+    	int xNew = -111;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(mTouchElement.getId() != e.getId()) {
+					if((Math.abs(x - e.getMiddleX())) < xDiff) {
+						xDiff = Math.abs(x - e.getMiddleX());
+						xNew = e.getMiddleX();		
+					}
+				}
+			}					
+		}
+    	
+    	if(xDiff < 30) 
+    		return xNew;
+    	
+    	return -111;
+    }
+
+	public TouchMode getmCurrMode() {
+		return mCurrMode;
+	}
+
+
+	public void setmCurrMode(TouchMode mCurrMode) {
+		this.mCurrMode = mCurrMode;
+	}
+	
+	public boolean somethingSelected() {
+		return !(mSelected.isEmpty());
+	}
+
+
+	public boolean isRasterOn() {
+		return rasterOn;
+	}
+
+
+	public void setRasterOn(boolean rasterOn) {
+		this.rasterOn = rasterOn;
+	}
+
+
+	public SnapMode getSnapMode() {
+		return snapMode;
+	}
+
+
+	public void setSnapMode(SnapMode snapMode) {
+		this.snapMode = snapMode;
+	}
+
+    
+	
+    
+    
     
 //    private void select(AbstractElement e) {
 //    	mSelected.put(e.getId(), e);

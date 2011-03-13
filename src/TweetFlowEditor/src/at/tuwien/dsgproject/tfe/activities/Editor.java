@@ -23,14 +23,16 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
 
 public class Editor extends ActionbarActivity {
 	
-	EditorView editorView;
+	private EditorView editorView;
 	
     /** Called when the activity is first created. */
     @Override
@@ -41,39 +43,77 @@ public class Editor extends ActionbarActivity {
         editorView = (EditorView) findViewById(R.id.editor_view);
     }	
     
- 
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-         
-        MenuItem menuItem;
+    	
+    	MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.editor_menu, menu);
+
+        return true;
+    }
+    
+    public boolean onPrepareOptionsMenu(Menu menu) {   	
+    	if(editorView.somethingSelected()) {
+    		menu.findItem(R.id.deselect).setVisible(true);
+    	} else {
+    		menu.findItem(R.id.deselect).setVisible(false);
+    	}
+    	
+    	if(editorView.isRasterOn()) {  
+    		menu.findItem(R.id.raster_add).setVisible(false);
+    		menu.findItem(R.id.raster_remove).setVisible(true);
+        }     	
+    	else {	
+    		menu.findItem(R.id.raster_add).setVisible(true);
+    		menu.findItem(R.id.raster_remove).setVisible(false);
+        }
         
-        menuItem = menu.add("Redo");
-        menuItem.setIcon(R.drawable.editor_menue_undo);
-          
-        menuItem = menu.add("Undo");
-        menuItem.setIcon(R.drawable.editor_menue_undo);
-        
-        menuItem = menu.add("Deselect");
-        menuItem.setIcon(R.drawable.editor_menue_deselect);
-        
-        menuItem = menu.add("Save");
-        menuItem.setIcon(R.drawable.editor_menue_save);
-        
-        menuItem = menu.add("Open");
-        menuItem.setIcon(R.drawable.editor_menue_save);
+    	if(editorView.getSnapMode() == SnapMode.NOTHING)
+    		menu.findItem(R.id.snapping_nothing).setChecked(true);
+    	else if(editorView.getSnapMode() == SnapMode.RASTER) 
+        	menu.findItem(R.id.snapping_raster).setChecked(true);
+        else if(editorView.getSnapMode() == SnapMode.GRID) 
+        	menu.findItem(R.id.snapping_grid).setChecked(true);
         
 		return true;
     }
-    
+        
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-    	if (menuItem.hasSubMenu() == false) {
-    		if(menuItem.getTitle().equals("Deselect")) {
+    	super.onOptionsItemSelected(menuItem);
+    	
+    	switch (menuItem.getItemId()) {
+    		case R.id.deselect:
     			editorView.delesectAll();
     			editorView.redraw();
-    		}
-    		
-    		else
+    			break;
+    		case R.id.raster_add:
+    			editorView.setRasterOn(true);
+    			editorView.redraw();
+    			break;
+    		case R.id.raster_remove:	
+    			editorView.setRasterOn(false);
+    			editorView.redraw();
+    			break;
+    		case R.id.snapping:
+    			break;
+    		case R.id.snapping_nothing:
+    			menuItem.setChecked(true);
+    			editorView.setSnapMode(SnapMode.NOTHING);
+    			editorView.redraw();
+    			break;
+    		case R.id.snapping_raster:
+    			menuItem.setChecked(true);
+    			editorView.setSnapMode(SnapMode.RASTER);
+    			editorView.redraw();
+    			break;
+    		case R.id.snapping_grid:
+    			menuItem.setChecked(true);
+    			editorView.setSnapMode(SnapMode.GRID);
+    			editorView.redraw();
+    			break;
+    		default:	
     			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+    	  
     	}
     	return true;  
     }	

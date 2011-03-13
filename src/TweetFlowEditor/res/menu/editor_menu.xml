@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/undo"
+        android:icon="@drawable/editor_menue_undo"
+        android:title="Undo" />
+        
+	<item android:id="@+id/redo"
+		android:icon="@drawable/editor_menue_redo"
+        android:title="Redo" />
+       
+    <item android:id="@+id/deselect"
+        android:icon="@drawable/editor_menue_deselect"
+        android:title="Deselect" />
+        
+	<item android:id="@+id/raster_add"
+        android:title="Add raster" />      
+        
+    <item android:id="@+id/raster_remove"
+        android:title="Remove raster" />       
+          
+    <item android:id="@+id/save"
+        android:icon="@drawable/editor_menue_save"
+        android:title="Save" />
+          
+    <item android:id="@+id/open"
+        android:icon="@drawable/editor_menue_open"
+        android:title="Open" /> 
+        
+	<item android:id="@+id/snapping"
+        android:title="Snapping" >
+    	<menu>
+            <group android:checkableBehavior="single">
+        		<item android:id="@+id/snapping_nothing"
+              		android:title="Nothing" />
+        		<item android:id="@+id/snapping_raster"
+              		android:title="Raster snapping" />
+              	<item android:id="@+id/snapping_grid"
+              		android:title="Grid snapping" />	
+    </group>
+
+        </menu>
+    </item>
+	
+
+    
+</menu>
