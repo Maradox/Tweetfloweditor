@@ -111,6 +111,12 @@ public class Editor extends ActionbarActivity {
     			editorView.setSnapMode(SnapMode.GRID);
     			editorView.redraw();
     			break;
+    		case R.id.undo:
+    			editorView.undo();
+    			break;	
+    		case R.id.redo:
+    			editorView.redo();
+    			break;		
     		default:	
     			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
     	  

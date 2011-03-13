@@ -21,6 +21,7 @@
 
 package at.tuwien.dsgproject.tfe.views;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -37,7 +38,7 @@ import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 
 public class EditorView extends View {
-		
+
 	private static int RASTER_HORIZONTAL_WIDTH = 70;
 	
 	private HashMap<Integer, AbstractElement> mElements;
@@ -91,8 +92,7 @@ public class EditorView extends View {
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
 		
-		this.setOnLongClickListener(mOnLongClickListener);
-		
+		this.setOnLongClickListener(mOnLongClickListener);		
 	}
 	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
@@ -157,10 +157,11 @@ public class EditorView extends View {
 			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
 				paint.setColor(Color.BLUE);
 			
-				for(int i=0; i<horizontalRasterCT; i++) {
-					int x = (i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
-					canvas.drawLine(x, 0, x, canvas.getHeight(), paint);
-				}
+				ArrayList<Integer> gridLines = createRasterLines();
+		    	
+		    	for(int i=0; i<gridLines.size(); i++) {
+		    		canvas.drawLine(gridLines.get(i), 0, gridLines.get(i), canvas.getHeight(), paint);
+		    	}
 			}	
 			
 			if(snapMode == SnapMode.GRID) {
@@ -288,6 +289,7 @@ public class EditorView extends View {
 	    			invalidate();
     		}			
     	}
+    	    	
 			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();		
     	mCurrMode = TouchMode.FREE;
     }
@@ -380,14 +382,29 @@ public class EditorView extends View {
     }
     
     public int findRasterHorizontal(int x) {
-    	int xCT = x / RASTER_HORIZONTAL_WIDTH;
-    	int xRaster1 = (xCT * RASTER_HORIZONTAL_WIDTH) +  (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + (xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
-    	int xRaster2 = ((xCT+1) * RASTER_HORIZONTAL_WIDTH) +  (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + (xGlobalOffset % RASTER_HORIZONTAL_WIDTH);
-		
-    	if(Math.abs(x - xRaster1) < Math.abs(x - xRaster2))
-    		return xRaster1;
-    	else
-    		return xRaster2;
+    	ArrayList<Integer> gridLines = createRasterLines();
+    	
+    	for(int i=0; i<gridLines.size()-1; i++) {
+    		if(x>gridLines.get(i) && x<gridLines.get(i+1)) {
+    			if((x-gridLines.get(i)) < (gridLines.get(i+1) - x)) {
+    				return gridLines.get(i);
+    			} else {
+    				return gridLines.get(i+1);
+    			}
+    		}
+    	}
+    	
+    	return -111;
+    }
+    
+    public ArrayList<Integer> createRasterLines() {
+    	ArrayList<Integer> gridLines = new ArrayList<Integer>();
+    	
+    	for(int i=0; i<horizontalRasterCT; i++) {
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(xGlobalOffset % RASTER_HORIZONTAL_WIDTH));
+    	}
+    	
+    	return gridLines;
     }
     
     public int findGridHorizontal(int x) {
@@ -440,6 +457,15 @@ public class EditorView extends View {
 				}
 			}
     	}
+    }
+    
+    
+    public void undo() {
+    	//TODO
+    }
+    
+    public void redo() {
+    	//TODO
     }
     
     
