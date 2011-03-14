@@ -29,6 +29,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
+import at.tuwien.dsgproject.tfe.views.EditorView.TouchMode;
 
 public class Editor extends ActionbarActivity {
 	
@@ -117,6 +118,10 @@ public class Editor extends ActionbarActivity {
     		case R.id.redo:
     			editorView.redo();
     			break;		
+    		case R.id.container:
+    			editorView.setmCurrMode(TouchMode.CONTAINER_DOWN);
+    			break;		
+    			
     		default:	
     			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
     	  

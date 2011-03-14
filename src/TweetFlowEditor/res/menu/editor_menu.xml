@@ -13,6 +13,9 @@
         android:icon="@drawable/editor_menue_deselect"
         android:title="Deselect" />
         
+    <item android:id="@+id/container"
+        android:title="Create container" />    
+        
 	<item android:id="@+id/raster_add"
         android:title="Add raster" />      
         

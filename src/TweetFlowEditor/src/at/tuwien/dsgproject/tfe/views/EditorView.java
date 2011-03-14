@@ -30,6 +30,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,9 +61,12 @@ public class EditorView extends View {
 	private SnapMode snapMode = SnapMode.NOTHING;
 	
 	private int xGlobalOffset = 0;
+	
+	private Point containerStart;
+	private Point containerEnd;
 		
 	
-	private enum TouchMode {	
+	public enum TouchMode {	
 		FREE,  			//no touch event
 		TOUCH_VOID, 	//touch event on free space
 		SELECTED,   	//touch event on element
@@ -69,7 +75,9 @@ public class EditorView extends View {
 		MOVE_ALL,		//move all elements
 		MOVE_ALL_GRID,	//move all elements on a grid
 		NEW_ELEMENT, 	//a new element has been inserted
-		ELEMENT_MENU 	//after long touch on element
+		ELEMENT_MENU, 	//after long touch on element
+		CONTAINER_DOWN,
+		CONTAINER_MOVE
 	}
 	
 	public enum SnapMode {	
@@ -91,6 +99,8 @@ public class EditorView extends View {
 		addRectangle(300,300);
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
+		containerStart = new Point();
+		containerEnd = new Point();
 		
 		this.setOnLongClickListener(mOnLongClickListener);		
 	}
@@ -174,10 +184,21 @@ public class EditorView extends View {
 				}
 			}
 		}	
-		
+				
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
+		}
+		
+		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.GREEN);
+			
+			canvas.drawLine(containerStart.x,  containerStart.y, containerStart.x,  containerEnd.y, paint);
+			canvas.drawLine(containerEnd.x,  containerStart.y, containerEnd.x,  containerEnd.y, paint);
+			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
+			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
 		}
 		
 	}
@@ -236,6 +257,11 @@ public class EditorView extends View {
     		mOldX = x;
     		mOldY = y;
     	}
+		
+		else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
+			containerStart.set(x,y);
+			mCurrMode = TouchMode.CONTAINER_MOVE;
+		}
 
     }
     
@@ -276,7 +302,10 @@ public class EditorView extends View {
     		case MOVE_ALL_GRID:	
     			delesectAll();
     			invalidate();
-				
+			
+    		case CONTAINER_MOVE:
+    			containerEnd.set(x, y);	//TODO
+    			invalidate();
 			default:
 				//TODO: (Toast)/Logging
 					
@@ -332,6 +361,11 @@ public class EditorView extends View {
 		case MOVE_SELECTED:
 		case MOVE_ALL_GRID:	
 			moveSelected(offX, offY);
+			break;
+			
+		case CONTAINER_MOVE:
+			containerEnd.set(x, y);
+			invalidate();
 			break;
 			
 		default:
