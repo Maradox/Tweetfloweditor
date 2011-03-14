@@ -24,16 +24,20 @@ package at.tuwien.dsgproject.tfe.views;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 
 public class EditorView extends View {
+	
+	private final int mMoveOffset;
 		
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
@@ -58,6 +62,9 @@ public class EditorView extends View {
 	
 	private TouchMode mCurrMode = TouchMode.FREE;
 	
+	private int INVALID_POINTER_ID = -1;
+	private int mActivePointerId = INVALID_POINTER_ID;
+	
 	
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -72,13 +79,15 @@ public class EditorView extends View {
 		
 		this.setOnLongClickListener(mOnLongClickListener);
 		
+		Resources res = getResources();
+		mMoveOffset = res.getInteger(R.integer.move_offset);
+		
 	}
 	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		    public boolean onLongClick(View v) {
 		    	if(mCurrMode == TouchMode.TOUCH_VOID) {
 		    		addRectangle(mOldX, mOldY);
-		    		Toast.makeText(EditorView.this.getContext(), "Long Click on void", Toast.LENGTH_SHORT).show();	
 		    	} else if(mCurrMode == TouchMode.SELECTED) {
 		    		mCurrMode = TouchMode.ELEMENT_MENU;
 		    		// show element menu mTouchElement
@@ -135,26 +144,57 @@ public class EditorView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
     	
-    	int state = event.getAction();
-    	int eventX = (int) event.getX();
-    	int eventY = (int) event.getY();	    
+    	final int action = event.getAction();
+    	final int eventX = (int) event.getX();
+    	final int eventY = (int) event.getY();
     	
-    	if (state == MotionEvent.ACTION_DOWN) {
+    	switch (action & MotionEvent.ACTION_MASK) {
+    	case MotionEvent.ACTION_DOWN:
     		onActionDown(eventX, eventY);
     		super.onTouchEvent(event); //For onLongClick
     		
-    	} else if (state == MotionEvent.ACTION_UP) {	
+    		//save current pointer id
+    		mActivePointerId = event.getPointerId(0);
+    		break;
+    	
+    	case MotionEvent.ACTION_UP:	
     		onActionUp(eventX, eventY);
-	    	
-    	} else if (state == MotionEvent.ACTION_CANCEL) {
+    		mActivePointerId = INVALID_POINTER_ID;
+    		break;
+    	 
+    	case MotionEvent.ACTION_CANCEL:
     		//TODO: when does this happen? + proper handling
     		//unset selected if TouchEvent ends
     		//mTouchElementId = -1;
     		mCurrMode = TouchMode.FREE;
+    		mActivePointerId = INVALID_POINTER_ID;
+    		break;
     		
-    	} else if (state == MotionEvent.ACTION_MOVE) {
-    		onActionMove(eventX, eventY);
-    		
+    	case MotionEvent.ACTION_MOVE:
+    		final int pointerIndex = event.findPointerIndex(mActivePointerId);
+            final int x = (int)event.getX(pointerIndex);
+            final int y = (int)event.getY(pointerIndex);
+
+    		onActionMove(x, y);
+    		break;
+    	 	
+    	case MotionEvent.ACTION_POINTER_UP:
+            // get index of the pointer that left the screen
+            final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
+                    >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+            final int pId = event.getPointerId(pIndex);
+            if (pId == mActivePointerId) {
+                // choose new active pointer
+                final int newPointerIndex = pIndex == 0 ? 1 : 0;
+                mOldX = (int)event.getX(newPointerIndex);
+                mOldY = (int)event.getY(newPointerIndex);
+                mActivePointerId = event.getPointerId(newPointerIndex);
+            }
+            break;
+    	
+    	default:
+    		//nothing
+    	
     	}
     	
     	return true;	//TODO
@@ -177,6 +217,7 @@ public class EditorView extends View {
     		
     		mOldX = x;
     		mOldY = y;
+    		
     	}
 
     }
@@ -223,23 +264,29 @@ public class EditorView extends View {
 		
 		switch(mCurrMode) {
 		case TOUCH_VOID:
-			mCurrMode = TouchMode.MOVE_ALL;
-			//fallthrough
+			if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
+				mCurrMode = TouchMode.MOVE_ALL;
+				//fallthrough
+			} else {
+				break;
+			}
 			
 		case MOVE_ALL:
 			moveAll(offX, offY);
 			break;
 		
 		case SELECTED:
-			if(mTouchElement != null) {	
-				if( mSelected.size() >= 1 && mSelected.containsKey(mTouchElement.getId()) ) {
-					// at least one element selected, and mTouchElement is one of them -> move selected
-					mCurrMode = TouchMode.MOVE_SELECTED;
-					moveSelected(offX, offY);		
-				} else {
-					// only move currently touched element
-					mCurrMode = TouchMode.MOVE_SINGLE;
-					moveSingle(offX, offY);	
+			if(mTouchElement != null) {
+				if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
+					if( mSelected.size() >= 1 && mSelected.containsKey(mTouchElement.getId()) ) {
+						// at least one element selected, and mTouchElement is one of them -> move selected
+						mCurrMode = TouchMode.MOVE_SELECTED;
+						moveSelected(offX, offY);		
+					} else {
+						// only move currently touched element
+						mCurrMode = TouchMode.MOVE_SINGLE;
+						moveSingle(offX, offY);	
+					}
 				}
 			} else {
 				//should not be here ...
@@ -283,17 +330,5 @@ public class EditorView extends View {
     	if(mTouchElement != null)
     		mTouchElement.move(offX, offY);
     }
-    
-    
-    
-//    private void select(AbstractElement e) {
-//    	mSelected.put(e.getId(), e);
-//		e.highlight();
-//    }
-//    
-//    private void deselect(AbstractElement e) {
-//		mSelected.remove(e.getId());
-//		e.deHighlight();
-//    }
   
 }
