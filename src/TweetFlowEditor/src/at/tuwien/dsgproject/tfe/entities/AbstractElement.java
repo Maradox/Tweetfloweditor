@@ -55,7 +55,15 @@ public abstract class AbstractElement {
 	abstract public void draw(Canvas canvas);
 	
 	public void move(int xOff, int yOff) {
+		mX += xOff;
+		mY += yOff;
 		mShape.getBounds().offset(xOff, yOff);
+	}
+	
+	public void moveOn(int x, int y) {
+		mX = x-mWidth/2;
+		mY = y-mHeight/2;
+		mShape.getBounds().set(x-mWidth/2, y-mHeight/2, x+mWidth/2, y+mHeight/2);
 	}
 	
 	abstract public void scale(float scaleFactor);
@@ -82,5 +90,11 @@ public abstract class AbstractElement {
 	public int getId() {
 		return mId;
 	}
+
+	public int getMiddleX() {
+		return mX+mWidth/2;
+	}
+	
+	
 	
 }

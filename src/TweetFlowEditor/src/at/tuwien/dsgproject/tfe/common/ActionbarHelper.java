@@ -21,8 +21,11 @@
 
 package at.tuwien.dsgproject.tfe.common;
 
+import twitter4j.TwitterException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.activities.Editor;
 import at.tuwien.dsgproject.tfe.activities.Home;
 
@@ -42,10 +45,22 @@ public class ActionbarHelper {
 	}
 	
 	public static void login(Context context) {
-		//TODO
+		try {
+			String authUrl = UserManagement.getInstance().login();
+			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+		} catch (TwitterException e) {
+			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	public static void onNewIntent(Intent intent, Context context) {
-		//TODO
+		Uri uri = intent.getData();
+		if(uri != null) {
+			try {
+				UserManagement.getInstance().loginIntent(uri);
+			} catch (TwitterException e) {
+				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 }

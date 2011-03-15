@@ -21,12 +21,19 @@
 
 package at.tuwien.dsgproject.tfe.views;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -40,6 +47,8 @@ public class EditorView extends View {
 	
 	private final int mMoveOffset;
 		
+	private static int RASTER_HORIZONTAL_WIDTH = 70;
+
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
 	
@@ -49,17 +58,38 @@ public class EditorView extends View {
 	
 	//private int mTouchElementId;
 	private AbstractElement mTouchElement = null;
+
+	private boolean setRaster = false;
+	private int horizontalRasterCT;
 	
-	private enum TouchMode {	
+	private boolean rasterOn = true;
+	private SnapMode snapMode = SnapMode.NOTHING;
+	
+	//private int xGlobalOffset = 0;
+	
+	private Point containerStart;
+	private Point containerEnd;
+		
+	
+	public enum TouchMode {	
 		FREE,  			//no touch event
 		TOUCH_VOID, 	//touch event on free space
 		SELECTED,   	//touch event on element
 		MOVE_SELECTED, 	//move selected elements
 		MOVE_SINGLE,	//move currently touched element
 		MOVE_ALL,		//move all elements
+		MOVE_ALL_GRID,	//move all elements on a grid
 		NEW_ELEMENT, 	//a new element has been inserted
 		ELEMENT_MENU, 	//after long touch on element
-		SCALE			//pinch2zoom gesture is detected
+		SCALE,			//pinch2zoom gesture is detected
+		CONTAINER_DOWN,
+		CONTAINER_MOVE
+	}
+	
+	public enum SnapMode {	
+		NOTHING,
+		RASTER,
+		GRID
 	}
 	
 	private TouchMode mCurrMode = TouchMode.FREE;
@@ -84,7 +114,10 @@ public class EditorView extends View {
 		addRectangle(300,300);
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
+		containerStart = new Point();
+		containerEnd = new Point();
 		
+
 		this.setOnLongClickListener(mOnLongClickListener);
 		
 		Resources res = getResources();
@@ -165,11 +198,58 @@ public class EditorView extends View {
 	    canvas.save();
 	    canvas.translate(mPosX, mPosY);
 	    canvas.scale(mScaleFactor, mScaleFactor);
+
+		if(rasterOn) {
+			if(!setRaster) {
+				setRaster = true;
+				horizontalRasterCT = (canvas.getWidth() / RASTER_HORIZONTAL_WIDTH) + 3;
+			}
+			
+			Paint paint = new Paint();
+			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
+			
+			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
+				paint.setColor(Color.BLUE);
+			
+				ArrayList<Integer> gridLines = createRasterLines();
+		    	
+		    	for(int i=0; i<gridLines.size(); i++) {
+		    		canvas.drawLine(gridLines.get(i), 0, gridLines.get(i), canvas.getHeight(), paint);
+		    	}
+			}	
+			
+			if(snapMode == SnapMode.GRID) {
+				paint.setColor(Color.RED);
+		
+				for(AbstractElement e : mElements.values()) {
+					if(e instanceof Rectangle) {
+						canvas.drawLine(e.getMiddleX(), 0, e.getMiddleX(), canvas.getHeight(), paint);
+					}					
+				}
+			}
+		}	
+				
+
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
 		}
+
+		
+
+		//TODO: Container als "Element" übernimmt zeichnen selbst
+//		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
+//			Paint paint = new Paint();
+//			paint.setStrokeWidth(5);
+//			paint.setColor(Color.GREEN);
+//			
+//			canvas.drawLine(containerStart.x,  containerStart.y, containerStart.x,  containerEnd.y, paint);
+//			canvas.drawLine(containerEnd.x,  containerStart.y, containerEnd.x,  containerEnd.y, paint);
+//			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
+//			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
+//		}
+		
 		canvas.restore();
 	}
 	
@@ -189,7 +269,7 @@ public class EditorView extends View {
     		break;
     	
     	case MotionEvent.ACTION_UP:	
-    		onActionUp();
+    		onActionUp(event);
  
     		break;
     	 
@@ -217,14 +297,14 @@ public class EditorView extends View {
     	return true;	//TODO
     }
     
-    
-    
+   
     private void onActionDown(MotionEvent event) {
-    	
+		int xGrid;
+		
+		final int x = (int) event.getX();
+		final int y = (int) event.getY();
+		
     	if(mCurrMode == TouchMode.FREE) {    	
-    		final int x = (int) event.getX();
-    		final int y = (int) event.getY();
-    	
     		mTouchElement = elementAt(x, y);	
     		
     		if (mTouchElement != null) {
@@ -233,27 +313,45 @@ public class EditorView extends View {
     				mTouchElement.highlight();
     				invalidate();
     			} 	
-    		} else {
-        		mCurrMode = TouchMode.TOUCH_VOID;
+    		}   	
+    		else if(snapMode == SnapMode.GRID && rasterOn && ((xGrid = getTouchOnGrid(x)) != -111)) {
+    			selectElementsOnGrid(xGrid);
+    			mCurrMode = TouchMode.MOVE_ALL_GRID;			
         	}
+    		else
+				mCurrMode = TouchMode.TOUCH_VOID;
     		
     		mOldX = x;
     		mOldY = y;
     		
-    	}
+    	} else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
+			containerStart.set(x,y);
+			mCurrMode = TouchMode.CONTAINER_MOVE;
+		}
     	
-		//save current pointer id
+    	//save current pointer id
 		mActivePointerId = event.getPointerId(0);
-
     }
     
     
-    private void onActionUp() {
-    	
+
+    private void onActionUp(MotionEvent event) {  
+    	final int x = (int)event.getX();
+    	final int y = (int)event.getY();
+
     	if(mTouchElement != null) {
-    		
     		switch(mCurrMode) {
     		case MOVE_SINGLE:
+    			if(snapMode == SnapMode.RASTER) {
+	    			int rasterX = findRasterHorizontal(mOldX);
+	    			moveSingleOn(rasterX, y);
+    			}	
+    			
+    			else if(snapMode == SnapMode.GRID) {
+	    			int gridX = findGridHorizontal(mOldX);
+	    			if(gridX != -111)
+	    				moveSingleOn(gridX, y);
+    			}	
     			//fallthrough
     			
     		case ELEMENT_MENU:
@@ -273,14 +371,27 @@ public class EditorView extends View {
 				}
 				break;
 				
+    		case MOVE_ALL_GRID:	
+    			delesectAll();
+    			invalidate();
+			
+    		case CONTAINER_MOVE:
+    			containerEnd.set(x, y);	//TODO
+    			invalidate();
 			default:
 				//TODO: (Toast)/Logging
 					
     		}
     		mTouchElement = null;
     	} else {
-			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();
-		}
+    		switch(mCurrMode) {
+	    		case MOVE_ALL_GRID:	
+	    			delesectAll();
+	    			invalidate();
+    		}			
+    	}
+    	    	
+			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();		
     	mCurrMode = TouchMode.FREE;
    		mActivePointerId = INVALID_POINTER_ID;
     }
@@ -331,9 +442,10 @@ public class EditorView extends View {
 			break;
 		
 		case MOVE_SELECTED:
+		case MOVE_ALL_GRID:	
 			moveSelected(offX, offY);
 			break;
-			
+
 		case SCALE:
 			//TODO: center canvas on gesture
 			break;
@@ -344,11 +456,17 @@ public class EditorView extends View {
 		case ELEMENT_MENU:
 			break;
 			
+		case CONTAINER_MOVE:
+			containerEnd.set(x, y);
+			invalidate();
+			break;
+			
 		//TODO handle/ignore all modes here
 			
 		default:
 			//....
 			Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
+			
 		}
 			
 		mOldX = x;
@@ -383,12 +501,154 @@ public class EditorView extends View {
     		mTouchElement.move(offX, offY);
     }
     
+
 	private int scaleX(int x) {
 		return (int)((x-mPosX)/mScaleFactor);
 	}
 	
+	
 	private int scaleY(int y) {
 		return (int)((y-mPosY)/mScaleFactor);
+	}
+
+	
+    private void moveSingleOn(int x, int y) {
+    	if(mTouchElement != null)
+    		mTouchElement.moveOn(x, y);
+    }
+    
+    
+    public void delesectAll() {
+    	for(Entry<Integer, AbstractElement> e : mSelected.entrySet()) {
+    		e.getValue().deHighlight();
+    	}
+    	mSelected = new HashMap<Integer, AbstractElement>();
+    	mCurrMode = TouchMode.FREE;
+    }
+    
+    public void redraw() {
+    	invalidate();
+    }
+    
+    public int findRasterHorizontal(int x) {
+    	ArrayList<Integer> gridLines = createRasterLines();
+    	
+    	for(int i=0; i<gridLines.size()-1; i++) {
+    		if(x>gridLines.get(i) && x<gridLines.get(i+1)) {
+    			if((x-gridLines.get(i)) < (gridLines.get(i+1) - x)) {
+    				return gridLines.get(i);
+    			} else {
+    				return gridLines.get(i+1);
+    			}
+    		}
+    	}
+    	
+    	return -111;
+    }
+    
+    public ArrayList<Integer> createRasterLines() {
+    	ArrayList<Integer> gridLines = new ArrayList<Integer>();
+    	
+    	for(int i=0; i<horizontalRasterCT; i++) {
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(mPosX % RASTER_HORIZONTAL_WIDTH));
+    	}
+    	
+    	return gridLines;
+    }
+    
+    public int findGridHorizontal(int x) {
+    	int xDiff = Integer.MAX_VALUE;
+    	int xNew = -111;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(mTouchElement.getId() != e.getId()) {
+					if((Math.abs(x - e.getMiddleX())) < xDiff) {
+						xDiff = Math.abs(x - e.getMiddleX());
+						xNew = e.getMiddleX();		
+					}
+				}
+			}					
+		}
+    	
+    	if(xDiff < 15) 
+    		return xNew;
+    	
+    	return -111;
+    }
+
+    
+    public int getTouchOnGrid(int x) {
+    	int xDiff = Integer.MAX_VALUE;
+    	int xNew = -111;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if((Math.abs(x - e.getMiddleX())) < xDiff) {
+					xDiff = Math.abs(x - e.getMiddleX());
+					xNew = e.getMiddleX();		
+				}
+			}
+    	}	
+    	
+		if(xDiff < 30) 
+	    	return xNew;
+    	
+		return -111;
+    }
+    
+    public void selectElementsOnGrid(int x) {
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(e.getMiddleX() == x) {
+					mSelected.put(e.getId(), e);
+					e.highlight();
+				}
+			}
+    	}
+    }
+    
+    
+    public void undo() {
+    	//TODO
+    }
+    
+    public void redo() {
+    	//TODO
+    }
+    
+    
+	public TouchMode getmCurrMode() {
+		return mCurrMode;
+	}
+
+
+	public void setmCurrMode(TouchMode mCurrMode) {
+		this.mCurrMode = mCurrMode;
+	}
+	
+	public boolean somethingSelected() {
+		return !(mSelected.isEmpty());
+	}
+
+
+	public boolean isRasterOn() {
+		return rasterOn;
+	}
+
+
+	public void setRasterOn(boolean rasterOn) {
+		this.rasterOn = rasterOn;
+	}
+
+
+	public SnapMode getSnapMode() {
+		return snapMode;
+	}
+
+
+	public void setSnapMode(SnapMode snapMode) {
+		this.snapMode = snapMode;
 	}
   
 }
