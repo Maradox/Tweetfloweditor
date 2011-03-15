@@ -209,7 +209,7 @@ public class EditorView extends View {
 				ArrayList<Integer> gridLines = createRasterLines();
 		    	
 		    	for(int i=0; i<gridLines.size(); i++) {
-		    		canvas.drawLine(gridLines.get(i), 0, gridLines.get(i), canvas.getHeight(), paint);
+		    		canvas.drawLine(gridLines.get(i)- mPosX, 0, gridLines.get(i)- mPosX, canvas.getHeight(), paint);
 		    	}
 			}	
 			
