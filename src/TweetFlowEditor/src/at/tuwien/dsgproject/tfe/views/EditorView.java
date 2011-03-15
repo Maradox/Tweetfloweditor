@@ -209,7 +209,7 @@ public class EditorView extends View {
 				ArrayList<Integer> gridLines = createRasterLines();
 		    	
 		    	for(int i=0; i<gridLines.size(); i++) {
-		    		canvas.drawLine(gridLines.get(i)- mPosX, 0, gridLines.get(i)- mPosX, canvas.getHeight(), paint);
+		    		canvas.drawLine(gridLines.get(i), -mPosY, gridLines.get(i), -mPosY + canvas.getHeight(), paint);
 		    	}
 			}	
 			
@@ -548,7 +548,7 @@ public class EditorView extends View {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
     	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(mPosX % RASTER_HORIZONTAL_WIDTH));
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + mPosX);
     	}
     	
     	return gridLines;
