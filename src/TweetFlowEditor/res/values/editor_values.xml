@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="integer" name="move_offset">5</item>
+    <item type="integer" name="move_offset">7</item>
 </resources>
