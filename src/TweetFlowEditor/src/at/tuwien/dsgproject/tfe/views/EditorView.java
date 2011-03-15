@@ -189,9 +189,11 @@ public class EditorView extends View {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
 
-	    canvas.save();
-	    canvas.translate(mPosX, mPosY);
-	    canvas.scale(mScaleFactor, mScaleFactor);
+		
+		//TODO: check how to handle save/restore with our lines
+//	    canvas.save();
+//	    canvas.translate(mPosX, mPosY);
+//	    canvas.scale(mScaleFactor, mScaleFactor);
 
 
 		if(rasterOn) {
@@ -209,7 +211,7 @@ public class EditorView extends View {
 				ArrayList<Integer> gridLines = createRasterLines();
 		    	
 		    	for(int i=0; i<gridLines.size(); i++) {
-		    		canvas.drawLine(gridLines.get(i), -mPosY, gridLines.get(i), -mPosY + canvas.getHeight(), paint);
+		    		canvas.drawLine(gridLines.get(i), 0, gridLines.get(i), canvas.getHeight(), paint);
 		    	}
 			}	
 			
@@ -236,16 +238,16 @@ public class EditorView extends View {
 		
 
 		//TODO: Container als "Element" übernimmt zeichnen selbst
-		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
-			Paint paint = new Paint();
-			paint.setStrokeWidth(5);
-			paint.setColor(Color.GREEN);
-			
-			canvas.drawLine(containerStart.x,  containerStart.y, containerStart.x,  containerEnd.y, paint);
-			canvas.drawLine(containerEnd.x,  containerStart.y, containerEnd.x,  containerEnd.y, paint);
-			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
-			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
-		}
+//		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
+//			Paint paint = new Paint();
+//			paint.setStrokeWidth(5);
+//			paint.setColor(Color.GREEN);
+//			
+//			canvas.drawLine(containerStart.x,  containerStart.y, containerStart.x,  containerEnd.y, paint);
+//			canvas.drawLine(containerEnd.x,  containerStart.y, containerEnd.x,  containerEnd.y, paint);
+//			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
+//			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
+//		}
 		
 		canvas.restore();
 
@@ -548,7 +550,7 @@ public class EditorView extends View {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
     	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + mPosX);
+    		gridLines.add((Integer)(mPosX + i*RASTER_HORIZONTAL_WIDTH - RASTER_HORIZONTAL_WIDTH/2));
     	}
     	
     	return gridLines;
