@@ -32,8 +32,6 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -44,15 +42,11 @@ import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 
 public class EditorView extends View {
-<<<<<<< HEAD
 
 	private static int RASTER_HORIZONTAL_WIDTH = 70;
 	
-=======
-	
 	private final int mMoveOffset;
 		
->>>>>>> matthias
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
 	
@@ -69,7 +63,7 @@ public class EditorView extends View {
 	private boolean rasterOn = true;
 	private SnapMode snapMode = SnapMode.NOTHING;
 	
-	private int xGlobalOffset = 0;
+	//private int xGlobalOffset = 0;
 	
 	private Point containerStart;
 	private Point containerEnd;
@@ -85,7 +79,7 @@ public class EditorView extends View {
 		MOVE_ALL_GRID,	//move all elements on a grid
 		NEW_ELEMENT, 	//a new element has been inserted
 		ELEMENT_MENU, 	//after long touch on element
-<<<<<<< HEAD
+		SCALE,			//pinch2zoom gesture is detected
 		CONTAINER_DOWN,
 		CONTAINER_MOVE
 	}
@@ -94,9 +88,6 @@ public class EditorView extends View {
 		NOTHING,
 		RASTER,
 		GRID
-=======
-		SCALE			//pinch2zoom gesture is detected
->>>>>>> matthias
 	}
 	
 	private TouchMode mCurrMode = TouchMode.FREE;
@@ -124,17 +115,13 @@ public class EditorView extends View {
 		containerStart = new Point();
 		containerEnd = new Point();
 		
-<<<<<<< HEAD
 		this.setOnLongClickListener(mOnLongClickListener);		
-=======
-		this.setOnLongClickListener(mOnLongClickListener);
 		
 		Resources res = getResources();
 		mMoveOffset = res.getInteger(R.integer.move_offset);
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
->>>>>>> matthias
 	}
 	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
@@ -197,14 +184,15 @@ public class EditorView extends View {
 	}
 	
 
-	
-	
-	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
-<<<<<<< HEAD
+
+	    canvas.save();
+	    canvas.translate(mPosX, mPosY);
+	    canvas.scale(mScaleFactor, mScaleFactor);
+
 
 		if(rasterOn) {
 			if(!setRaster) {
@@ -235,20 +223,19 @@ public class EditorView extends View {
 				}
 			}
 		}	
-				
-=======
-		
+
 	    canvas.save();
 	    canvas.translate(mPosX, mPosY);
 	    canvas.scale(mScaleFactor, mScaleFactor);
->>>>>>> matthias
+
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
 		}
-<<<<<<< HEAD
 		
+
+		//TODO: Container als "Element" übernimmt zeichnen selbst
 		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
 			Paint paint = new Paint();
 			paint.setStrokeWidth(5);
@@ -260,9 +247,8 @@ public class EditorView extends View {
 			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
 		}
 		
-=======
 		canvas.restore();
->>>>>>> matthias
+
 	}
 	
 	// TODO: log all touchevents/modes to reproduce errors
@@ -281,7 +267,7 @@ public class EditorView extends View {
     		break;
     	
     	case MotionEvent.ACTION_UP:	
-    		onActionUp();
+    		onActionUp(event);
  
     		break;
     	 
@@ -309,21 +295,14 @@ public class EditorView extends View {
     	return true;	//TODO
     }
     
-<<<<<<< HEAD
-    private void onActionDown(int x, int y) {
-		
-    	int xGrid;
-		if(mCurrMode == TouchMode.FREE) {
-=======
-    
-    
     private void onActionDown(MotionEvent event) {
-    	
+		int xGrid;
+		
+		final int x = (int) event.getX();
+		final int y = (int) event.getY();
+		
     	if(mCurrMode == TouchMode.FREE) {    	
-    		final int x = (int) event.getX();
-    		final int y = (int) event.getY();
     	
->>>>>>> matthias
     		mTouchElement = elementAt(x, y);	
     		
     		if (mTouchElement != null) {
@@ -342,29 +321,22 @@ public class EditorView extends View {
     		
     		mOldX = x;
     		mOldY = y;
-    		
-    	}
-<<<<<<< HEAD
-		
-		else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
+    			
+    	} else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
 			containerStart.set(x,y);
 			mCurrMode = TouchMode.CONTAINER_MOVE;
 		}
-=======
     	
-		//save current pointer id
+    	//save current pointer id
 		mActivePointerId = event.getPointerId(0);
->>>>>>> matthias
 
     }
     
-    
-<<<<<<< HEAD
-    private void onActionUp(int x, int y) {  
-=======
-    private void onActionUp() {
-    	
->>>>>>> matthias
+    private void onActionUp(MotionEvent event) {  
+    	final int x = (int)event.getX();
+    	final int y = (int)event.getY();
+
+
     	if(mTouchElement != null) {
     		switch(mCurrMode) {
     		case MOVE_SINGLE:
@@ -440,13 +412,9 @@ public class EditorView extends View {
 			}
 			
 		case MOVE_ALL:
-<<<<<<< HEAD
-			moveAll(offX, offY);
-			xGlobalOffset += offX;
-=======
 			mPosX += offX;
 			mPosY += offY;
->>>>>>> matthias
+
 			break;
 		
 		case SELECTED:
@@ -476,17 +444,7 @@ public class EditorView extends View {
 		case MOVE_ALL_GRID:	
 			moveSelected(offX, offY);
 			break;
-			
-<<<<<<< HEAD
-		case CONTAINER_MOVE:
-			containerEnd.set(x, y);
-			invalidate();
-			break;
-			
-		default:
-			//should not come here ...
-			Toast.makeText(this.getContext(), "!! invalid move mode: "+ mCurrMode, Toast.LENGTH_SHORT).show();	
-=======
+
 		case SCALE:
 			//TODO: center canvas on gesture
 			break;
@@ -497,12 +455,17 @@ public class EditorView extends View {
 		case ELEMENT_MENU:
 			break;
 			
+		case CONTAINER_MOVE:
+			containerEnd.set(x, y);
+			invalidate();
+			break;
+			
 		//TODO handle/ignore all modes here
 			
 		default:
 			//....
 			Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
->>>>>>> matthias
+
 		}
 			
 		mOldX = x;
@@ -537,7 +500,16 @@ public class EditorView extends View {
     		mTouchElement.move(offX, offY);
     }
     
-<<<<<<< HEAD
+	private int scaleX(int x) {
+		return (int)((x-mPosX)/mScaleFactor);
+	}
+	
+	
+	private int scaleY(int y) {
+		return (int)((y-mPosY)/mScaleFactor);
+	}
+
+	
     private void moveSingleOn(int x, int y) {
     	if(mTouchElement != null)
     		mTouchElement.moveOn(x, y);
@@ -576,7 +548,7 @@ public class EditorView extends View {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
     	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(xGlobalOffset % RASTER_HORIZONTAL_WIDTH));
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH +(mPosX % RASTER_HORIZONTAL_WIDTH));
     	}
     	
     	return gridLines;
@@ -676,31 +648,5 @@ public class EditorView extends View {
 	public void setSnapMode(SnapMode snapMode) {
 		this.snapMode = snapMode;
 	}
-
-    
-	
-    
-    
-    
-//    private void select(AbstractElement e) {
-//    	mSelected.put(e.getId(), e);
-//		e.highlight();
-//    }
-//    
-//    private void deselect(AbstractElement e) {
-//		mSelected.remove(e.getId());
-//		e.deHighlight();
-//    }
-    
-    
-=======
-	private int scaleX(int x) {
-		return (int)((x-mPosX)/mScaleFactor);
-	}
-	
-	private int scaleY(int y) {
-		return (int)((y-mPosY)/mScaleFactor);
-	}
->>>>>>> matthias
   
 }
