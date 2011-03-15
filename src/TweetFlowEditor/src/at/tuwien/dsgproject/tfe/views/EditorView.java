@@ -548,7 +548,7 @@ public class EditorView extends View {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
     	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH + mPosX);
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH) + (RASTER_HORIZONTAL_WIDTH/2) - RASTER_HORIZONTAL_WIDTH);
     	}
     	
     	return gridLines;
