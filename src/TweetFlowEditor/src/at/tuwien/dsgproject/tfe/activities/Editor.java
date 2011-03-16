@@ -22,9 +22,12 @@
 package at.tuwien.dsgproject.tfe.activities;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -42,6 +45,8 @@ public class Editor extends ActionbarActivity {
         setContentView(R.layout.editor); 
         
         editorView = (EditorView) findViewById(R.id.editor_view);
+        
+        registerForContextMenu(editorView);  
     }	
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,4 +133,13 @@ public class Editor extends ActionbarActivity {
     	}
     	return true;  
     }	
+      
+    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {      	
+    	if(editorView.getmCurrMode() == TouchMode.ELEMENT_MENU) {
+    		super.onCreateContextMenu(menu, v, menuInfo);  
+        	menu.setHeaderTitle("Element menue");  
+        	menu.add(0, v.getId(), 0, "Action 1");  
+        	menu.add(0, v.getId(), 0, "Action 2");  
+    	}	
+    } 
 }
