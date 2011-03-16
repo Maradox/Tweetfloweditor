@@ -61,7 +61,7 @@ public class EditorView extends View {
 	private int horizontalRasterCT;
 	
 	private boolean rasterOn = true;
-	private SnapMode snapMode = SnapMode.NOTHING;
+	private SnapMode snapMode = SnapMode.GRID;
 	
 	//private int xGlobalOffset = 0;
 	
@@ -195,7 +195,10 @@ public class EditorView extends View {
 //	    canvas.translate(mPosX, mPosY);
 //	    canvas.scale(mScaleFactor, mScaleFactor);
 
-
+		canvas.save();
+	    canvas.translate(mPosX, mPosY);
+	    canvas.scale(mScaleFactor, mScaleFactor);
+		
 		if(rasterOn) {
 			if(!setRaster) {
 				setRaster = true;
@@ -204,14 +207,15 @@ public class EditorView extends View {
 			
 			Paint paint = new Paint();
 			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
-			
+						
 			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
 				paint.setColor(Color.BLUE);
 			
 				ArrayList<Integer> gridLines = createRasterLines();
 		    	
 		    	for(int i=0; i<gridLines.size(); i++) {
-		    		canvas.drawLine(gridLines.get(i), 0, gridLines.get(i), canvas.getHeight(), paint);
+		    		canvas.drawLine(gridLines.get(i), 0-mPosY, gridLines.get(i), canvas.getHeight()-mPosY, paint);
+		    		canvas.drawText(""+gridLines.get(i), gridLines.get(i), 0, paint);		//TODO delete
 		    	}
 			}	
 			
@@ -220,15 +224,14 @@ public class EditorView extends View {
 		
 				for(AbstractElement e : mElements.values()) {
 					if(e instanceof Rectangle) {
-						canvas.drawLine(e.getMiddleX(), 0, e.getMiddleX(), canvas.getHeight(), paint);
+						canvas.drawLine(e.getMiddleX(), 0-mPosY, e.getMiddleX(), canvas.getHeight()-mPosY, paint);
+						canvas.drawText(""+e.getMiddleX(), e.getMiddleX(), 1, paint);		//TODO delete
 					}					
 				}
 			}
 		}	
 
-	    canvas.save();
-	    canvas.translate(mPosX, mPosY);
-	    canvas.scale(mScaleFactor, mScaleFactor);
+	    
 
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
@@ -344,13 +347,13 @@ public class EditorView extends View {
     		case MOVE_SINGLE:
     			if(snapMode == SnapMode.RASTER) {
 	    			int rasterX = findRasterHorizontal(mOldX);
-	    			moveSingleOn(rasterX, y);
+	    			moveSingleOn(rasterX, y-mPosY);
     			}	
     			
     			else if(snapMode == SnapMode.GRID) {
 	    			int gridX = findGridHorizontal(mOldX);
 	    			if(gridX != -111)
-	    				moveSingleOn(gridX, y);
+	    				moveSingleOn(gridX, y-mPosY);
     			}	
     			//fallthrough
     			
@@ -530,7 +533,8 @@ public class EditorView extends View {
     	invalidate();
     }
     
-    public int findRasterHorizontal(int x) {
+    public int findRasterHorizontal(int xScaled) {
+    	int x = xScaled - mPosX;
     	ArrayList<Integer> gridLines = createRasterLines();
     	
     	for(int i=0; i<gridLines.size()-1; i++) {
@@ -550,16 +554,17 @@ public class EditorView extends View {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
     	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(mPosX + i*RASTER_HORIZONTAL_WIDTH - RASTER_HORIZONTAL_WIDTH/2));
+    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH - RASTER_HORIZONTAL_WIDTH/2 + mPosX % RASTER_HORIZONTAL_WIDTH -mPosX));
     	}
     	
     	return gridLines;
     }
     
-    public int findGridHorizontal(int x) {
+    public int findGridHorizontal(int xScaled) {
+    	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
     	int xNew = -111;
-    	
+    	    	
     	for(AbstractElement e : mElements.values()) {
 			if(e instanceof Rectangle) {
 				if(mTouchElement.getId() != e.getId()) {
@@ -578,7 +583,8 @@ public class EditorView extends View {
     }
 
     
-    public int getTouchOnGrid(int x) {
+    public int getTouchOnGrid(int xScaled) {
+    	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
     	int xNew = -111;
     	
