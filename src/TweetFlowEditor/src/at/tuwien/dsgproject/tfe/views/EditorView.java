@@ -138,8 +138,6 @@ public class EditorView extends View {
 		    		addRectangle(mOldX, mOldY);
 		    	} else if(mCurrMode == TouchMode.SELECTED) {
 		    		mCurrMode = TouchMode.ELEMENT_MENU;
-		    		// show element menu mTouchElement
-		    		Toast.makeText(EditorView.this.getContext(), "Long Click on element", Toast.LENGTH_SHORT).show();	
 		    	}
 	    			
 		    	return false;
