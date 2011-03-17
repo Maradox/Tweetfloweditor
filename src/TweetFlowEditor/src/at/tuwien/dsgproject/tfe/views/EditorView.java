@@ -100,6 +100,9 @@ public class EditorView extends View {
 	
 	private int mPosX;
 	private int mPosY;
+	
+	private int mScalePivotX;
+	private int mScalePivotY;
 
 	
 	public EditorView(Context context, AttributeSet attrs) {
@@ -115,7 +118,8 @@ public class EditorView extends View {
 		containerStart = new Point();
 		containerEnd = new Point();
 		
-		this.setOnLongClickListener(mOnLongClickListener);		
+		this.setOnLongClickListener(mOnLongClickListener);
+		this.setBackgroundColor(Color.WHITE);
 		
 		Resources res = getResources();
 		mMoveOffset = res.getInteger(R.integer.move_offset);
@@ -124,7 +128,11 @@ public class EditorView extends View {
 		
 	}
 	
+	
+	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
+			
+		
 		    public boolean onLongClick(View v) {
 		    	if(mCurrMode == TouchMode.TOUCH_VOID) {
 		    		addRectangle(mOldX, mOldY);
@@ -146,11 +154,16 @@ public class EditorView extends View {
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
 	        mCurrMode = TouchMode.SCALE;
+	        
+	        mScalePivotX = (int)detector.getFocusX();
+	        mScalePivotY = (int)detector.getFocusY();
 
 	        invalidate();
 	        return true;
 	    }
 	}
+	
+	
 	    
 	
 	private void addRectangle(int x, int y) {
@@ -187,19 +200,16 @@ public class EditorView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		canvas.drawColor(Color.WHITE);
+		//canvas.drawColor(Color.WHITE);
 
 		
 		//TODO: check how to handle save/restore with our lines
-//	    canvas.save();
-//	    canvas.translate(mPosX, mPosY);
-//	    canvas.scale(mScaleFactor, mScaleFactor);
-
 		canvas.save();
-	    canvas.translate(mPosX, mPosY);
-	    canvas.scale(mScaleFactor, mScaleFactor);
-		
-		if(rasterOn) {
+		canvas.translate(mPosX, mPosY);
+    	canvas.scale(mScaleFactor, mScaleFactor);
+		//canvas.scale(mScaleFactor, mScaleFactor, mScalePivotX, mScalePivotY);
+    	
+	    if(rasterOn) {
 			if(!setRaster) {
 				setRaster = true;
 				horizontalRasterCT = (canvas.getWidth() / RASTER_HORIZONTAL_WIDTH) + 3;
@@ -262,6 +272,8 @@ public class EditorView extends View {
     public boolean onTouchEvent(MotionEvent event) {
     	 // Let the ScaleGestureDetector inspect all events.
         mScaleDetector.onTouchEvent(event);
+        
+        mScalePivotX = mScalePivotY = 0;
 
     	final int action = event.getAction();
     	
@@ -316,22 +328,20 @@ public class EditorView extends View {
     				mTouchElement.highlight();
     				invalidate();
     			} 	
-    		}   	
-    		else if(snapMode == SnapMode.GRID && rasterOn && ((xGrid = getTouchOnGrid(x)) != -111)) {
+    		} else if(snapMode == SnapMode.GRID && rasterOn && ((xGrid = getTouchOnGrid(x)) != -111)) {
     			selectElementsOnGrid(xGrid);
     			mCurrMode = TouchMode.MOVE_ALL_GRID;			
-        	}
-    		else
+        	} else {
 				mCurrMode = TouchMode.TOUCH_VOID;
+        	}
     		
-    		mOldX = x;
-    		mOldY = y;
-    			
     	} else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
 			containerStart.set(x,y);
 			mCurrMode = TouchMode.CONTAINER_MOVE;
 		}
     	
+    	mOldX = x;
+		mOldY = y;
     	//save current pointer id
 		mActivePointerId = event.getPointerId(0);
 
@@ -393,104 +403,110 @@ public class EditorView extends View {
 	    			invalidate();
     		}			
     	}
-    	    	
-			//Toast.makeText(this.getContext(), "!! action up with no selected element", Toast.LENGTH_SHORT).show();		
+    	
     	mCurrMode = TouchMode.FREE;
    		mActivePointerId = INVALID_POINTER_ID;
     }
     
+    
     private void onActionMove(MotionEvent event) {
+    	
+    
     	
 		final int pointerIndex = event.findPointerIndex(mActivePointerId);
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-		final int offX = x - mOldX;
-		final int offY = y - mOldY;
-		
-		switch(mCurrMode) {
-		case TOUCH_VOID:
-			if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
-				mCurrMode = TouchMode.MOVE_ALL;
-				//fallthrough
-			} else {
-				break;
-			}
+    	if(!mScaleDetector.isInProgress()) {
+	    		
+			final int offX = x - mOldX;
+			final int offY = y - mOldY;
 			
-		case MOVE_ALL:
-			mPosX += offX;
-			mPosY += offY;
-
-			break;
-		
-		case SELECTED:
-			if(mTouchElement != null) {
+			switch(mCurrMode) {
+			case TOUCH_VOID:
 				if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
-					if( mSelected.size() >= 1 && mSelected.containsKey(mTouchElement.getId()) ) {
-						// at least one element selected, and mTouchElement is one of them -> move selected
-						mCurrMode = TouchMode.MOVE_SELECTED;
-						moveSelected(offX, offY);		
-					} else {
-						// only move currently touched element
-						mCurrMode = TouchMode.MOVE_SINGLE;
-						moveSingle(offX, offY);	
-					}
+					mCurrMode = TouchMode.MOVE_ALL;
+					//fallthrough
+				} else {
+					break;
 				}
-			} else {
-				//should not be here ...
-				Toast.makeText(this.getContext(), "!!select mode, but element == null?", Toast.LENGTH_SHORT).show();		
-			}
-			break;
 				
-		case MOVE_SINGLE:
-			moveSingle(offX, offY);
-			break;
-		
-		case MOVE_SELECTED:
-		case MOVE_ALL_GRID:	
-			moveSelected(offX, offY);
-			break;
-
-		case SCALE:
-			//TODO: center canvas on gesture
-			break;
+			case MOVE_ALL:
+				mPosX += offX;
+				mPosY += offY;
+	
+				break;
 			
-		case NEW_ELEMENT:
-			break;
+			case SELECTED:
+				if(mTouchElement != null) {
+					if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
+						if( mSelected.size() >= 1 && mSelected.containsKey(mTouchElement.getId()) ) {
+							// at least one element selected, and mTouchElement is one of them -> move selected
+							mCurrMode = TouchMode.MOVE_SELECTED;
+							moveSelected(offX, offY);		
+						} else {
+							// only move currently touched element
+							mCurrMode = TouchMode.MOVE_SINGLE;
+							moveSingle(offX, offY);	
+						}
+					}
+				} else {
+					//should not be here ...
+					Toast.makeText(this.getContext(), "!!select mode, but element == null?", Toast.LENGTH_SHORT).show();		
+				}
+				break;
+					
+			case MOVE_SINGLE:
+				moveSingle(offX, offY);
+				break;
 			
-		case ELEMENT_MENU:
-			break;
-			
-		case CONTAINER_MOVE:
-			containerEnd.set(x, y);
-			invalidate();
-			break;
-			
-		//TODO handle/ignore all modes here
-			
-		default:
-			//....
-			Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
-
-		}
+			case MOVE_SELECTED:
+			case MOVE_ALL_GRID:	
+				moveSelected(offX, offY);
+				break;
+	
+			case SCALE:
+				//TODO: center canvas on gesture
+				break;
+				
+			case NEW_ELEMENT:
+				break;
+				
+			case ELEMENT_MENU:
+				break;
+				
+			case CONTAINER_MOVE:
+				containerEnd.set(x, y);
+				invalidate();
+				break;
+				
+			//TODO handle/ignore all modes here
+				
+			default:
+				//....
+				Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
+	
+			}
+    	}
 			
 		mOldX = x;
 		mOldY = y;
 		invalidate();
+    		
     }
     
     
     private void onActionPointerUp(int action, MotionEvent event) {
         // get index of the pointer that left the screen
-        final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
-                >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-        final int pId = event.getPointerId(pIndex);
-        if (pId == mActivePointerId) {
-            // choose new active pointer
-            final int newPointerIndex = pIndex == 0 ? 1 : 0;
-            mOldX = (int)event.getX(newPointerIndex);
-            mOldY = (int)event.getY(newPointerIndex);
-            mActivePointerId = event.getPointerId(newPointerIndex);
-        }
+		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
+        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+	    final int pId = event.getPointerId(pIndex);
+	    if (pId == mActivePointerId) {
+	        // choose new active pointer
+	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
+	        mOldX = (int)event.getX(newPointerIndex);
+	        mOldY = (int)event.getY(newPointerIndex);
+	        mActivePointerId = event.getPointerId(newPointerIndex);
+	    }    
     }
     
     
@@ -559,6 +575,8 @@ public class EditorView extends View {
     	
     	return gridLines;
     }
+    
+    
     
     public int findGridHorizontal(int xScaled) {
     	int x = xScaled - mPosX;
