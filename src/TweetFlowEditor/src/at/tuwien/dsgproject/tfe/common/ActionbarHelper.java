@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.activities.Editor;
 import at.tuwien.dsgproject.tfe.activities.Home;
+import at.tuwien.dsgproject.tfe.activities.Tweeter;
 
 public class ActionbarHelper {
 	public static void openHome(Context context) {	
@@ -41,7 +42,17 @@ public class ActionbarHelper {
 	}
 	
 	public static void openMyTwitter(Context context) {
-		//TODO
+		try {
+			if(UserManagement.getInstance().isLoggedIn()) {
+				Intent i = new Intent( context, Tweeter.class );
+				context.startActivity(i); 
+			} else {
+				Toast.makeText(context, "You have to login first", Toast.LENGTH_LONG).show();
+			}
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	
 	public static void login(Context context) {

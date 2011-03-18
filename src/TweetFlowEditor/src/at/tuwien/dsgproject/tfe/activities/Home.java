@@ -20,8 +20,10 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.common.UserManagement;
 
 public class Home extends ActionbarActivity {
     /** Called when the activity is first created. */
@@ -29,6 +31,14 @@ public class Home extends ActionbarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
+        
+        SharedPreferences settings = getPreferences(0);
+        String requestToken = settings.getString("requestToken", "");
+        String secretToken = settings.getString("secretToken", "");
+        
+        if((requestToken.length() > 0) && (secretToken.length() > 0)) {
+        	UserManagement.getInstance().loginAuto(requestToken,secretToken);
+        }
     }	
 	
 }

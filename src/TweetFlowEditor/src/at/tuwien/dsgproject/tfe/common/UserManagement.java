@@ -9,8 +9,8 @@ import twitter4j.http.RequestToken;
 
 public class UserManagement {
 	private static UserManagement instance;
-	private final static String consumerKey = ""; //TODO		
-	private final static String consumerSecret = ""; //TODO
+	private final static String consumerKey = "XDzRCbsjZCHD1WPkVoU8g"; 		
+	private final static String consumerSecret = "PXcaRO74YOZegeQWxen8l2pGZKHHvAbPQvNGqP4Ajk"; 
 
 		
 	private final String CALLBACKURL = "T4JOAuth://main";
@@ -19,6 +19,9 @@ public class UserManagement {
 	private AccessToken accessToken;
 	
 	private boolean loggedIn = false;
+	
+	private String reqToken;
+	private String secretToken;
 	
 	private UserManagement() {};
 
@@ -37,13 +40,20 @@ public class UserManagement {
 		return authUrl;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void loginIntent(Uri uri) throws TwitterException {
 		String verifier = uri.getQueryParameter("oauth_verifier");
 		accessToken = UserManagement.getInstance().getTwitter().getOAuthAccessToken(UserManagement.getInstance().getRequestToken(),verifier);
-		String token = accessToken.getToken();
-		String secret = accessToken.getTokenSecret();		
-		twitter.setOAuthAccessToken(token, secret);
+		reqToken = accessToken.getToken();
+		secretToken = accessToken.getTokenSecret();		
+		twitter.setOAuthAccessToken(accessToken);
+		loggedIn = true;
+	}
+	
+	public void loginAuto(String requestToken, String secretToken) {
+		twitter = new TwitterFactory().getInstance();
+		accessToken = new AccessToken(requestToken, secretToken);
+		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+		twitter.setOAuthAccessToken(accessToken);
 		loggedIn = true;
 	}
 
@@ -93,6 +103,22 @@ public class UserManagement {
 
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
+	}
+
+	public String getReqToken() {
+		return reqToken;
+	}
+
+	public void setReqToken(String reqToken) {
+		this.reqToken = reqToken;
+	}
+
+	public String getSecretToken() {
+		return secretToken;
+	}
+
+	public void setSecretToken(String secretToken) {
+		this.secretToken = secretToken;
 	}
 	
 	
