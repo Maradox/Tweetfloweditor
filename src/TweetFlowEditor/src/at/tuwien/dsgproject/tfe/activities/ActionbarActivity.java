@@ -23,8 +23,10 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
+import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.Actionbar;
 
 public abstract class ActionbarActivity extends Activity implements Actionbar {
@@ -49,5 +51,12 @@ public abstract class ActionbarActivity extends Activity implements Actionbar {
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		ActionbarHelper.onNewIntent(intent, this);
+		
+		SharedPreferences settings = getPreferences(0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putString("requestToken", UserManagement.getInstance().getReqToken());
+	    editor.putString("secretToken", UserManagement.getInstance().getSecretToken());
+	    editor.commit();
+
 	}
 }
