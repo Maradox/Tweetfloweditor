@@ -24,7 +24,6 @@ package at.tuwien.dsgproject.tfe.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -40,33 +39,46 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
+import at.tuwien.dsgproject.tfe.states.StateFree;
+import at.tuwien.dsgproject.tfe.states.StateMoveElement;
+import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
+import at.tuwien.dsgproject.tfe.states.StateSelected;
+import at.tuwien.dsgproject.tfe.states.State;
+import at.tuwien.dsgproject.tfe.states.StateTouchElement;
 
 public class EditorView extends View {
 
-	private static int RASTER_HORIZONTAL_WIDTH = 70;
+	public State state;
+	public StateFree stateFree;
+	public StateSelected stateSelected;
+	public StateTouchElement stateTouchElement;
+	public StateMoveElement stateMoveElement;
+	public StateMoveSelected stateMoveSelected;
 	
-	private final int mMoveOffset;
+	public static int RASTER_HORIZONTAL_WIDTH = 70;
+	
+	public final int mMoveOffset;
 		
-	private HashMap<Integer, AbstractElement> mElements;
-	private HashMap<Integer, AbstractElement> mSelected;
+	public HashMap<Integer, AbstractElement> mElements;
+	public HashMap<Integer, AbstractElement> mSelected;
 	
-	private int mOldX = 0, mOldY = 0;
+	public int mOldX = 0, mOldY = 0;
 
-	private Integer mElemCounter;
+	public Integer mElemCounter;
 	
-	//private int mTouchElementId;
-	private AbstractElement mTouchElement = null;
+	//public int mTouchElementId;
+	public AbstractElement mTouchElement = null;
 
-	private boolean setRaster = false;
-	private int horizontalRasterCT;
+	public boolean setRaster = false;
+	public int horizontalRasterCT;
 	
-	private boolean rasterOn = true;
-	private SnapMode snapMode = SnapMode.GRID;
+	public boolean rasterOn = true;
+	public SnapMode snapMode = SnapMode.GRID;
 	
-	//private int xGlobalOffset = 0;
+	//public int xGlobalOffset = 0;
 	
-	private Point containerStart;
-	private Point containerEnd;
+	public Point containerStart;
+	public Point containerEnd;
 		
 	
 	public enum TouchMode {	
@@ -90,16 +102,16 @@ public class EditorView extends View {
 		GRID
 	}
 	
-	private TouchMode mCurrMode = TouchMode.FREE;
+	public TouchMode mCurrMode = TouchMode.FREE;
 	
-	private int INVALID_POINTER_ID = -1;
-	private int mActivePointerId = INVALID_POINTER_ID;
+	public int INVALID_POINTER_ID = -1;
+	public int mActivePointerId = INVALID_POINTER_ID;
 	
-	private ScaleGestureDetector mScaleDetector;
-	private float mScaleFactor = 1.f;
+	public ScaleGestureDetector mScaleDetector;
+	public float mScaleFactor = 1.f;
 	
-	private int mPosX;
-	private int mPosY;
+	public int mPosX;
+	public int mPosY;
 
 	
 	public EditorView(Context context, AttributeSet attrs) {
@@ -121,6 +133,13 @@ public class EditorView extends View {
 		mMoveOffset = res.getInteger(R.integer.move_offset);
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+		
+		stateFree = new StateFree(this);
+		stateSelected = new StateSelected(this);
+		stateTouchElement = new StateTouchElement(this);
+		stateMoveElement = new StateMoveElement(this);
+		stateMoveSelected = new StateMoveSelected(this);
+		state = stateFree;
 		
 	}
 	
@@ -168,7 +187,7 @@ public class EditorView extends View {
 	 * @param y y coordinate
 	 * @return The element at the given location or null.
 	 */
-	private AbstractElement elementAt(int x, int y) {
+	public AbstractElement elementAt(int x, int y) {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
 		AbstractElement elem = null;
@@ -260,7 +279,10 @@ public class EditorView extends View {
     public boolean onTouchEvent(MotionEvent event) {
     	 // Let the ScaleGestureDetector inspect all events.
         mScaleDetector.onTouchEvent(event);
-
+        
+        
+        state.onTouchEvent(event);
+/*
     	final int action = event.getAction();
     	
     	switch (action & MotionEvent.ACTION_MASK) {
@@ -293,7 +315,7 @@ public class EditorView extends View {
     	default:
     		//nothing
     	
-    	}
+    	}*/
     	
     	return true;	//TODO
     }
@@ -492,13 +514,14 @@ public class EditorView extends View {
     }
     
     
-    private void moveSelected(int offX, int offY) {
+    
+    public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {
 			e.move(offX, offY);
 		}
     }
     
-    private void moveSingle(int offX, int offY) {
+    public void moveSingle(int offX, int offY) {
     	if(mTouchElement != null)
     		mTouchElement.move(offX, offY);
     }
@@ -513,7 +536,7 @@ public class EditorView extends View {
 	}
 
 	
-    private void moveSingleOn(int x, int y) {
+    public void moveSingleOn(int x, int y) {
     	if(mTouchElement != null)
     		mTouchElement.moveOn(x, y);
     }
