@@ -1,45 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" 
-    android:background="#ff03ffff"
-    android:padding = "4dp">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" 
+        android:layout_width="fill_parent"
+        android:layout_height="50dip" 
+        android:background="#ffbbbbbb">
 	
-	<!-- 48x48 -->
-	
-	<ImageButton 	android:id="@+id/actionbarHome"
+	<ImageView 	
+		android:id="@+id/actionbarHome"
 		android:src="@drawable/actionbar_ibtn_home"
-	  	android:layout_width="64dp"		
-	  	android:layout_height="64dp"
-	  	android:onClick="openHome"
-	    android:layout_gravity="left" 
-	    android:padding = "4dp" />
+		android:onClick="openHome"
+	  	android:layout_width="25dip"		
+	  	android:layout_height="25dip"
+	  	android:scaleType="fitXY"
+	    android:layout_alignParentLeft="true"
+	    android:layout_centerVertical="true"
+	    android:layout_marginLeft="10dip" />
 	    
-	<ImageButton 	android:id="@+id/actionbarEditor"
+	<ImageView 
+		android:id="@+id/borderHome" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	android:src="#ffffffff" 
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/actionbarHome"
+        android:layout_toRightOf="@+id/actionbarHome" />
+	    
+	<TextView
+		android:id="@+id/actionBarText"
+		android:text="@string/app_name"
+	    android:textSize="7pt"
+	    android:textStyle="bold" 
+	    android:padding="4dp" 
+	    android:textColor="@android:color/white"
+	    android:layout_width="wrap_content" 
+	    android:layout_height="wrap_content"
+	    android:layout_centerVertical="true"
+	    android:layout_toRightOf="@+id/borderHome" />
+	        
+	<ImageView 
+		android:id="@+id/borderThree" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	android:src="#ffffffff" 
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/actionbarEditor"
+        android:layout_toLeftOf="@+id/actionbarEditor" />
+	    
+	<ImageView 	
+		android:id="@+id/actionbarEditor"
 		android:src="@drawable/actionbar_ibtn_editor"
-	  	android:layout_width="64dp"
-	  	android:layout_height="64dp"
-	  	android:onClick="openEditor"
-	    android:layout_gravity="left" 
-	     android:padding = "4dp" />   
-	    
-	<ImageButton 	android:id="@+id/actionbarMyTwitter"
+		android:onClick="openEditor"
+	  	android:layout_width="25dip"		
+	  	android:layout_height="25dip"
+	  	android:layout_marginRight="10dip" 
+	    android:layout_centerVertical="true"
+	    android:layout_toLeftOf="@+id/borderTwo"
+	    android:scaleType="fitXY" />
+	       
+	<ImageView 
+		android:id="@+id/borderTwo" 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	android:src="#ffffffff" 
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/actionbarMyTwitter"
+        android:layout_toLeftOf="@+id/actionbarMyTwitter" />
+            
+	<ImageView	
+		android:id="@+id/actionbarMyTwitter"
 		android:src="@drawable/actionbar_ibtn_mytwitter"
-	  	android:layout_width="64dp"
-	  	android:layout_height="64dp"
+	  	android:layout_width="25dip"		
+	  	android:layout_height="25dip"
 	  	android:onClick="openMyTwitter"
-	    android:layout_gravity="left"
-	    android:padding = "4dp" />  
+	  	android:layout_marginRight="10dip" 
+	    android:layout_centerVertical="true"
+	    android:layout_toLeftOf="@+id/borderOne"
+	    android:scaleType="fitXY" />
 	    
-     <ImageButton 	android:id="@+id/actionbarLogin"
+    <ImageView 
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content"
+    	android:src="#ffffffff" 
+        android:id="@+id/borderOne" 
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dip" 
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/actionbarLogin"
+        android:layout_toLeftOf="@+id/actionbarLogin" />
+                
+     <ImageView 	
+     	android:id="@+id/actionbarLogin"
 		android:src="@drawable/actionbar_ibtn_mytwitter"
-	  	android:layout_width="64dp"
-	  	android:layout_height="64dp"
+	  	android:layout_width="25dip"		
+	  	android:layout_height="25dip"
 	  	android:onClick="login"
-	    android:layout_gravity="left"
-	    android:padding = "4dp" />    
-					
-</LinearLayout>
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:layout_marginRight="10dip"
+	    android:scaleType="fitXY" />
+	    					
+</RelativeLayout>
