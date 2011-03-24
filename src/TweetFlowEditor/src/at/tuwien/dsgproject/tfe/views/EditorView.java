@@ -60,8 +60,8 @@ public class EditorView extends View {
 	private boolean setRaster = false;
 	private int horizontalRasterCT;
 	
-	private boolean rasterOn = true;
-	private SnapMode snapMode = SnapMode.GRID;
+	private boolean rasterOn = false;
+	private SnapMode snapMode = SnapMode.NOTHING;
 	
 	//private int xGlobalOffset = 0;
 	
