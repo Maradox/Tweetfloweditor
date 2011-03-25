@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+	android:id="@+id/linearLayout1" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <LinearLayout style="@style/ActionBar">
+    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarHome"
+			android:src="@drawable/btn_home"
+			android:onClick="openHome" />
+			
+		<ImageView style="@style/ActionBarSeparator" />
+			
+      	<TextView
+        	style="@style/ActionBarText"
+			android:id="@+id/actionbar_text"
+			android:text="@string/timeline" />
+
+        <ImageView style="@style/ActionBarSeparator" />
+	    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarEditor"
+			android:src="@drawable/btn_editor"
+	  		android:onClick="openEditor" /> 
+	  		
+	  	<ImageView style="@style/ActionBarSeparator" />
+	    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarLogin"
+			android:src="@drawable/btn_login"
+	  		android:onClick="login" />      
+    
+	</LinearLayout> <!-- ActionBar -->
+	
+	
+	<ListView android:id="@id/android:list" android:layout_width="fill_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1" 
+		android:listSelector="#00000000" />
+    
+    
+</LinearLayout>

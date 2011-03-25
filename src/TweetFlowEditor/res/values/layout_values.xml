@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="actionbar_height">50dip</dimen>
+	<dimen name="actionbar_icon_height">30dip</dimen>
+	<dimen name="actionbar_text">7pt</dimen>
+</resources>

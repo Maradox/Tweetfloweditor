@@ -119,10 +119,8 @@ public class EditorView extends View {
 		containerEnd = new Point();
 		
 		this.setOnLongClickListener(mOnLongClickListener);
-		this.setBackgroundColor(Color.WHITE);
 		
-		Resources res = getResources();
-		mMoveOffset = res.getInteger(R.integer.move_offset);
+		mMoveOffset = 7;
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		

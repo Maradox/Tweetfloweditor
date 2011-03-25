@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+	android:id="@+id/linearLayout1" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <LinearLayout style="@style/ActionBar">
+    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarHome"
+			android:src="@drawable/btn_home"
+			android:onClick="openHome" />
+			
+		<ImageView style="@style/ActionBarSeparator" />
+			
+      	<TextView
+        	style="@style/ActionBarText"
+			android:id="@+id/actionbar_text"
+			android:text="@string/editor" />
+
+        <ImageView style="@style/ActionBarSeparator" />
+	    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarMyTwitter"
+			android:src="@drawable/btn_twitter"
+	  		android:onClick="openMyTwitter" />    
+    
+	</LinearLayout> <!-- ActionBar -->
+	
+	<at.tuwien.dsgproject.tfe.views.EditorView
+		android:id="@+id/editor_view"
+		android:layout_width="fill_parent"
+   		android:layout_height="fill_parent"
+   		android:background="@color/editor_background"
+   	/>
+    
+    
+</LinearLayout>

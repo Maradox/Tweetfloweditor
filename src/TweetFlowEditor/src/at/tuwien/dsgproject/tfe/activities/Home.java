@@ -30,7 +30,7 @@ public class Home extends ActionbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home);
+        setContentView(R.layout.activity_home);
         
         SharedPreferences settings = getPreferences(0);
         String requestToken = settings.getString("requestToken", "");

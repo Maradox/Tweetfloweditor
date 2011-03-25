@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme is the default theme. -->
+    <style name="Theme" parent="android:Theme"></style>
+
+    <!-- Variation on the Light theme that turns off the title -->
+    <style name="Theme.TweetFlowEditor" parent="android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    <style name="ActionBar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/actionbar_height</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:background">@drawable/actionbar_background</item>  
+    </style>
+    
+    <style name="ActionBarText">
+        <item name="android:id">@+id/actionbar_text</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/actionbar_text</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    
+    <style name="ActionBarButton">
+        <item name="android:layout_width">@dimen/actionbar_height</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+    
+    <style name="ActionBarSeparator">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@color/actionbar_separator</item>
+    </style>
+
+
+    <style name="ActionBarSpacer">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    
+    
+</resources>

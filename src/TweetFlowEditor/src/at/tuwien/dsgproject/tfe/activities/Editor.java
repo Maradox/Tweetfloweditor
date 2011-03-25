@@ -42,7 +42,7 @@ public class Editor extends ActionbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.editor); 
+        setContentView(R.layout.activity_editor); 
         
         editorView = (EditorView) findViewById(R.id.editor_view);
         
