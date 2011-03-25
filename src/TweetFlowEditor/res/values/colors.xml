@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="blue_dark">#ff0A416B</color>
+	<color name="blue_medium">#ff206ba4</color>
+	<color name="blue_light">#ff54a4de</color>
+	<color name="green_light">#ffbedf5d</color>
+	<color name="orange">#ffff9834</color>
+	<color name="actionbar_separator">#30bbbbbb</color>
+	
+	<color name="editor_background">#ffeeeeee</color>
+	
+
+<!--
+	
+	http://colorschemedesigner.com/search#3x31Qrzv-w0w0
+	
+	<color id="primary-1" nr="1" rgb="206BA4" /> blue_medium
+	<color id="primary-2" nr="2" rgb="315B7B" />
+	<color id="primary-3" nr="3" rgb="0A416B" /> blue_dark
+	<color id="primary-4" nr="4" rgb="539BD2" />
+	<color id="primary-5" nr="5" rgb="75A9D2" />
+
+	<color id="secondary-a-1" nr="1" rgb="FFC423" />
+	<color id="secondary-a-2" nr="2" rgb="BF9E44" />
+	<color id="secondary-a-3" nr="3" rgb="A67D0C" />
+	<color id="secondary-a-4" nr="4" rgb="FFD35A" />
+	<color id="secondary-a-5" nr="5" rgb="FFDF86" />
+
+	<color id="secondary-b-1" nr="1" rgb="FF6B23" />
+	<color id="secondary-b-2" nr="2" rgb="BF6C44" />
+	<color id="secondary-b-3" nr="3" rgb="A63E0C" />
+	<color id="secondary-b-4" nr="4" rgb="FF905A" />
+	<color id="secondary-b-5" nr="5" rgb="FFAD86" />    -->
+
+</resources>
