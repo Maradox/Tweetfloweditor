@@ -24,7 +24,6 @@ package at.tuwien.dsgproject.tfe.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -40,66 +39,69 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
+import at.tuwien.dsgproject.tfe.states.StateFree;
+import at.tuwien.dsgproject.tfe.states.StateMoveAll;
+import at.tuwien.dsgproject.tfe.states.StateMoveElement;
+import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
+import at.tuwien.dsgproject.tfe.states.StateSelected;
+import at.tuwien.dsgproject.tfe.states.State;
+import at.tuwien.dsgproject.tfe.states.StateTouchElement;
+import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
 
 public class EditorView extends View {
 
-	private static int RASTER_HORIZONTAL_WIDTH = 70;
+	public State state;
+	public StateFree stateFree;
+	public StateSelected stateSelected;
+	public StateTouchElement stateTouchElement;
+	public StateMoveElement stateMoveElement;
+	public StateMoveSelected stateMoveSelected;
+	public StateTouchVoid stateTouchVoid;
+	public StateMoveAll stateMoveAll;
 	
-	private final int mMoveOffset;
+	public static int RASTER_HORIZONTAL_WIDTH = 70;
+	
+	public final int mMoveOffset;
 		
-	private HashMap<Integer, AbstractElement> mElements;
-	private HashMap<Integer, AbstractElement> mSelected;
+	public HashMap<Integer, AbstractElement> mElements;
+	public HashMap<Integer, AbstractElement> mSelected;
 	
-	private int mOldX = 0, mOldY = 0;
+	public int mOldX = 0, mOldY = 0;
 
-	private Integer mElemCounter;
+	public Integer mElemCounter;
 	
-	//private int mTouchElementId;
-	private AbstractElement mTouchElement = null;
+	//public int mTouchElementId;
+	public AbstractElement mTouchElement = null;
 
-	private boolean setRaster = false;
-	private int horizontalRasterCT;
+	public boolean setRaster = false;
+	public int horizontalRasterCT;
 	
-	private boolean rasterOn = false;
-	private SnapMode snapMode = SnapMode.NOTHING;
+	public boolean rasterOn = false;
+	public SnapMode snapMode = SnapMode.NOTHING;
 	
-	//private int xGlobalOffset = 0;
+	//public int xGlobalOffset = 0;
 	
-	private Point containerStart;
-	private Point containerEnd;
-		
+	public Point containerStart;
+	public Point containerEnd;
 	
-	public enum TouchMode {	
-		FREE,  			//no touch event
-		TOUCH_VOID, 	//touch event on free space
-		SELECTED,   	//touch event on element
-		MOVE_SELECTED, 	//move selected elements
-		MOVE_SINGLE,	//move currently touched element
-		MOVE_ALL,		//move all elements
-		MOVE_ALL_GRID,	//move all elements on a grid
-		NEW_ELEMENT, 	//a new element has been inserted
-		ELEMENT_MENU, 	//after long touch on element
-		SCALE,			//pinch2zoom gesture is detected
-		CONTAINER_DOWN,
-		CONTAINER_MOVE
-	}
-	
+	public boolean openContextMenu = false;
+			
 	public enum SnapMode {	
 		NOTHING,
 		RASTER,
 		GRID
 	}
 	
-	private TouchMode mCurrMode = TouchMode.FREE;
 	
-	private int INVALID_POINTER_ID = -1;
-	private int mActivePointerId = INVALID_POINTER_ID;
+	public int INVALID_POINTER_ID = -1;
+	public int mActivePointerId = INVALID_POINTER_ID;
 	
-	private ScaleGestureDetector mScaleDetector;
-	private float mScaleFactor = 1.f;
+	public ScaleGestureDetector mScaleDetector;
+	public float mScaleFactor = 1.f;
 	
-	private int mPosX;
-	private int mPosY;
+
+	public int mPosX;
+	public int mPosY;
 	
 	private int mScalePivotX;
 	private int mScalePivotY;
@@ -124,23 +126,31 @@ public class EditorView extends View {
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
+		stateFree = new StateFree(this);
+		stateSelected = new StateSelected(this);
+		stateTouchElement = new StateTouchElement(this);
+		stateMoveElement = new StateMoveElement(this);
+		stateMoveSelected = new StateMoveSelected(this);
+		stateTouchVoid = new StateTouchVoid(this);
+		stateMoveAll= new StateMoveAll(this);
+		state = stateFree;
+		
 	}
 	
 	
 	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
-			
-		
-		    public boolean onLongClick(View v) {
-		    	if(mCurrMode == TouchMode.TOUCH_VOID) {
-		    		addRectangle(mOldX, mOldY);
-		    	} else if(mCurrMode == TouchMode.SELECTED) {
-		    		mCurrMode = TouchMode.ELEMENT_MENU;
-		    	}
-	    			
-		    	return false;
-		    }
-		};
+		public boolean onLongClick(View v) {
+	    	if(state instanceof StateTouchVoid) {
+	    		addRectangle(mOldX, mOldY);
+	    	} else if(state instanceof StateTouchElement) {
+	    		openContextMenu = true;
+	    	}
+    			
+	    	return false;
+	    }
+	};
+
 		
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 	    @Override
@@ -149,10 +159,12 @@ public class EditorView extends View {
 	        
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
-	        mCurrMode = TouchMode.SCALE;
+
+	  //      mCurrMode = TouchMode.SCALE;
 	        
 	        mScalePivotX = (int)detector.getFocusX();
 	        mScalePivotY = (int)detector.getFocusY();
+
 
 	        invalidate();
 	        return true;
@@ -179,7 +191,7 @@ public class EditorView extends View {
 	 * @param y y coordinate
 	 * @return The element at the given location or null.
 	 */
-	private AbstractElement elementAt(int x, int y) {
+	public AbstractElement elementAt(int x, int y) {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
 		AbstractElement elem = null;
@@ -262,234 +274,19 @@ public class EditorView extends View {
 
 	}
 	
-	// TODO: log all touchevents/modes to reproduce errors
 	
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-    	 // Let the ScaleGestureDetector inspect all events.
+    	super.onTouchEvent(event);
+    	
+		state.onTouchEvent(event);
         mScaleDetector.onTouchEvent(event);
-        
         mScalePivotX = mScalePivotY = 0;
 
-    	final int action = event.getAction();
-    	
-    	switch (action & MotionEvent.ACTION_MASK) {
-    	case MotionEvent.ACTION_DOWN:
-    		onActionDown(event);
-    		super.onTouchEvent(event); //For onLongClick
-    		break;
-    	
-    	case MotionEvent.ACTION_UP:	
-    		onActionUp(event);
- 
-    		break;
-    	 
-    	case MotionEvent.ACTION_CANCEL:
-    		//TODO: when does this happen? + proper handling
-    		//unset selected if TouchEvent ends
-    		//mTouchElementId = -1;
-    		mCurrMode = TouchMode.FREE;
-    		mActivePointerId = INVALID_POINTER_ID;
-    		break;
-    		
-    	case MotionEvent.ACTION_MOVE:
-    		onActionMove(event);
-    		break;
-    	 	
-    	case MotionEvent.ACTION_POINTER_UP:
-    		onActionPointerUp(action, event);
-            break;
-    	
-    	default:
-    		//nothing
-    	
-    	}
-    	
-    	return true;	//TODO
+    	return true;	
     }
     
-    private void onActionDown(MotionEvent event) {
-		int xGrid;
-		
-		final int x = (int) event.getX();
-		final int y = (int) event.getY();
-		
-    	if(mCurrMode == TouchMode.FREE) {    	
-    	
-    		mTouchElement = elementAt(x, y);	
-    		
-    		if (mTouchElement != null) {
-    			mCurrMode = TouchMode.SELECTED;
-    			if(!mSelected.containsKey(mTouchElement.getId())) {
-    				mTouchElement.highlight();
-    				invalidate();
-    			} 	
-    		} else if(snapMode == SnapMode.GRID && rasterOn && ((xGrid = getTouchOnGrid(x)) != -111)) {
-    			selectElementsOnGrid(xGrid);
-    			mCurrMode = TouchMode.MOVE_ALL_GRID;			
-        	} else {
-				mCurrMode = TouchMode.TOUCH_VOID;
-        	}
-    		
-    	} else if(mCurrMode == TouchMode.CONTAINER_DOWN) {
-			containerStart.set(x,y);
-			mCurrMode = TouchMode.CONTAINER_MOVE;
-		}
-    	
-    	mOldX = x;
-		mOldY = y;
-    	//save current pointer id
-		mActivePointerId = event.getPointerId(0);
-
-    }
-    
-    private void onActionUp(MotionEvent event) {  
-    	final int x = (int)event.getX();
-    	final int y = (int)event.getY();
-
-
-    	if(mTouchElement != null) {
-    		switch(mCurrMode) {
-    		case MOVE_SINGLE:
-    			if(snapMode == SnapMode.RASTER) {
-	    			int rasterX = findRasterHorizontal(mOldX);
-	    			moveSingleOn(rasterX, y-mPosY);
-    			}	
-    			
-    			else if(snapMode == SnapMode.GRID) {
-	    			int gridX = findGridHorizontal(mOldX);
-	    			if(gridX != -111)
-	    				moveSingleOn(gridX, y-mPosY);
-    			}	
-    			//fallthrough
-    			
-    		case ELEMENT_MENU:
-    			mTouchElement.deHighlight();
-				invalidate();
-				break;
-				
-    		case SELECTED:
-    			int id = mTouchElement.getId();
-				if(!mSelected.containsKey(id)) { // add to selected elements, on first click
-					mSelected.put(id, mTouchElement);
-				} else { // deselect item on 2nd click
-					mSelected.remove(id);
-					mTouchElement.deHighlight();
-					//mTouchElement = null;
-					invalidate();
-				}
-				break;
-				
-    		case MOVE_ALL_GRID:	
-    			delesectAll();
-    			invalidate();
-			
-    		case CONTAINER_MOVE:
-    			containerEnd.set(x, y);	//TODO
-    			invalidate();
-			default:
-				//TODO: (Toast)/Logging
-					
-    		}
-    		mTouchElement = null;
-    	} else {
-    		switch(mCurrMode) {
-	    		case MOVE_ALL_GRID:	
-	    			delesectAll();
-	    			invalidate();
-    		}			
-    	}
-    	
-    	mCurrMode = TouchMode.FREE;
-   		mActivePointerId = INVALID_POINTER_ID;
-    }
-    
-    
-    private void onActionMove(MotionEvent event) {
-    	
-    
-    	
-		final int pointerIndex = event.findPointerIndex(mActivePointerId);
-        final int x = (int)event.getX(pointerIndex);
-        final int y = (int)event.getY(pointerIndex);
-    	if(!mScaleDetector.isInProgress()) {
-	    		
-			final int offX = x - mOldX;
-			final int offY = y - mOldY;
-			
-			switch(mCurrMode) {
-			case TOUCH_VOID:
-				if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
-					mCurrMode = TouchMode.MOVE_ALL;
-					//fallthrough
-				} else {
-					break;
-				}
-				
-			case MOVE_ALL:
-				mPosX += offX;
-				mPosY += offY;
-	
-				break;
-			
-			case SELECTED:
-				if(mTouchElement != null) {
-					if(Math.sqrt(offX*offX + offY*offY) > mMoveOffset) {
-						if( mSelected.size() >= 1 && mSelected.containsKey(mTouchElement.getId()) ) {
-							// at least one element selected, and mTouchElement is one of them -> move selected
-							mCurrMode = TouchMode.MOVE_SELECTED;
-							moveSelected(offX, offY);		
-						} else {
-							// only move currently touched element
-							mCurrMode = TouchMode.MOVE_SINGLE;
-							moveSingle(offX, offY);	
-						}
-					}
-				} else {
-					//should not be here ...
-					Toast.makeText(this.getContext(), "!!select mode, but element == null?", Toast.LENGTH_SHORT).show();		
-				}
-				break;
-					
-			case MOVE_SINGLE:
-				moveSingle(offX, offY);
-				break;
-			
-			case MOVE_SELECTED:
-			case MOVE_ALL_GRID:	
-				moveSelected(offX, offY);
-				break;
-	
-			case SCALE:
-				//TODO: center canvas on gesture
-				break;
-				
-			case NEW_ELEMENT:
-				break;
-				
-			case ELEMENT_MENU:
-				break;
-				
-			case CONTAINER_MOVE:
-				containerEnd.set(x, y);
-				invalidate();
-				break;
-				
-			//TODO handle/ignore all modes here
-				
-			default:
-				//....
-				Toast.makeText(this.getContext(), "!! invalid move mode?", Toast.LENGTH_SHORT).show();	
-	
-			}
-    	}
-			
-		mOldX = x;
-		mOldY = y;
-		invalidate();
-    		
-    }
-    
+  
     
     private void onActionPointerUp(int action, MotionEvent event) {
         // get index of the pointer that left the screen
@@ -506,13 +303,13 @@ public class EditorView extends View {
     }
     
     
-    private void moveSelected(int offX, int offY) {
+    public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {
 			e.move(offX, offY);
 		}
     }
     
-    private void moveSingle(int offX, int offY) {
+    public void moveSingle(int offX, int offY) {
     	if(mTouchElement != null)
     		mTouchElement.move(offX, offY);
     }
@@ -527,7 +324,7 @@ public class EditorView extends View {
 	}
 
 	
-    private void moveSingleOn(int x, int y) {
+    public void moveSingleOn(int x, int y) {
     	if(mTouchElement != null)
     		mTouchElement.moveOn(x, y);
     }
@@ -538,7 +335,7 @@ public class EditorView extends View {
     		e.getValue().deHighlight();
     	}
     	mSelected = new HashMap<Integer, AbstractElement>();
-    	mCurrMode = TouchMode.FREE;
+    //	mCurrMode = TouchMode.FREE;
     }
     
     public void redraw() {
@@ -572,12 +369,31 @@ public class EditorView extends View {
     	return gridLines;
     }
     
+    public boolean isThereGridHorizontal(int xScaled) {
+    	int x = xScaled - mPosX;
+    	int xDiff = Integer.MAX_VALUE;
+    	    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(mTouchElement.getId() != e.getId()) {
+					if((Math.abs(x - e.getMiddleX())) < xDiff) {
+						xDiff = Math.abs(x - e.getMiddleX());
+					}
+				}
+			}					
+		}
+    	
+    	if(xDiff < 15) 
+    		return true;
+    	
+    	return false;
+    }
     
     
     public int findGridHorizontal(int xScaled) {
     	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
-    	int xNew = -111;
+    	int xNew = 0;
     	    	
     	for(AbstractElement e : mElements.values()) {
 			if(e instanceof Rectangle) {
@@ -590,17 +406,32 @@ public class EditorView extends View {
 			}					
 		}
     	
-    	if(xDiff < 15) 
-    		return xNew;
-    	
-    	return -111;
+    	return xNew;
     }
 
     
+    public boolean isTouchOnGrid(int xScaled) {
+    	int x = xScaled - mPosX;
+    	int xDiff = Integer.MAX_VALUE;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if((Math.abs(x - e.getMiddleX())) < xDiff) {
+					xDiff = Math.abs(x - e.getMiddleX());
+				}
+			}
+    	}	
+    	
+		if(xDiff < 30) 
+	    	return true;
+    	
+		return false;
+    }
+   
     public int getTouchOnGrid(int xScaled) {
     	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
-    	int xNew = -111;
+    	int xNew = 0;
     	
     	for(AbstractElement e : mElements.values()) {
 			if(e instanceof Rectangle) {
@@ -610,11 +441,8 @@ public class EditorView extends View {
 				}
 			}
     	}	
-    	
-		if(xDiff < 30) 
-	    	return xNew;
-    	
-		return -111;
+   
+	    return xNew;
     }
     
     public void selectElementsOnGrid(int x) {
@@ -637,15 +465,6 @@ public class EditorView extends View {
     	//TODO
     }
     
-    
-	public TouchMode getmCurrMode() {
-		return mCurrMode;
-	}
-
-
-	public void setmCurrMode(TouchMode mCurrMode) {
-		this.mCurrMode = mCurrMode;
-	}
 	
 	public boolean somethingSelected() {
 		return !(mSelected.isEmpty());
