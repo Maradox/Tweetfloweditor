@@ -29,6 +29,7 @@ public class StateMoveElement extends State {
 	}	
 	
 	public void onActionUp(MotionEvent event) {
+		final int x = (int)event.getX();
 		final int y = (int)event.getY();
 		
 		if(editorView.snapMode == SnapMode.RASTER) {
@@ -36,10 +37,9 @@ public class StateMoveElement extends State {
 			editorView.moveSingleOn(rasterX, y-editorView.mPosY);
 		}	
 		
-		else if(editorView.snapMode == SnapMode.GRID) {
-			int gridX = editorView.findGridHorizontal(editorView.mOldX);
-			if(gridX != -111)
-				editorView.moveSingleOn(gridX, y-editorView.mPosY);
+		else if(editorView.snapMode == SnapMode.GRID && editorView.isThereGridHorizontal(x)) {
+			int gridX = editorView.findGridHorizontal(x);
+			editorView.moveSingleOn(gridX, y-editorView.mPosY);
 		}	
 		
 		editorView.mTouchElement.deHighlight();

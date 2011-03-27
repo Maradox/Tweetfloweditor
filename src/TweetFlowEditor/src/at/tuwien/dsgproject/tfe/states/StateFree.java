@@ -24,7 +24,8 @@ public class StateFree extends State {
 			
 			editorView.redraw();
 		}   	
-		else if(editorView.snapMode == SnapMode.GRID && editorView.rasterOn && ((xGrid = editorView.getTouchOnGrid(x)) != -111)) {
+		else if(editorView.snapMode == SnapMode.GRID && editorView.rasterOn && (editorView.isTouchOnGrid(x))) {
+			xGrid = editorView.getTouchOnGrid(x);
 			editorView.selectElementsOnGrid(xGrid);
 			editorView.state = editorView.stateMoveSelected;				//TODO
 			

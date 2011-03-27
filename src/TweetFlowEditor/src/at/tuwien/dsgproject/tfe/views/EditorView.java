@@ -85,30 +85,13 @@ public class EditorView extends View {
 	public Point containerEnd;
 	
 	public boolean openContextMenu = false;
-		
-	
-	public enum TouchMode {	
-		FREE,  			//no touch event
-		TOUCH_VOID, 	//touch event on free space
-		SELECTED,   	//touch event on element
-		MOVE_SELECTED, 	//move selected elements
-		MOVE_SINGLE,	//move currently touched element
-		MOVE_ALL,		//move all elements
-		MOVE_ALL_GRID,	//move all elements on a grid
-		NEW_ELEMENT, 	//a new element has been inserted
-		ELEMENT_MENU, 	//after long touch on element
-		SCALE,			//pinch2zoom gesture is detected
-		CONTAINER_DOWN,
-		CONTAINER_MOVE
-	}
-	
+			
 	public enum SnapMode {	
 		NOTHING,
 		RASTER,
 		GRID
 	}
 	
-	//public TouchMode mCurrMode = TouchMode.FREE;
 	
 	public int INVALID_POINTER_ID = -1;
 	public int mActivePointerId = INVALID_POINTER_ID;
@@ -359,10 +342,31 @@ public class EditorView extends View {
     	return gridLines;
     }
     
+    public boolean isThereGridHorizontal(int xScaled) {
+    	int x = xScaled - mPosX;
+    	int xDiff = Integer.MAX_VALUE;
+    	    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if(mTouchElement.getId() != e.getId()) {
+					if((Math.abs(x - e.getMiddleX())) < xDiff) {
+						xDiff = Math.abs(x - e.getMiddleX());
+					}
+				}
+			}					
+		}
+    	
+    	if(xDiff < 15) 
+    		return true;
+    	
+    	return false;
+    }
+    
+    
     public int findGridHorizontal(int xScaled) {
     	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
-    	int xNew = -111;
+    	int xNew = 0;
     	    	
     	for(AbstractElement e : mElements.values()) {
 			if(e instanceof Rectangle) {
@@ -375,17 +379,32 @@ public class EditorView extends View {
 			}					
 		}
     	
-    	if(xDiff < 15) 
-    		return xNew;
-    	
-    	return -111;
+    	return xNew;
     }
 
     
+    public boolean isTouchOnGrid(int xScaled) {
+    	int x = xScaled - mPosX;
+    	int xDiff = Integer.MAX_VALUE;
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e instanceof Rectangle) {
+				if((Math.abs(x - e.getMiddleX())) < xDiff) {
+					xDiff = Math.abs(x - e.getMiddleX());
+				}
+			}
+    	}	
+    	
+		if(xDiff < 30) 
+	    	return true;
+    	
+		return false;
+    }
+   
     public int getTouchOnGrid(int xScaled) {
     	int x = xScaled - mPosX;
     	int xDiff = Integer.MAX_VALUE;
-    	int xNew = -111;
+    	int xNew = 0;
     	
     	for(AbstractElement e : mElements.values()) {
 			if(e instanceof Rectangle) {
@@ -395,11 +414,8 @@ public class EditorView extends View {
 				}
 			}
     	}	
-    	
-		if(xDiff < 30) 
-	    	return xNew;
-    	
-		return -111;
+   
+	    return xNew;
     }
     
     public void selectElementsOnGrid(int x) {
@@ -422,15 +438,6 @@ public class EditorView extends View {
     	//TODO
     }
     
-    /*
-	public TouchMode getmCurrMode() {
-		return mCurrMode;
-	}
-
-
-	public void setmCurrMode(TouchMode mCurrMode) {
-		this.mCurrMode = mCurrMode;
-	}*/
 	
 	public boolean somethingSelected() {
 		return !(mSelected.isEmpty());
