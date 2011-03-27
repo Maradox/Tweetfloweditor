@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.UserTimelineEntry;
@@ -23,7 +24,7 @@ public class Tweeter extends ActionbarListviewActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tweeter);
+        setContentView(R.layout.activity_timeline);
         
         //getListView().setDivider(null);
 
@@ -37,7 +38,11 @@ public class Tweeter extends ActionbarListviewActivity {
     @Override
     public void onStart() {
     	super.onStart();
-    	updateData();
+    	if(UserManagement.getInstance().isLoggedIn()) {
+    		updateData();
+    	} else {
+			Toast.makeText(this, "You have to login first", Toast.LENGTH_LONG).show();
+		}
     }
     
     public void updateData() {

@@ -76,8 +76,8 @@ public class EditorView extends View {
 	public boolean setRaster = false;
 	public int horizontalRasterCT;
 	
-	public boolean rasterOn = true;
-	public SnapMode snapMode = SnapMode.GRID;
+	public boolean rasterOn = false;
+	public SnapMode snapMode = SnapMode.NOTHING;
 	
 	//public int xGlobalOffset = 0;
 	
@@ -99,8 +99,12 @@ public class EditorView extends View {
 	public ScaleGestureDetector mScaleDetector;
 	public float mScaleFactor = 1.f;
 	
+
 	public int mPosX;
 	public int mPosY;
+	
+	private int mScalePivotX;
+	private int mScalePivotY;
 
 	
 	public EditorView(Context context, AttributeSet attrs) {
@@ -116,10 +120,9 @@ public class EditorView extends View {
 		containerStart = new Point();
 		containerEnd = new Point();
 		
-		this.setOnLongClickListener(mOnLongClickListener);		
+		this.setOnLongClickListener(mOnLongClickListener);
 		
-		Resources res = getResources();
-		mMoveOffset = res.getInteger(R.integer.move_offset);
+		mMoveOffset = 7;
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
@@ -134,6 +137,8 @@ public class EditorView extends View {
 		
 	}
 	
+	
+	
 	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
 	    	if(state instanceof StateTouchVoid) {
@@ -145,6 +150,7 @@ public class EditorView extends View {
 	    	return false;
 	    }
 	};
+
 		
 	private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 	    @Override
@@ -153,12 +159,19 @@ public class EditorView extends View {
 	        
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
-	     //   mCurrMode = TouchMode.SCALE;
+
+	  //      mCurrMode = TouchMode.SCALE;
+	        
+	        mScalePivotX = (int)detector.getFocusX();
+	        mScalePivotY = (int)detector.getFocusY();
+
 
 	        invalidate();
 	        return true;
 	    }
 	}
+	
+	
 	    
 	
 	private void addRectangle(int x, int y) {
@@ -195,19 +208,16 @@ public class EditorView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		canvas.drawColor(Color.WHITE);
+		//canvas.drawColor(Color.WHITE);
 
 		
 		//TODO: check how to handle save/restore with our lines
-//	    canvas.save();
-//	    canvas.translate(mPosX, mPosY);
-//	    canvas.scale(mScaleFactor, mScaleFactor);
-
 		canvas.save();
-	    canvas.translate(mPosX, mPosY);
-	    canvas.scale(mScaleFactor, mScaleFactor);
-		
-		if(rasterOn) {
+		canvas.translate(mPosX, mPosY);
+    	canvas.scale(mScaleFactor, mScaleFactor);
+		//canvas.scale(mScaleFactor, mScaleFactor, mScalePivotX, mScalePivotY);
+    	
+	    if(rasterOn) {
 			if(!setRaster) {
 				setRaster = true;
 				horizontalRasterCT = (canvas.getWidth() / RASTER_HORIZONTAL_WIDTH) + 3;
@@ -268,13 +278,30 @@ public class EditorView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
     	super.onTouchEvent(event);
-
+    	
+		state.onTouchEvent(event);
         mScaleDetector.onTouchEvent(event);
-        state.onTouchEvent(event);
-        
-    	return true;
-    }
+        mScalePivotX = mScalePivotY = 0;
 
+    	return true;	
+    }
+    
+  
+    
+    private void onActionPointerUp(int action, MotionEvent event) {
+        // get index of the pointer that left the screen
+		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
+        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+	    final int pId = event.getPointerId(pIndex);
+	    if (pId == mActivePointerId) {
+	        // choose new active pointer
+	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
+	        mOldX = (int)event.getX(newPointerIndex);
+	        mOldY = (int)event.getY(newPointerIndex);
+	        mActivePointerId = event.getPointerId(newPointerIndex);
+	    }    
+    }
+    
     
     public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {

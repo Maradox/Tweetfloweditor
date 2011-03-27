@@ -43,12 +43,8 @@ public class ActionbarHelper {
 	
 	public static void openMyTwitter(Context context) {
 		try {
-			if(UserManagement.getInstance().isLoggedIn()) {
-				Intent i = new Intent( context, Tweeter.class );
-				context.startActivity(i); 
-			} else {
-				Toast.makeText(context, "You have to login first", Toast.LENGTH_LONG).show();
-			}
+			Intent i = new Intent( context, Tweeter.class );
+			context.startActivity(i); 	
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
