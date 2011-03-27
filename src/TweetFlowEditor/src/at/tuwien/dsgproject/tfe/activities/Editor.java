@@ -32,7 +32,6 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
-import at.tuwien.dsgproject.tfe.views.EditorView.TouchMode;
 
 public class Editor extends ActionbarActivity {
 	
@@ -124,7 +123,7 @@ public class Editor extends ActionbarActivity {
     			editorView.redo();
     			break;		
     		case R.id.container:
-    			editorView.setmCurrMode(TouchMode.CONTAINER_DOWN);
+    		//	editorView.setmCurrMode(TouchMode.CONTAINER_DOWN);
     			break;		
     			
     		default:	
@@ -135,11 +134,13 @@ public class Editor extends ActionbarActivity {
     }	
       
     public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {      	
-    	if(editorView.getmCurrMode() == TouchMode.ELEMENT_MENU) {
+    	if(editorView.openContextMenu) {
     		super.onCreateContextMenu(menu, v, menuInfo);  
         	menu.setHeaderTitle("Element menue");  
         	menu.add(0, v.getId(), 0, "Action 1");  
         	menu.add(0, v.getId(), 0, "Action 2");  
+        	
+        	editorView.openContextMenu = false;
     	}	
     } 
 }
