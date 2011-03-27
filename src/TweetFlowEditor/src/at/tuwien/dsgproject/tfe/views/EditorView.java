@@ -40,11 +40,13 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 import at.tuwien.dsgproject.tfe.states.StateFree;
+import at.tuwien.dsgproject.tfe.states.StateMoveAll;
 import at.tuwien.dsgproject.tfe.states.StateMoveElement;
 import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
 import at.tuwien.dsgproject.tfe.states.StateSelected;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
+import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
 
 public class EditorView extends View {
 
@@ -54,6 +56,8 @@ public class EditorView extends View {
 	public StateTouchElement stateTouchElement;
 	public StateMoveElement stateMoveElement;
 	public StateMoveSelected stateMoveSelected;
+	public StateTouchVoid stateTouchVoid;
+	public StateMoveAll stateMoveAll;
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
 	
@@ -139,6 +143,8 @@ public class EditorView extends View {
 		stateTouchElement = new StateTouchElement(this);
 		stateMoveElement = new StateMoveElement(this);
 		stateMoveSelected = new StateMoveSelected(this);
+		stateTouchVoid = new StateTouchVoid(this);
+		stateMoveAll= new StateMoveAll(this);
 		state = stateFree;
 		
 	}
@@ -319,7 +325,7 @@ public class EditorView extends View {
     	
     	return true;	//TODO
     }
-    
+    /*
     private void onActionDown(MotionEvent event) {
 		int xGrid;
 		
@@ -367,13 +373,13 @@ public class EditorView extends View {
     		case MOVE_SINGLE:
     			if(snapMode == SnapMode.RASTER) {
 	    			int rasterX = findRasterHorizontal(mOldX);
-	    			moveSingleOn(rasterX, y-mPosY);
+	    	//		moveSingleOn(rasterX, y-mPosY);
     			}	
     			
     			else if(snapMode == SnapMode.GRID) {
 	    			int gridX = findGridHorizontal(mOldX);
-	    			if(gridX != -111)
-	    				moveSingleOn(gridX, y-mPosY);
+	    	//		if(gridX != -111)
+	    		//		moveSingleOn(gridX, y-mPosY);
     			}	
     			//fallthrough
     			
@@ -513,7 +519,7 @@ public class EditorView extends View {
         }
     }
     
-    
+    */
     
     public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {

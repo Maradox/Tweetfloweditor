@@ -26,10 +26,12 @@ public class StateFree extends State {
 		}   	
 		else if(editorView.snapMode == SnapMode.GRID && editorView.rasterOn && ((xGrid = editorView.getTouchOnGrid(x)) != -111)) {
 			editorView.selectElementsOnGrid(xGrid);
-		//	mCurrMode = TouchMode.MOVE_ALL_GRID;	//TODO			
+			editorView.state = editorView.stateMoveSelected;				//TODO
+			
+			editorView.redraw();
     	}
 		else
-	//		mCurrMode = TouchMode.TOUCH_VOID;	//TODO
+			editorView.state = editorView.stateTouchVoid;
 		
 		editorView.mOldX = x;
 		editorView.mOldY = y;

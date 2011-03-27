@@ -20,10 +20,17 @@ public class StateTouchElement extends State {
 		final int offY = y - editorView.mOldY;
 			
 		if(editorView.mTouchElement != null) {
-			if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
-				editorView.moveSingleOn(x, y);
-				editorView.state = editorView.stateMoveElement;
-			}	
+	
+			if(editorView.mSelected.containsValue(editorView.mTouchElement)) {
+				editorView.moveSelected(offX, offY);
+				editorView.state = editorView.stateMoveSelected;
+			}
+			else {
+				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
+					editorView.moveSingle(offX, offY);
+					editorView.state = editorView.stateMoveElement;
+				}	
+			}
 						
 			editorView.redraw();
 			

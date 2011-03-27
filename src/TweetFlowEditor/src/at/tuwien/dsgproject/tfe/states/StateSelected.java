@@ -23,9 +23,7 @@ public class StateSelected extends State {
 		}   
 		
 		else {
-			editorView.state = editorView.stateMoveSelected;
-			
-			editorView.redraw();
+			editorView.state = editorView.stateTouchVoid;
 		}
 		
 		editorView.mOldX = x;
