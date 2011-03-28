@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 
 public abstract class AbstractElement {
 	
@@ -101,11 +102,11 @@ public abstract class AbstractElement {
 		return mY+mHeight;
 	}
 
-	public ShapeDrawable getmShape() {
+	public Drawable getmShape() {
 		return mShape;
 	}
 
-	public void setmShape(ShapeDrawable mShape) {
+	public void setmShape(Drawable mShape) {
 		this.mShape = mShape;
 	}
 	
