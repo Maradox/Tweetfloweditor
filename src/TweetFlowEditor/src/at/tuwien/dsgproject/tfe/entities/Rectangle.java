@@ -21,44 +21,58 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
+import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
+import at.tuwien.dsgproject.tfe.R;
 
 
 public class Rectangle extends AbstractElement {
 	
 
-	public Rectangle(int id, int x, int y, int width, int height) {
-		super(id, x,y,width,height);
-		mShape = new ShapeDrawable(new RectShape());
-		((ShapeDrawable)mShape).getPaint().setAntiAlias(true);
+	public Rectangle(Context context, int id, int x, int y, int width, int height) {
+		super(context, id, x,y,width,height);
+//		mShape = new ShapeDrawable(new RectShape());
+//		((ShapeDrawable)mShape).getPaint().setAntiAlias(true);
+//		mShape.setBounds(x, y, x+height, y+width);
+		mShape = context.getResources().getDrawable(R.drawable.shape_rectangle);
 		mShape.setBounds(x, y, x+height, y+width);
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		ShapeDrawable drawShape = new ShapeDrawable();
-		Rect border = new Rect(mShape.getBounds());
-		Rect fill = new Rect(border);
-		
-		if(mHighlighted) {
-			fill.inset(2, 2);
-			border.inset(-1,-1);
-			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
-		} else {
-			fill.inset(1, 1);
-			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
-		}
-		drawShape.setBounds(border);
-		drawShape.draw(canvas);
-		
-		drawShape.setBounds(fill);
-		drawShape.getPaint().setColor(fillColor);
-		drawShape.draw(canvas);
+//		ShapeDrawable drawShape = new ShapeDrawable();
+//		Rect border = new Rect(mShape.getBounds());
+//		Rect fill = new Rect(border);
+//		
+//		if(mHighlighted) {
+//			fill.inset(2, 2);
+//			border.inset(-1,-1);
+//			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
+//		} else {
+//			fill.inset(1, 1);
+//			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
+//		}
+//		drawShape.setBounds(border);
+//		drawShape.draw(canvas);
+//		
+//		drawShape.setBounds(fill);
+//		drawShape.getPaint().setColor(fillColor);
+//		drawShape.draw(canvas);
+		mShape.draw(canvas);
 		
 	}	
+	
+	public void highlight() {
+		mHighlighted = true;
+		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle_selected);
+		mShape.setBounds(mBounds);	
+	}
+	
+	public void deHighlight() {
+		mHighlighted = false;
+		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle);
+		mShape.setBounds(mBounds);
+	}
 		
 
 	@Override

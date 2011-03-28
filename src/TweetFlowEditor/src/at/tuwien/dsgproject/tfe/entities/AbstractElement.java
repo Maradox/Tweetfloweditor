@@ -21,8 +21,10 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 public abstract class AbstractElement {
@@ -32,19 +34,24 @@ public abstract class AbstractElement {
 	protected boolean mHighlighted;
 	
 	protected Drawable mShape;
+	protected Rect mBounds;
 	
 	protected final int fillColor = Color.RED;
 	protected final int borderColor = Color.BLACK;
 	
 	protected int mId;
 	
+	protected Context mContext;
 	
-	AbstractElement(int id, int x, int y, int width, int height) {
+	
+	AbstractElement(Context context, int id, int x, int y, int width, int height) {
+		mContext = context;
 		mId = id;
 		mX = x;
 		mY = y;
 		mWidth = width;
 		mHeight = height;
+		mBounds = new Rect(x, y, x+width, y+height);
 	}
 	
 	abstract public void draw(Canvas canvas);
@@ -52,13 +59,15 @@ public abstract class AbstractElement {
 	public void move(int xOff, int yOff) {
 		mX += xOff;
 		mY += yOff;
-		mShape.getBounds().offset(xOff, yOff);
+		mBounds.offset(xOff, yOff);
+		mShape.setBounds(mBounds);
 	}
 	
-	public void moveOn(int x, int y) {
-		mX = x-mWidth/2;
-		mY = y-mHeight/2;
-		mShape.getBounds().set(x-mWidth/2, y-mHeight/2, x+mWidth/2, y+mHeight/2);
+	public void moveOn(int centerX, int centerY) {
+		mX = centerX-mWidth/2;
+		mY = centerY-mHeight/2;
+		mBounds.set(centerX-mWidth/2, centerY-mHeight/2, centerX+mWidth/2, centerY+mHeight/2);
+		mShape.setBounds(mBounds);
 	}
 	
 	abstract public boolean contains(int x, int y);

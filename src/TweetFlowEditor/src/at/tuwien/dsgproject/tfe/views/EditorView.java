@@ -62,10 +62,11 @@ public class EditorView extends View {
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
 	
-	public final int mMoveOffset;
+	public final int mMoveOffset = 7;
 		
 	public HashMap<Integer, AbstractElement> mElements;
 	public HashMap<Integer, AbstractElement> mSelected;
+	public HashMap<Integer, OpenSequence> mOpenSequences;
 	
 	public int mOldX = 0, mOldY = 0;
 
@@ -82,8 +83,8 @@ public class EditorView extends View {
 	
 	//public int xGlobalOffset = 0;
 	
-	public Point containerStart;
-	public Point containerEnd;
+//	public Point containerStart;
+//	public Point containerEnd;
 	
 	public boolean openContextMenu = false;
 			
@@ -107,33 +108,22 @@ public class EditorView extends View {
 	private int mScalePivotX;
 	private int mScalePivotY;
 
-	
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mElemCounter = 0;
 		mElements = new HashMap<Integer, AbstractElement>();
-		
-		addRectangle(100,100);
-		addRectangle(200,100);
-		addRectangle(300,300);
-		addRectangle(444,444);
-		addRectangle(300,500);
-		
-		//TODO clean
-		mElements.put(mElemCounter++,new OpenSequence(context, 100, 100, 100, 200, 400));
-		
 		mSelected = new HashMap<Integer, AbstractElement>();
-		containerStart = new Point();
-		containerEnd = new Point();
+		mOpenSequences = new HashMap<Integer, OpenSequence>();
+		
 		
 		this.setOnLongClickListener(mOnLongClickListener);
 		
-		mMoveOffset = 7;
-		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
+	
 		prepareStates();
-		
+		//TODO clean
+		fillElements();
 	}
 	
 	private void prepareStates() {
@@ -149,6 +139,22 @@ public class EditorView extends View {
 		state = stateFree;
 	}
 	
+	private void fillElements() {
+		addRectangle(100,100);
+		addRectangle(200,100);
+		addRectangle(300,300);
+		addRectangle(444,444);
+		addRectangle(300,500);
+		
+		
+		OpenSequence os = new OpenSequence(getContext(), mElemCounter++, 100, 100, 200, 400);
+		mOpenSequences.put(os.getId(), os);
+		
+		mSelected = new HashMap<Integer, AbstractElement>();
+//		containerStart = new Point();
+//		containerEnd = new Point();
+	}
+		
 	
 	
 	public OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
@@ -158,8 +164,8 @@ public class EditorView extends View {
 	    	} else if(state instanceof StateTouchElement) {
 	    		openContextMenu = true;
 	    	}
-    			
-	    	return false;
+    		
+	    	return true;
 	    }
 	};
 
@@ -172,11 +178,10 @@ public class EditorView extends View {
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
 
-	  //      mCurrMode = TouchMode.SCALE;
+//            mCurrMode = TouchMode.SCALE;
 	        
 	        mScalePivotX = (int)detector.getFocusX();
 	        mScalePivotY = (int)detector.getFocusY();
-
 
 	        invalidate();
 	        return true;
@@ -203,10 +208,9 @@ public class EditorView extends View {
 	private void addRectangle(int x, int y) {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
-		mElemCounter++;
 		//ugly hack to insert rectangle centered on touch event
 		//maybe x and y should be the center of AbstractElements instead of the upper left corner
-		mElements.put(mElemCounter, new Rectangle(mElemCounter, xScaled-25, yScaled-25, 50, 50));
+		mElements.put(mElemCounter, new Rectangle(getContext(), mElemCounter++, xScaled-25, yScaled-25, 50, 50));
 		invalidate();
 	}
 	
@@ -279,9 +283,14 @@ public class EditorView extends View {
 
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
+		for (OpenSequence os : mOpenSequences.values()) {
+			os.draw(canvas);
+		}
+		
 		for (AbstractElement elem : mElements.values()) {
 			elem.draw(canvas);
 		}
+
 		
 
 		//TODO: Container als "Element" übernimmt zeichnen selbst

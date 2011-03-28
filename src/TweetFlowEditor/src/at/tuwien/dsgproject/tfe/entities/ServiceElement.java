@@ -21,12 +21,13 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 public class ServiceElement extends AbstractElement {
 	
-	ServiceElement(int id, int x, int y, int width, int height) {
-		super(id, x, y, width, height);
+	ServiceElement(Context context, int id, int x, int y, int width, int height) {
+		super(context, id, x, y, width, height);
 		// TODO Auto-generated constructor stub
 	}
 

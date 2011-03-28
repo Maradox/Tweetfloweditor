@@ -3,6 +3,7 @@
 	<color name="blue_dark">#ff0A416B</color>
 	<color name="blue_medium">#ff206ba4</color>
 	<color name="blue_light">#ff54a4de</color>
+	<color name="blue_light_trans">#5554a4de</color>
 	<color name="green_light">#ffbedf5d</color>
 	<color name="orange">#ffff9834</color>
 	<color name="actionbar_separator">#30bbbbbb</color>
