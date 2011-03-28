@@ -22,8 +22,10 @@ public class StateTouchElement extends State {
 		if(editorView.mTouchElement != null) {
 	
 			if(editorView.mSelected.containsValue(editorView.mTouchElement)) {
-				editorView.moveSelected(offX, offY);
-				editorView.state = editorView.stateMoveSelected;
+				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
+					editorView.moveSelected(offX, offY);
+					editorView.state = editorView.stateMoveSelected;
+				}	
 			}
 			else {
 				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
