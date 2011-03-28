@@ -97,6 +97,20 @@ public abstract class AbstractElement {
 		return mX+mWidth/2;
 	}
 	
+	public int getBotY() {
+		return mY+mHeight;
+	}
+
+	public ShapeDrawable getmShape() {
+		return mShape;
+	}
+
+	public void setmShape(ShapeDrawable mShape) {
+		this.mShape = mShape;
+	}
+	
+	
+	
 	
 	
 }

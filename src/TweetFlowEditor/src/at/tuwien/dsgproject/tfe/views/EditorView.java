@@ -31,13 +31,20 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
+import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
+import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
+import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateFree;
 import at.tuwien.dsgproject.tfe.states.StateMoveAll;
@@ -107,6 +114,8 @@ public class EditorView extends View {
 	
 	private int mScalePivotX;
 	private int mScalePivotY;
+	
+	ShapeDrawable mContainer;
 
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -162,7 +171,8 @@ public class EditorView extends View {
 	    	if(state instanceof StateTouchVoid) {
 	    		addRectangle(mOldX, mOldY);
 	    	} else if(state instanceof StateTouchElement) {
-	    		openContextMenu = true;
+	    		//openContextMenu = true; //TODO
+	    		openContextMenu();
 	    	}
     		
 	    	return true;
@@ -304,6 +314,10 @@ public class EditorView extends View {
 //			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
 //			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
 //		}
+		
+		if(mContainer != null) {
+			mContainer.draw(canvas);
+		}	
 		
 		canvas.restore();
 
@@ -473,6 +487,13 @@ public class EditorView extends View {
     	}
     }
     
+    public void createContainer() {	//TODO
+    	float[] outerR = new float[] { 12, 12, 12, 12, 12, 12, 12, 12 };
+    	mContainer = new ShapeDrawable(new RoundRectShape(outerR, null,null));
+    	mContainer.getPaint().setColor(Color.TRANSPARENT);
+    	mContainer.setBounds(10, 10, 100, 200);
+    
+    }
     
     public void undo() {
     	//TODO
@@ -480,6 +501,58 @@ public class EditorView extends View {
     
     public void redo() {
     	//TODO
+    }
+    
+    public void openContextMenu() {    	
+    	final QuickAction qa = new QuickAction(this);
+    	
+    	ActionItem delete = new ActionItem();
+    	delete.setTitle("Delete");
+    	delete.setIcon(getResources().getDrawable(R.drawable.chart));
+    	delete.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				mSelected.remove(mTouchElement.getId());
+				mElements.remove(mTouchElement.getId());
+				redraw();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(delete);
+
+		ActionItem changeData = new ActionItem();
+		changeData.setTitle("Change data");
+		changeData.setIcon(getResources().getDrawable(R.drawable.production));
+		changeData.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(EditorView.this.getContext(), "Change data", Toast.LENGTH_SHORT).show();
+				redraw();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(changeData);
+
+		if(mSelected.containsValue(mTouchElement)) {
+			ActionItem deselect = new ActionItem();
+			changeData.setTitle("Deselect");
+			changeData.setIcon(getResources().getDrawable(R.drawable.production));
+			changeData.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mSelected.remove(mTouchElement.getId());
+					redraw();
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(deselect);
+		}	
+		
+		
+		qa.setAnimStyle(QuickAction.ANIM_AUTO);
+		
+		Rect rect = new Rect();
+		rect.set(mTouchElement.getmShape().getBounds().left, mTouchElement.getmShape().getBounds().top, mTouchElement.getmShape().getBounds().right, mTouchElement.getmShape().getBounds().bottom);
+		rect.offset(mPosX,this.getTop()+mPosY+24);
+				
+		qa.show(rect);
     }
     
 	
