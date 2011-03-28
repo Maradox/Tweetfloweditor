@@ -123,7 +123,7 @@ public class Editor extends ActionbarActivity {
     			editorView.redo();
     			break;		
     		case R.id.container:
-    		//	editorView.setmCurrMode(TouchMode.CONTAINER_DOWN);
+    			editorView.createContainer();
     			break;		
     			
     		default:	

@@ -23,6 +23,7 @@
         
         <activity android:name=".activities.Editor" android:label="@string/app_name"></activity>        
         <activity android:name=".activities.Tweeter" android:label="@string/app_name"></activity>
+        <activity android:name="quickAction.TestQuickAction" android:label="@string/app_name"></activity>
         
     </application>
     

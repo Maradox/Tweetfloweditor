@@ -39,6 +39,9 @@ public class Home extends ActionbarActivity {
         if((requestToken.length() > 0) && (secretToken.length() > 0)) {
         	UserManagement.getInstance().loginAuto(requestToken,secretToken);
         }
+        
+        //TODO
+        
     }	
 	
 }
