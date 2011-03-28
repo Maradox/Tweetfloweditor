@@ -17,13 +17,15 @@ public class StateTouchVoid extends State {
         final int y = (int)event.getY(pointerIndex);
 		final int offX = x - editorView.mOldX;
 		final int offY = y - editorView.mOldY;
+		
+		if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
+			editorView.mPosX += offX;
+			editorView.mPosY += offY;
 			
-		editorView.mPosX += offX;
-		editorView.mPosY += offY;
-		
-		editorView.state = editorView.stateMoveAll;
-		
-		editorView.redraw();
+			editorView.state = editorView.stateMoveAll;
+			
+			editorView.redraw();
+		}
 		
 		editorView.mOldX = x;
 		editorView.mOldY = y;	

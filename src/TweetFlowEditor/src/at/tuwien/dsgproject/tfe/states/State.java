@@ -26,21 +26,16 @@ public abstract class State {
     	case MotionEvent.ACTION_MOVE:
     		onActionMove(event);
     		break;
-    		
-    		
-    		/*
     	 
     	case MotionEvent.ACTION_CANCEL:
-    		mCurrMode = TouchMode.FREE;
-    		mActivePointerId = INVALID_POINTER_ID;
+	    	editorView.state = editorView.stateFree;
+	    	editorView.mActivePointerId = editorView.INVALID_POINTER_ID;
     		break;
-    		
-    	
-    	 	
+    		 	
     	case MotionEvent.ACTION_POINTER_UP:
     		onActionPointerUp(action, event);
             break;
-    	*/
+            
     	default:
     		//nothing
     	
@@ -50,6 +45,20 @@ public abstract class State {
 	protected void onActionDown(MotionEvent event) {}
 	protected void onActionMove(MotionEvent event) {}
 	protected void onActionUp(MotionEvent event) {}
+	
+    protected void onActionPointerUp(int action, MotionEvent event) {
+        // get index of the pointer that left the screen
+		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
+        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+	    final int pId = event.getPointerId(pIndex);
+	    if (pId == editorView.mActivePointerId) {
+	        // choose new active pointer
+	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
+	        editorView.mOldX = (int)event.getX(newPointerIndex);
+	        editorView.mOldY = (int)event.getY(newPointerIndex);
+	        editorView.mActivePointerId = event.getPointerId(newPointerIndex);
+	    }    
+    }
 	
 	
 	
