@@ -23,35 +23,30 @@ package at.tuwien.dsgproject.tfe.entities;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.Drawable;
 
 public abstract class AbstractElement {
 	
 	protected int mX, mY, mWidth, mHeight;
-	protected double mScale;
 	
 	protected boolean mHighlighted;
 	
-	protected ShapeDrawable mShape;
+	protected Drawable mShape;
 	
 	protected final int fillColor = Color.RED;
 	protected final int borderColor = Color.BLACK;
 	
 	protected int mId;
 	
-	AbstractElement(int id, int x, int y, int width, int height, double scale) {
+	
+	AbstractElement(int id, int x, int y, int width, int height) {
 		mId = id;
 		mX = x;
 		mY = y;
 		mWidth = width;
 		mHeight = height;
-		mScale = scale;
 	}
 	
-	AbstractElement(int id, int x, int y, int width, int height) {
-		this(id, x, y, width, height, 1);
-	}
-
 	abstract public void draw(Canvas canvas);
 	
 	public void move(int xOff, int yOff) {
@@ -65,8 +60,6 @@ public abstract class AbstractElement {
 		mY = y-mHeight/2;
 		mShape.getBounds().set(x-mWidth/2, y-mHeight/2, x+mWidth/2, y+mHeight/2);
 	}
-	
-	abstract public void scale(float scaleFactor);
 	
 	abstract public boolean contains(int x, int y);
 

@@ -33,7 +33,7 @@ public class Rectangle extends AbstractElement {
 	public Rectangle(int id, int x, int y, int width, int height) {
 		super(id, x,y,width,height);
 		mShape = new ShapeDrawable(new RectShape());
-		mShape.getPaint().setAntiAlias(true);
+		((ShapeDrawable)mShape).getPaint().setAntiAlias(true);
 		mShape.setBounds(x, y, x+height, y+width);
 	}
 
@@ -46,10 +46,10 @@ public class Rectangle extends AbstractElement {
 		if(mHighlighted) {
 			fill.inset(2, 2);
 			border.inset(-1,-1);
-			mShape.getPaint().setColor(borderColor);
+			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
 		} else {
 			fill.inset(1, 1);
-			mShape.getPaint().setColor(borderColor);
+			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
 		}
 		drawShape.setBounds(border);
 		drawShape.draw(canvas);
@@ -60,12 +60,6 @@ public class Rectangle extends AbstractElement {
 		
 	}	
 		
-		
-	@Override
-	public void scale(float scaleFactor) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public boolean contains(int x, int y) {

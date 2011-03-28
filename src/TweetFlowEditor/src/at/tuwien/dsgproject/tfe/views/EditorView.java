@@ -36,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
+import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateFree;
@@ -115,6 +116,11 @@ public class EditorView extends View {
 		addRectangle(100,100);
 		addRectangle(200,100);
 		addRectangle(300,300);
+		addRectangle(444,444);
+		addRectangle(300,500);
+		
+		//TODO clean
+		mElements.put(mElemCounter++,new OpenSequence(context, 100, 100, 100, 200, 400));
 		
 		mSelected = new HashMap<Integer, AbstractElement>();
 		containerStart = new Point();
@@ -145,7 +151,7 @@ public class EditorView extends View {
 	
 	
 	
-	OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
+	public OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
 	    	if(state instanceof StateTouchVoid) {
 	    		addRectangle(mOldX, mOldY);
