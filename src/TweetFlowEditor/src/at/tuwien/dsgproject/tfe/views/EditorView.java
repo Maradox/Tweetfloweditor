@@ -24,8 +24,8 @@ package at.tuwien.dsgproject.tfe.views;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -35,16 +35,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.Toast;
-import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
+import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateFree;
 import at.tuwien.dsgproject.tfe.states.StateMoveAll;
 import at.tuwien.dsgproject.tfe.states.StateMoveElement;
 import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
+import at.tuwien.dsgproject.tfe.states.StateScale;
 import at.tuwien.dsgproject.tfe.states.StateSelected;
-import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
 import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
 
@@ -58,6 +57,7 @@ public class EditorView extends View {
 	public StateMoveSelected stateMoveSelected;
 	public StateTouchVoid stateTouchVoid;
 	public StateMoveAll stateMoveAll;
+	public StateScale stateScale;
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
 	
@@ -126,6 +126,11 @@ public class EditorView extends View {
 		
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
+		prepareStates();
+		
+	}
+	
+	private void prepareStates() {
 		stateFree = new StateFree(this);
 		stateSelected = new StateSelected(this);
 		stateTouchElement = new StateTouchElement(this);
@@ -133,8 +138,9 @@ public class EditorView extends View {
 		stateMoveSelected = new StateMoveSelected(this);
 		stateTouchVoid = new StateTouchVoid(this);
 		stateMoveAll= new StateMoveAll(this);
-		state = stateFree;
+		stateScale = new StateScale(this);
 		
+		state = stateFree;
 	}
 	
 	
@@ -169,6 +175,20 @@ public class EditorView extends View {
 	        invalidate();
 	        return true;
 	    }
+
+		@Override
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			state = stateScale;
+			return true;
+		}
+
+		@Override
+		public void onScaleEnd(ScaleGestureDetector detector) {
+			state = stateFree;
+			super.onScaleEnd(detector);
+		}
+	    
+	    
 	}
 	
 	
@@ -286,23 +306,6 @@ public class EditorView extends View {
     	return true;	
     }
     
-  
-    
-    private void onActionPointerUp(int action, MotionEvent event) {
-        // get index of the pointer that left the screen
-		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
-        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-	    final int pId = event.getPointerId(pIndex);
-	    if (pId == mActivePointerId) {
-	        // choose new active pointer
-	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
-	        mOldX = (int)event.getX(newPointerIndex);
-	        mOldY = (int)event.getY(newPointerIndex);
-	        mActivePointerId = event.getPointerId(newPointerIndex);
-	    }    
-    }
-    
-    
     public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {
 			e.move(offX, offY);
@@ -335,7 +338,6 @@ public class EditorView extends View {
     		e.getValue().deHighlight();
     	}
     	mSelected = new HashMap<Integer, AbstractElement>();
-    //	mCurrMode = TouchMode.FREE;
     }
     
     public void redraw() {
