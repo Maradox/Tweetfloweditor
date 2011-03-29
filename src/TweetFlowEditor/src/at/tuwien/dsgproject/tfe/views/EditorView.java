@@ -330,7 +330,6 @@ public class EditorView extends View {
     	
 		state.onTouchEvent(event);
         mScaleDetector.onTouchEvent(event);
-        mScalePivotX = mScalePivotY = 0;
 
     	return true;	
     }
