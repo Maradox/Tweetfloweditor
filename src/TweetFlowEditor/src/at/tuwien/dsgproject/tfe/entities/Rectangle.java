@@ -62,18 +62,27 @@ public class Rectangle extends AbstractElement {
 		
 	}	
 	
-	public void highlight() {
+	public void modeSelected() {
 		mHighlighted = true;
+		mMarked = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle_selected);
 		mShape.setBounds(mBounds);	
 	}
 	
-	public void deHighlight() {
+	public void modeNormal() {
 		mHighlighted = false;
+		mMarked = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle);
 		mShape.setBounds(mBounds);
 	}
 		
+	public void modeMarked() {
+		mHighlighted = false;
+		mMarked = true;
+		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle_marked);
+		mShape.setBounds(mBounds);
+	}
+	
 
 	@Override
 	public boolean contains(int x, int y) {

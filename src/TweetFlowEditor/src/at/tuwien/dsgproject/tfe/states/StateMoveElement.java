@@ -42,7 +42,7 @@ public class StateMoveElement extends State {
 			editorView.moveSingleOn(gridX, y-editorView.mPosY);
 		}	
 		
-		editorView.mTouchElement.deHighlight();
+		editorView.mTouchElement.modeNormal();
 		editorView.state = editorView.stateFree;
 		
 		editorView.redraw();
