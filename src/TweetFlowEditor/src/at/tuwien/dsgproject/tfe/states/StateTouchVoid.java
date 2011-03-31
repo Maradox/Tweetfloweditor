@@ -40,4 +40,12 @@ public class StateTouchVoid extends State {
 			editorView.setState(EDITOR_STATE.SELECTED);
 		}
 	}
+
+	@Override
+	public boolean handleLongClick() {
+		editorView.addRectangle(editorView.mOldX, editorView.mOldY);
+		return true;
+	}
+	
+	
 }
