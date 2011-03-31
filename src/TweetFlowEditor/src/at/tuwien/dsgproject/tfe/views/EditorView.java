@@ -68,6 +68,8 @@ public class EditorView extends View {
 	public StateScale stateScale;
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
+	public static int DISTANCE_FOR_AUTO_CONNECTION_X = 70;
+	public static int DISTANCE_FOR_AUTO_CONNECTION_Y = 120;
 	
 	public final int mMoveOffset = 7;
 		
@@ -302,6 +304,22 @@ public class EditorView extends View {
 		}
 
 		
+		if(state instanceof StateMoveElement) {
+			Point ids = findElementForConnection();
+			if(ids.x != -1) {
+				Paint paint = new Paint();
+				paint.setStrokeWidth(5);
+				paint.setColor(Color.GREEN);
+				canvas.drawLine(mElements.get(ids.x).getMiddleX(),  mElements.get(ids.x).getTopY(), mTouchElement.getMiddleX(), mTouchElement.getBotY(), paint);
+			}	
+			if(ids.y != -1) {
+				Paint paint = new Paint();
+				paint.setStrokeWidth(5);
+				paint.setColor(Color.GREEN);
+				canvas.drawLine(mElements.get(ids.y).getMiddleX(),  mElements.get(ids.y).getBotY(), mTouchElement.getMiddleX(), mTouchElement.getTopY(), paint);
+			}	
+		}
+		
 
 		//TODO: Container als "Element" übernimmt zeichnen selbst
 //		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
@@ -398,6 +416,25 @@ public class EditorView extends View {
     	}
     	
     	return gridLines;
+    }
+    
+    public Point findElementForConnection() {	
+    	Point ids = new Point(-1,-1);
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e.getId() != mTouchElement.getId()) {
+				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
+				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
+				
+				if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
+					if(offY < 0) 
+						ids.x = e.getId();
+					else 
+						ids.y = e.getId();
+				}
+			}	
+    	}
+    	return ids;
     }
     
     public boolean isThereGridHorizontal(int xScaled) {

@@ -107,6 +107,14 @@ public abstract class AbstractElement {
 		return mX+mWidth/2;
 	}
 	
+	public int getMiddleY() {
+		return mY+mHeight/2;
+	}
+	
+	public int getTopY() {
+		return mY;
+	}
+	
 	public int getBotY() {
 		return mY+mHeight;
 	}
