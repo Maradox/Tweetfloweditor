@@ -363,7 +363,7 @@ public class EditorView extends View {
     
     public void delesectAll() {
     	for(Entry<Integer, AbstractElement> e : mSelected.entrySet()) {
-    		e.getValue().deHighlight();
+    		e.getValue().modeNormal();
     	}
     	mSelected = new HashMap<Integer, AbstractElement>();
     }
@@ -480,7 +480,7 @@ public class EditorView extends View {
 			if(e instanceof Rectangle) {
 				if(e.getMiddleX() == x) {
 					mSelected.put(e.getId(), e);
-					e.highlight();
+					e.modeSelected();
 				}
 			}
     	}
@@ -532,9 +532,9 @@ public class EditorView extends View {
 
 		if(mSelected.containsValue(mTouchElement)) {
 			ActionItem deselect = new ActionItem();
-			changeData.setTitle("Deselect");
-			changeData.setIcon(getResources().getDrawable(R.drawable.production));
-			changeData.setOnClickListener(new OnClickListener() {
+			deselect.setTitle("Deselect");
+			deselect.setIcon(getResources().getDrawable(R.drawable.production));
+			deselect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					mSelected.remove(mTouchElement.getId());
 					redraw();
@@ -543,8 +543,7 @@ public class EditorView extends View {
 			});
 			qa.addActionItem(deselect);
 		}	
-		
-		
+				
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		
 		Rect rect = new Rect();

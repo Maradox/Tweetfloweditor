@@ -33,6 +33,7 @@ public abstract class AbstractElement {
 	protected int mX, mY, mWidth, mHeight;
 	
 	protected boolean mHighlighted;
+	protected boolean mMarked;
 	
 	protected Drawable mShape;
 	protected Rect mBounds;
@@ -78,13 +79,21 @@ public abstract class AbstractElement {
 	// - highlighted -> if current element receives touch event
 	// - selected -> if it has been selected, after ACTION_UP
 	
-	public void highlight() {
+	public void modeSelected() {
 		mHighlighted = true;
+		mMarked = false;
 	}
 	
-	public void deHighlight() {
+	public void modeNormal() {
+		mHighlighted = false;
+		mMarked = false;
+	}
+	
+	public void modeMarked() {
+		mMarked = true;
 		mHighlighted = false;
 	}
+	
 	
 	public boolean isSelected() {
 		return mHighlighted;

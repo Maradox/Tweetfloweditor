@@ -48,12 +48,14 @@ public class StateTouchElement extends State {
 		int id = editorView.mTouchElement.getId();
 		if(!editorView.mSelected.containsKey(id)) { // add to selected elements, on first click
 			editorView.mSelected.put(id, editorView.mTouchElement);
+			editorView.mTouchElement.modeSelected();
 		} else { // deselect item on 2nd click
 			editorView.mSelected.remove(id);
-			editorView.mTouchElement.deHighlight();
+			editorView.mTouchElement.modeNormal();
 			//mTouchElement = null;
-			editorView.redraw();
 		}
+		
+		editorView.redraw();
 		
 		if(editorView.mSelected.isEmpty()) {
 			editorView.state = editorView.stateFree;

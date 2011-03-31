@@ -19,7 +19,7 @@ public class StateFree extends State {
 		editorView.mTouchElement = editorView.elementAt(x, y);	
     		
 		if (editorView.mTouchElement != null) {
-			editorView.mTouchElement.highlight();
+			editorView.mTouchElement.modeMarked();
 			editorView.state = editorView.stateTouchElement;
 			
 			editorView.redraw();
