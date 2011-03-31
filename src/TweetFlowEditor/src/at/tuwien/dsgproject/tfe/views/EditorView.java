@@ -331,16 +331,14 @@ public class EditorView extends View {
 
 		if(mCurrState instanceof StateMoveElement) {
 			Point ids = findElementForConnection();
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.GRAY);
+			paint.setAntiAlias(true);
 			if(ids.x != -1) {
-				Paint paint = new Paint();
-				paint.setStrokeWidth(5);
-				paint.setColor(Color.GREEN);
 				canvas.drawLine(mElements.get(ids.x).getMiddleX(),  mElements.get(ids.x).getTopY(), mTouchElement.getMiddleX(), mTouchElement.getBotY(), paint);
 			}	
 			if(ids.y != -1) {
-				Paint paint = new Paint();
-				paint.setStrokeWidth(5);
-				paint.setColor(Color.GREEN);
 				canvas.drawLine(mElements.get(ids.y).getMiddleX(),  mElements.get(ids.y).getBotY(), mTouchElement.getMiddleX(), mTouchElement.getTopY(), paint);
 			}	
 		}
