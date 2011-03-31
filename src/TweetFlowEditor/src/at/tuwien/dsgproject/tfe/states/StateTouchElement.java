@@ -64,6 +64,15 @@ public class StateTouchElement extends State {
 		
 		editorView.redraw();
 	}
+
+	@Override
+	public boolean handleLongClick() {
+		editorView.openContextMenu();
+		return true;
+	}
+	
+	
+	
 	
 	
 

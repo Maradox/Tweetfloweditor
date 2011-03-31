@@ -71,7 +71,7 @@ public class EditorView extends View {
 	}
 
 	private State mCurrState;
-	private HashMap <EDITOR_STATE, State> mAvailableStates;
+	private HashMap <EDITOR_STATE, State> mAvailableStates = new HashMap<EDITOR_STATE, State> ();
 	
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
@@ -224,7 +224,7 @@ public class EditorView extends View {
 	}
 	
 	
-	private void addRectangle(int x, int y) {
+	public void addRectangle(int x, int y) {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
 		//ugly hack to insert rectangle centered on touch event
