@@ -68,6 +68,12 @@ public class StateTouchElement extends State {
 	@Override
 	public boolean handleLongClick() {
 		editorView.openContextMenu();
+		if(editorView.mSelected.isEmpty()) {
+			editorView.setState(EDITOR_STATE.FREE);
+		} else {
+			editorView.setState(EDITOR_STATE.SELECTED);
+		}
+		editorView.mTouchElement.modeNormal();
 		return true;
 	}
 	
