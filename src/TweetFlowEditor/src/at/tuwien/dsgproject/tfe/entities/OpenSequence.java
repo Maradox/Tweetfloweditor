@@ -33,19 +33,26 @@ public class OpenSequence extends AbstractElement {
 	}
 
 	@Override
-	public boolean contains(int x, int y) {
+	public boolean isFocused(int x, int y) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
-	public boolean onLine(int x, int y) {
+	public boolean isLineFocused(int x, int y) {
 		final int r = 5;
-		
-		if( Math.abs(x - mX) < r && mY - r < y && mY + mHeight + r > y || //on left side
-			Math.abs(x - mWidth - mX) < r && mY - r < y && mY + mHeight + r > y || // right side
-			Math.abs(y - mY) < r && mX - r < x && mX + mWidth + r > x || //top
-			Math.abs(y - mHeight - mY) < r && mX - r < x && mX + mWidth + r > x ) { // bottom
-			
+		//TODO corner detection
+		//TODO all in one if/else - check specific side/edge in move event
+		if(Math.abs(x - mX) < r && mY - r < y && mY + mHeight + r > y) {
+			//left
+			return true;
+		} else if (Math.abs(x - mWidth - mX) < r && mY - r < y && mY + mHeight + r > y) {
+			//right
+			return true;
+		} else if (Math.abs(y - mY) < r && mX - r < x && mX + mWidth + r > x) {
+			//top
+			return true;
+		} else if (Math.abs(y - mHeight - mY) < r && mX - r < x && mX + mWidth + r > x ) { // bottom
+			//bottom
 			return true;
 		} else {
 			return false;

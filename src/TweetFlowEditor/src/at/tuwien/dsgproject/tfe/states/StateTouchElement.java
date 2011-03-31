@@ -3,6 +3,7 @@ package at.tuwien.dsgproject.tfe.states;
 import android.view.MotionEvent;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class StateTouchElement extends State {
 		
@@ -24,13 +25,13 @@ public class StateTouchElement extends State {
 			if(editorView.mSelected.containsValue(editorView.mTouchElement)) {
 				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
 					editorView.moveSelected(offX, offY);
-					editorView.state = editorView.stateMoveSelected;
+					editorView.setState(EDITOR_STATE.SELECTED);
 				}	
 			}
 			else {
 				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
 					editorView.moveSingle(offX, offY);
-					editorView.state = editorView.stateMoveElement;
+					editorView.setState(EDITOR_STATE.MOVE_ELEMENT);
 				}	
 			}
 						
@@ -45,7 +46,7 @@ public class StateTouchElement extends State {
 	}	
 	
 	public void onActionUp(MotionEvent event) {
-		int id = editorView.mTouchElement.getId();
+		final int id = editorView.mTouchElement.getId();
 		if(!editorView.mSelected.containsKey(id)) { // add to selected elements, on first click
 			editorView.mSelected.put(id, editorView.mTouchElement);
 			editorView.mTouchElement.modeSelected();
@@ -55,14 +56,13 @@ public class StateTouchElement extends State {
 			//mTouchElement = null;
 		}
 		
-		editorView.redraw();
-		
 		if(editorView.mSelected.isEmpty()) {
-			editorView.state = editorView.stateFree;
+			editorView.setState(EDITOR_STATE.FREE);
+		} else {
+			editorView.setState(EDITOR_STATE.SELECTED);
 		}
-		else {
-			editorView.state = editorView.stateSelected;
-		}
+		
+		editorView.redraw();
 	}
 	
 	

@@ -72,12 +72,13 @@ public abstract class AbstractElement {
 		mShape.setBounds(mBounds);
 	}
 	
-	abstract public boolean contains(int x, int y);
+	abstract public boolean isFocused(int x, int y);
 
 	// TODO: elements should have 3 visual states:
 	// - normal
 	// - highlighted -> if current element receives touch event
 	// - selected -> if it has been selected, after ACTION_UP
+	
 	
 	public void modeSelected() {
 		mHighlighted = true;

@@ -2,6 +2,7 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class StateMoveAll extends State {
 		
@@ -29,10 +30,10 @@ public class StateMoveAll extends State {
 	
 	public void onActionUp(MotionEvent event) {
 		if(editorView.mSelected.isEmpty()) {
-			editorView.state = editorView.stateFree;
+			editorView.setState(EDITOR_STATE.FREE);
 		}
 		else {
-			editorView.state = editorView.stateSelected;
+			editorView.setState(EDITOR_STATE.SELECTED);
 		}
 	}
 	

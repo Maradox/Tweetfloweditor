@@ -52,26 +52,33 @@ import at.tuwien.dsgproject.tfe.states.StateMoveElement;
 import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
 import at.tuwien.dsgproject.tfe.states.StateScale;
 import at.tuwien.dsgproject.tfe.states.StateSelected;
+import at.tuwien.dsgproject.tfe.states.StateTouchOpenSequence;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
 import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
 
 public class EditorView extends View {
+	
+	public enum EDITOR_STATE {
+		FREE,
+		SELECTED,
+		TOUCH_ELEMENT,
+		MOVE_ELEMENT,
+		MOVE_SELECTED,
+		TOUCH_VOID,
+		MOVE_ALL,
+		SCALE,
+		SELECTED_OPEN_SEQUENCE
+	}
 
-	public State state;
-	public StateFree stateFree;
-	public StateSelected stateSelected;
-	public StateTouchElement stateTouchElement;
-	public StateMoveElement stateMoveElement;
-	public StateMoveSelected stateMoveSelected;
-	public StateTouchVoid stateTouchVoid;
-	public StateMoveAll stateMoveAll;
-	public StateScale stateScale;
+	private State mCurrState;
+	private HashMap <EDITOR_STATE, State> mAvailableStates;
+	
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
 	
 	public final int mMoveOffset = 7;
 		
-	public HashMap<Integer, AbstractElement> mElements;
+	public HashMap<Integer, Rectangle> mElements;
 	public HashMap<Integer, AbstractElement> mSelected;
 	public HashMap<Integer, OpenSequence> mOpenSequences;
 	
@@ -114,13 +121,11 @@ public class EditorView extends View {
 	
 	private int mScalePivotX;
 	private int mScalePivotY;
-	
-	ShapeDrawable mContainer;
 
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mElemCounter = 0;
-		mElements = new HashMap<Integer, AbstractElement>();
+		mElements = new HashMap<Integer, Rectangle>();
 		mSelected = new HashMap<Integer, AbstractElement>();
 		mOpenSequences = new HashMap<Integer, OpenSequence>();
 		
@@ -131,21 +136,30 @@ public class EditorView extends View {
 		
 	
 		prepareStates();
+		
 		//TODO clean
 		fillElements();
 	}
 	
 	private void prepareStates() {
-		stateFree = new StateFree(this);
-		stateSelected = new StateSelected(this);
-		stateTouchElement = new StateTouchElement(this);
-		stateMoveElement = new StateMoveElement(this);
-		stateMoveSelected = new StateMoveSelected(this);
-		stateTouchVoid = new StateTouchVoid(this);
-		stateMoveAll= new StateMoveAll(this);
-		stateScale = new StateScale(this);
+		mAvailableStates.put(EDITOR_STATE.FREE, new StateFree(this));
+		mAvailableStates.put(EDITOR_STATE.SELECTED, new StateSelected(this));
+		mAvailableStates.put(EDITOR_STATE.TOUCH_ELEMENT, new StateTouchElement(this));
+		mAvailableStates.put(EDITOR_STATE.MOVE_ELEMENT, new StateMoveElement(this));
+		mAvailableStates.put(EDITOR_STATE.MOVE_SELECTED, new StateMoveSelected(this));
+		mAvailableStates.put(EDITOR_STATE.TOUCH_VOID, new StateTouchVoid(this));
+		mAvailableStates.put(EDITOR_STATE.MOVE_ALL, new StateMoveAll(this));
+		mAvailableStates.put(EDITOR_STATE.SCALE, new StateScale(this));
+		mAvailableStates.put(EDITOR_STATE.SELECTED_OPEN_SEQUENCE, new StateTouchOpenSequence(this));
 		
-		state = stateFree;
+		//TODO: just as a security measure
+		for(EDITOR_STATE s : EDITOR_STATE.values()) {
+			if (!mAvailableStates.containsKey(s)) {
+				Toast.makeText(EditorView.this.getContext(), "STATE MISSING IN AVAILABLE STATES", Toast.LENGTH_SHORT).show();
+			}
+		}
+		
+		mCurrState = mAvailableStates.get(EDITOR_STATE.FREE);
 	}
 	
 	private void fillElements() {
@@ -155,27 +169,21 @@ public class EditorView extends View {
 		addRectangle(444,444);
 		addRectangle(300,500);
 		
-		
-		OpenSequence os = new OpenSequence(getContext(), mElemCounter++, 100, 100, 200, 400);
-		mOpenSequences.put(os.getId(), os);
-		
-		mSelected = new HashMap<Integer, AbstractElement>();
-//		containerStart = new Point();
-//		containerEnd = new Point();
+		addOpenSequence();
 	}
 		
 	
 	
 	public OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
-	    	if(state instanceof StateTouchVoid) {
-	    		addRectangle(mOldX, mOldY);
-	    	} else if(state instanceof StateTouchElement) {
-	    		//openContextMenu = true; //TODO
-	    		openContextMenu();
-	    	}
+//	    	if(state instanceof StateTouchVoid) {
+//	    		addRectangle(mOldX, mOldY);
+//	    	} else if(state instanceof StateTouchElement) {
+//	    		//openContextMenu = true; //TODO
+//	    		openContextMenu();
+//	    	}
     		
-	    	return true;
+	    	return mCurrState.handleLongClick();
 	    }
 	};
 
@@ -197,23 +205,21 @@ public class EditorView extends View {
 	        return true;
 	    }
 
-		@Override
-		public boolean onScaleBegin(ScaleGestureDetector detector) {
-			state = stateScale;
-			return true;
-		}
-
-		@Override
-		public void onScaleEnd(ScaleGestureDetector detector) {
-			state = stateFree;
-			super.onScaleEnd(detector);
-		}
+//		@Override
+//		public boolean onScaleBegin(ScaleGestureDetector detector) {
+//			state = stateScale;
+//			return true;
+//		}
+//
+//		@Override
+//		public void onScaleEnd(ScaleGestureDetector detector) {
+//			state = stateFree;
+//			super.onScaleEnd(detector);
+//		}
 	    
 	    
 	}
 	
-	
-	    
 	
 	private void addRectangle(int x, int y) {
 		final int xScaled = scaleX(x);
@@ -225,32 +231,50 @@ public class EditorView extends View {
 	}
 	
 	
+	public void addOpenSequence() {
+		final OpenSequence os = new OpenSequence(getContext(), mElemCounter++, 100, 100, 200, 400);
+		mOpenSequences.put(os.getId(), os);
+		invalidate();
+	}
+	
+	
 	/**
 	 * Checks if an element is at the given location and returns it.
 	 * @param x x coordinate
 	 * @param y y coordinate
 	 * @return The element at the given location or null.
 	 */
-	public AbstractElement elementAt(int x, int y) {
+	public boolean elementAt(int x, int y) {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
-		AbstractElement elem = null;
-		for(AbstractElement e : mElements.values()) {
-			if(e.contains(xScaled,yScaled)) {
-				elem = e;
-				break;
+		mTouchElement = null;
+		for(Rectangle r : mElements.values()) {
+			if(r.isFocused(xScaled,yScaled)) {
+				mTouchElement = r;
+				return true;
 			}	
 		}
-		return elem;
+		return false;
+	}
+	
+	public boolean openSequenceAt(int x, int y) {
+		final int xScaled = scaleX(x);
+		final int yScaled = scaleY(y);
+		mTouchElement = null;
+		for(OpenSequence o : mOpenSequences.values()) {
+			if(o.isFocused(xScaled,yScaled)) {
+				mTouchElement = o;
+				return true;
+			}	
+		}
+		return false;
 	}
 	
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		//canvas.drawColor(Color.WHITE);
-
-		
+	
 		//TODO: check how to handle save/restore with our lines
 		canvas.save();
 		canvas.translate(mPosX, mPosY);
@@ -297,27 +321,9 @@ public class EditorView extends View {
 			os.draw(canvas);
 		}
 		
-		for (AbstractElement elem : mElements.values()) {
-			elem.draw(canvas);
+		for (Rectangle rect : mElements.values()) {
+			rect.draw(canvas);
 		}
-
-		
-
-		//TODO: Container als "Element" übernimmt zeichnen selbst
-//		if(mCurrMode == TouchMode.CONTAINER_MOVE) {
-//			Paint paint = new Paint();
-//			paint.setStrokeWidth(5);
-//			paint.setColor(Color.GREEN);
-//			
-//			canvas.drawLine(containerStart.x,  containerStart.y, containerStart.x,  containerEnd.y, paint);
-//			canvas.drawLine(containerEnd.x,  containerStart.y, containerEnd.x,  containerEnd.y, paint);
-//			canvas.drawLine(containerStart.x,  containerStart.y, containerEnd.x,  containerStart.y, paint);
-//			canvas.drawLine(containerStart.x,  containerEnd.y, containerEnd.x,  containerEnd.y, paint);
-//		}
-		
-		if(mContainer != null) {
-			mContainer.draw(canvas);
-		}	
 		
 		canvas.restore();
 
@@ -328,10 +334,19 @@ public class EditorView extends View {
     public boolean onTouchEvent(MotionEvent event) {
     	super.onTouchEvent(event);
     	
-		state.onTouchEvent(event);
+		mCurrState.onTouchEvent(event);
         mScaleDetector.onTouchEvent(event);
 
     	return true;	
+    }
+    
+    public void setState(EDITOR_STATE state) {
+    	if(!mAvailableStates.containsKey(state)) {
+    		//TODO fixme
+    		Toast.makeText(getContext(), "INVALID STATE", Toast.LENGTH_SHORT).show();
+    	} else {
+    		mCurrState = mAvailableStates.get(state);
+    	}
     }
     
     public void moveSelected(int offX, int offY) {
@@ -484,14 +499,6 @@ public class EditorView extends View {
 				}
 			}
     	}
-    }
-    
-    public void createContainer() {	//TODO
-    	float[] outerR = new float[] { 12, 12, 12, 12, 12, 12, 12, 12 };
-    	mContainer = new ShapeDrawable(new RoundRectShape(outerR, null,null));
-    	mContainer.getPaint().setColor(Color.TRANSPARENT);
-    	mContainer.setBounds(10, 10, 100, 200);
-    
     }
     
     public void undo() {

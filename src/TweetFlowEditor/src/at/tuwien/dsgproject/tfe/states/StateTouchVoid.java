@@ -2,6 +2,7 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class StateTouchVoid extends State {
 		
@@ -22,7 +23,7 @@ public class StateTouchVoid extends State {
 			editorView.mPosX += offX;
 			editorView.mPosY += offY;
 			
-			editorView.state = editorView.stateMoveAll;
+			editorView.setState(EDITOR_STATE.MOVE_ALL);
 			
 			editorView.redraw();
 		}
@@ -33,10 +34,10 @@ public class StateTouchVoid extends State {
 	
 	public void onActionUp(MotionEvent event) {
 		if(editorView.mSelected.isEmpty()) {
-			editorView.state = editorView.stateFree;
+			editorView.setState(EDITOR_STATE.FREE);
 		}
 		else {
-			editorView.state = editorView.stateSelected;
+			editorView.setState(EDITOR_STATE.SELECTED);
 		}
 	}
 }

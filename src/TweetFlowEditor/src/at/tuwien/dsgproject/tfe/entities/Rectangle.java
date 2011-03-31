@@ -31,35 +31,13 @@ public class Rectangle extends AbstractElement {
 
 	public Rectangle(Context context, int id, int x, int y, int width, int height) {
 		super(context, id, x,y,width,height);
-//		mShape = new ShapeDrawable(new RectShape());
-//		((ShapeDrawable)mShape).getPaint().setAntiAlias(true);
-//		mShape.setBounds(x, y, x+height, y+width);
 		mShape = context.getResources().getDrawable(R.drawable.shape_rectangle);
 		mShape.setBounds(x, y, x+height, y+width);
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-//		ShapeDrawable drawShape = new ShapeDrawable();
-//		Rect border = new Rect(mShape.getBounds());
-//		Rect fill = new Rect(border);
-//		
-//		if(mHighlighted) {
-//			fill.inset(2, 2);
-//			border.inset(-1,-1);
-//			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
-//		} else {
-//			fill.inset(1, 1);
-//			((ShapeDrawable)mShape).getPaint().setColor(borderColor);
-//		}
-//		drawShape.setBounds(border);
-//		drawShape.draw(canvas);
-//		
-//		drawShape.setBounds(fill);
-//		drawShape.getPaint().setColor(fillColor);
-//		drawShape.draw(canvas);
-		mShape.draw(canvas);
-		
+		mShape.draw(canvas);	
 	}	
 	
 	public void modeSelected() {
@@ -85,7 +63,7 @@ public class Rectangle extends AbstractElement {
 	
 
 	@Override
-	public boolean contains(int x, int y) {
+	public boolean isFocused(int x, int y) {
 		return mShape.getBounds().contains(x, y);
 	}
 
