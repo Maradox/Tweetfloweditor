@@ -122,8 +122,8 @@ public class Editor extends ActionbarActivity {
     		case R.id.redo:
     			editorView.redo();
     			break;		
-    		case R.id.container:
-    			editorView.createContainer();
+    		case R.id.add_open_sequence:
+    			editorView.addOpenSequence();
     			break;		
     			
     		default:	
@@ -131,16 +131,5 @@ public class Editor extends ActionbarActivity {
     	  
     	}
     	return true;  
-    }	
-      
-    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {      	
-    	if(editorView.openContextMenu) {
-    		super.onCreateContextMenu(menu, v, menuInfo);  
-        	menu.setHeaderTitle("Element menue");  
-        	menu.add(0, v.getId(), 0, "Action 1");  
-        	menu.add(0, v.getId(), 0, "Action 2");  
-        	
-        	editorView.openContextMenu = false;
-    	}	
-    } 
+    }	 
 }

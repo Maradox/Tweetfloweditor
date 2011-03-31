@@ -2,6 +2,7 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
 
 public class StateMoveElement extends State {
@@ -43,7 +44,7 @@ public class StateMoveElement extends State {
 		}	
 		
 		editorView.mTouchElement.modeNormal();
-		editorView.state = editorView.stateFree;
+		editorView.setState(EDITOR_STATE.FREE);
 		
 		editorView.redraw();
 	}

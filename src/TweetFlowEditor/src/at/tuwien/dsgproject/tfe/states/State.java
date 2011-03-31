@@ -2,6 +2,7 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public abstract class State {
 
@@ -28,7 +29,7 @@ public abstract class State {
     		break;
     	 
     	case MotionEvent.ACTION_CANCEL:
-	    	editorView.state = editorView.stateFree;
+	    	editorView.setState(EDITOR_STATE.FREE);
 	    	editorView.mActivePointerId = editorView.INVALID_POINTER_ID;
     		break;
     		 	
@@ -58,6 +59,11 @@ public abstract class State {
 	        editorView.mOldY = (int)event.getY(newPointerIndex);
 	        editorView.mActivePointerId = event.getPointerId(newPointerIndex);
 	    }    
+    }
+    
+    
+    public boolean handleLongClick() {
+    	return false;
     }
 	
 	

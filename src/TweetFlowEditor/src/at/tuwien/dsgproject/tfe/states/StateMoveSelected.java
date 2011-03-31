@@ -2,6 +2,7 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class StateMoveSelected extends State {
 		
@@ -26,7 +27,7 @@ public class StateMoveSelected extends State {
 	}	
 	
 	public void onActionUp(MotionEvent event) {
-		editorView.state = editorView.stateSelected;
+		editorView.setState(EDITOR_STATE.SELECTED);
 	}
 	
 	
