@@ -23,14 +23,14 @@ public class StateTouchElement extends State {
 		if(editorView.mTouchElement != null) {
 	
 			if(editorView.mSelected.containsValue(editorView.mTouchElement)) {
-				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
+				if(Math.sqrt(offX*offX + offY*offY) > editorView.MOVE_OFFSET) {
 					editorView.moveSelected(offX, offY);
-					editorView.setState(EDITOR_STATE.SELECTED);
+					editorView.setState(EDITOR_STATE.MOVE_SELECTED);
 				}	
 			}
 			else {
-				if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
-					editorView.moveSingle(offX, offY);
+				if(Math.sqrt(offX*offX + offY*offY) > editorView.MOVE_OFFSET) {
+					editorView.mTouchElement.move(offX, offY);
 					editorView.setState(EDITOR_STATE.MOVE_ELEMENT);
 				}	
 			}

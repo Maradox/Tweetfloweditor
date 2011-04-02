@@ -67,22 +67,22 @@ public class EditorView extends View {
 		TOUCH_VOID,
 		MOVE_ALL,
 		SCALE,
-		SELECTED_OPEN_SEQUENCE
+		TOUCH_OPEN_SEQUENCE
 	}
 
 	private State mCurrState;
-	private HashMap <EDITOR_STATE, State> mAvailableStates = new HashMap<EDITOR_STATE, State> ();
+	private HashMap <EDITOR_STATE, State> mAvailableStates;
 	
 	
 	public static int RASTER_HORIZONTAL_WIDTH = 70;
 	public static int DISTANCE_FOR_AUTO_CONNECTION_X = 70;
 	public static int DISTANCE_FOR_AUTO_CONNECTION_Y = 120;
 	
-	public final int mMoveOffset = 7;
+	public final int MOVE_OFFSET = 8;
 		
-	public HashMap<Integer, Rectangle> mElements;
+	public HashMap<Integer, AbstractElement> mElements;
 	public HashMap<Integer, AbstractElement> mSelected;
-	public HashMap<Integer, OpenSequence> mOpenSequences;
+	//public HashMap<Integer, OpenSequence> mOpenSequences;
 	
 	public int mOldX = 0, mOldY = 0;
 
@@ -127,9 +127,9 @@ public class EditorView extends View {
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		mElemCounter = 0;
-		mElements = new HashMap<Integer, Rectangle>();
+		mElements = new HashMap<Integer, AbstractElement>();
 		mSelected = new HashMap<Integer, AbstractElement>();
-		mOpenSequences = new HashMap<Integer, OpenSequence>();
+		//mOpenSequences = new HashMap<Integer, OpenSequence>();
 		
 		
 		this.setOnLongClickListener(mOnLongClickListener);
@@ -153,7 +153,7 @@ public class EditorView extends View {
 		mAvailableStates.put(EDITOR_STATE.TOUCH_VOID, new StateTouchVoid(this));
 		mAvailableStates.put(EDITOR_STATE.MOVE_ALL, new StateMoveAll(this));
 		mAvailableStates.put(EDITOR_STATE.SCALE, new StateScale(this));
-		mAvailableStates.put(EDITOR_STATE.SELECTED_OPEN_SEQUENCE, new StateTouchOpenSequence(this));
+		mAvailableStates.put(EDITOR_STATE.TOUCH_OPEN_SEQUENCE, new StateTouchOpenSequence(this));
 		
 		//TODO: just as a security measure
 		for(EDITOR_STATE s : EDITOR_STATE.values()) {
@@ -167,9 +167,7 @@ public class EditorView extends View {
 	
 	private void fillElements() {
 		addRectangle(100,100);
-		addRectangle(200,100);
-		addRectangle(300,300);
-		addRectangle(444,444);
+		addRectangle(200,350);
 		addRectangle(300,500);
 		
 		addOpenSequence();
@@ -229,14 +227,13 @@ public class EditorView extends View {
 		final int yScaled = scaleY(y);
 		//ugly hack to insert rectangle centered on touch event
 		//maybe x and y should be the center of AbstractElements instead of the upper left corner
-		mElements.put(mElemCounter, new Rectangle(getContext(), mElemCounter++, xScaled-25, yScaled-25, 50, 50));
+		mElements.put(mElemCounter, new Rectangle(getContext(), mElemCounter++, xScaled-75, yScaled-40, 150, 80));
 		invalidate();
 	}
 	
 	
 	public void addOpenSequence() {
-		final OpenSequence os = new OpenSequence(getContext(), mElemCounter++, 100, 100, 200, 400);
-		mOpenSequences.put(os.getId(), os);
+		mElements.put(mElemCounter, new OpenSequence(getContext(), mElemCounter++, 100, 100, 250, 400));
 		invalidate();
 	}
 	
@@ -251,7 +248,7 @@ public class EditorView extends View {
 		final int xScaled = scaleX(x);
 		final int yScaled = scaleY(y);
 		mTouchElement = null;
-		for(Rectangle r : mElements.values()) {
+		for(AbstractElement r : mElements.values()) {
 			if(r.isFocused(xScaled,yScaled)) {
 				mTouchElement = r;
 				return true;
@@ -260,24 +257,26 @@ public class EditorView extends View {
 		return false;
 	}
 	
-	public boolean openSequenceAt(int x, int y) {
-		final int xScaled = scaleX(x);
-		final int yScaled = scaleY(y);
-		mTouchElement = null;
-		for(OpenSequence o : mOpenSequences.values()) {
-			if(o.isFocused(xScaled,yScaled)) {
-				mTouchElement = o;
-				return true;
-			}	
-		}
-		return false;
-	}
+	
+//	public boolean openSequenceAt(int x, int y) {
+//		final int xScaled = scaleX(x);
+//		final int yScaled = scaleY(y);
+//		mTouchElement = null;
+//		for(OpenSequence o : mOpenSequences.values()) {
+//			if(o.isFocused(xScaled,yScaled)) {
+//				mTouchElement = o;
+//				return true;
+//			}	
+//		}
+//		return false;
+//	}
 	
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 	
+		canvas.drawText(mCurrState.toString(), 10, 10, new Paint(Color.BLACK));
 		//TODO: check how to handle save/restore with our lines
 		canvas.save();
 		canvas.translate(mPosX, mPosY);
@@ -320,12 +319,12 @@ public class EditorView extends View {
 
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
-		for (OpenSequence os : mOpenSequences.values()) {
-			os.draw(canvas);
-		}
+//		for (OpenSequence os : mOpenSequences.values()) {
+//			os.draw(canvas);
+//		}
 		
-		for (Rectangle rect : mElements.values()) {
-			rect.draw(canvas);
+		for (AbstractElement e : mElements.values()) {
+			e.draw(canvas);
 		}
 
 

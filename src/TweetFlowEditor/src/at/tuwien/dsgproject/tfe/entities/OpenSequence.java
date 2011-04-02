@@ -11,20 +11,28 @@ import at.tuwien.dsgproject.tfe.R;
 
 public class OpenSequence extends AbstractElement {
 	
-	//private Paint mFillPaint, mStrokePaint;
+	final private int EDGE_RADIUS = 20;
+	final private int CORNER_RADIUS = 30;
+	
+	private enum TouchFocus 
+	{	TOP, 
+		TOP_LEFT, 
+		TOP_RIGHT, 
+		BOTTOM, 
+		BOTTOM_LEFT, 
+		BOTTOM_RIGHT, 
+		LEFT, 
+		RIGHT, 
+		INVALID
+	}
+	
+	private TouchFocus mTouchFocus = TouchFocus.INVALID;
+	
 
 	public OpenSequence(Context context, int id, int x, int y, int width, int height) {
 		super(context, id, x, y, width, height);
-//		mShape = new ShapeDrawable(new RectShape());
-//		mShape.getPaint().setAntiAlias(true);
-//		mShape.setBounds(x, y, x+height, y+width);
-//		mShape.getPaint().setStyle(Paint.Style.STROKE);
-//		mShape.getPaint().setColor(context.getResources().getColor(R.color.blue_light));
-//		mShape.getPaint().setStrokeWidth(3);
-//		mShape.getPaint().setPathEffect( new DashPathEffect(new float[] {10,3}, 0) );
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence);
-		mShape.setBounds(x, y, x+height, y+width);
-
+		mShape.setBounds(mBounds);
 	}
 
 	@Override
@@ -32,42 +40,142 @@ public class OpenSequence extends AbstractElement {
 		mShape.draw(canvas);
 	}
 
-	@Override
-	public boolean isFocused(int x, int y) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
-	public boolean isLineFocused(int x, int y) {
-		final int r = 5;
-		//TODO corner detection
-		//TODO all in one if/else - check specific side/edge in move event
-		if(Math.abs(x - mX) < r && mY - r < y && mY + mHeight + r > y) {
-			//left
+	public boolean isFocused(int x, int y) {
+		
+		//TODO make this ugly ***** go away :(
+		
+		if(Math.abs(x - mX) < CORNER_RADIUS && 
+				Math.abs(y - mY) < CORNER_RADIUS) {
+			mTouchFocus = TouchFocus.TOP_LEFT;
 			return true;
-		} else if (Math.abs(x - mWidth - mX) < r && mY - r < y && mY + mHeight + r > y) {
-			//right
+		} else if(Math.abs(x - mWidth - mX) < CORNER_RADIUS && 
+				Math.abs(y - mY) < CORNER_RADIUS) {
+			mTouchFocus = TouchFocus.TOP_RIGHT;
 			return true;
-		} else if (Math.abs(y - mY) < r && mX - r < x && mX + mWidth + r > x) {
-			//top
+		}  else if(Math.abs(x - mX) < CORNER_RADIUS && 
+				Math.abs(y - mHeight - mY) < CORNER_RADIUS) {
+			mTouchFocus = TouchFocus.BOTTOM_LEFT;
 			return true;
-		} else if (Math.abs(y - mHeight - mY) < r && mX - r < x && mX + mWidth + r > x ) { // bottom
-			//bottom
+		}  else if(Math.abs(x - mWidth - mX) < CORNER_RADIUS && 
+				Math.abs(y - mHeight - mY) < CORNER_RADIUS) {
+			mTouchFocus = TouchFocus.BOTTOM_RIGHT;
+			return true;
+		} else if(Math.abs(x - mX) < EDGE_RADIUS && 
+				mY < y && mY + mHeight > y) {
+			mTouchFocus = TouchFocus.LEFT;
+			return true;
+		} else if (Math.abs(x - mWidth - mX) < EDGE_RADIUS && 
+				mY < y && mY + mHeight > y) {
+			mTouchFocus = TouchFocus.RIGHT;
+			return true;
+		} else if (Math.abs(y - mY) < EDGE_RADIUS && 
+				mX < x && mX + mWidth > x) {
+			mTouchFocus = TouchFocus.TOP;
+			return true;
+		} else if (Math.abs(y - mHeight - mY) < EDGE_RADIUS && 
+				mX < x && mX + mWidth > x ) { // bottom
+			mTouchFocus = TouchFocus.BOTTOM;
 			return true;
 		} else {
+			mTouchFocus = TouchFocus.INVALID;
 			return false;
 		}
 	}
 	
-	public void highlight() {
+	
+	@Override
+	public void move(int xOff, int yOff) {
+		if(mHighlighted) {
+			super.move(xOff, yOff);
+		} else {
+			switch(mTouchFocus) {
+			case TOP_LEFT:
+				growTop(yOff);
+				growLeft(xOff);
+				break;
+			
+			case TOP:
+				growTop(yOff);
+				break;
+		
+			case TOP_RIGHT:
+				growTop(yOff);
+				growRight(xOff);
+				break;
+				
+			case LEFT:
+				growLeft(xOff);
+				break;
+				
+			case RIGHT:
+				growRight(xOff);
+				break;
+				
+			case BOTTOM_LEFT:
+				growBottom(yOff);
+				growLeft(xOff);
+				break;
+		
+			case BOTTOM:
+				growBottom(yOff);
+				break;
+				
+			case BOTTOM_RIGHT:
+				growBottom(yOff);
+				growRight(xOff);
+				break;
+				
+			default:
+				return;
+			
+			}
+			updateBounds();
+		}
+	}
+	
+	
+	private void growTop(int yOff) {
+		mY += yOff;
+		mHeight -= yOff;
+	}
+	
+	private void growBottom(int yOff) {
+		mHeight += yOff;
+	}
+	
+	private void growLeft(int xOff) {
+		mX += xOff;
+		mWidth -= xOff;
+	}
+	
+	private void growRight(int xOff) {
+		mWidth += xOff;
+	}
+	
+	private void updateBounds() {
+		mBounds.set(mX, mY, mX+mWidth, mY+mHeight);
+		mShape.setBounds(mBounds);
+	}
+
+	public void modeSelected() {
 		mHighlighted = true;
+		mMarked = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_selected);
 		mShape.setBounds(mBounds);	
 	}
 	
-	public void deHighlight() {
+	public void modeNormal() {
 		mHighlighted = false;
+		mMarked = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence);
+		mShape.setBounds(mBounds);
+	}
+		
+	public void modeMarked() {
+		mHighlighted = false;
+		mMarked = true;
+		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_marked);
 		mShape.setBounds(mBounds);
 	}
 

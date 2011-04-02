@@ -28,9 +28,6 @@ public class StateFree extends State {
 			editorView.setState(EDITOR_STATE.MOVE_SELECTED);				//TODO
 			
 			editorView.redraw();
-    	} else if (editorView.openSequenceAt(x, y)) {
-    		editorView.setState(EDITOR_STATE.SELECTED_OPEN_SEQUENCE);
-    		editorView.mTouchElement.modeSelected();
     	} else {
 			editorView.setState(EDITOR_STATE.TOUCH_VOID);
     	}

@@ -80,20 +80,11 @@ public abstract class AbstractElement {
 	// - selected -> if it has been selected, after ACTION_UP
 	
 	
-	public void modeSelected() {
-		mHighlighted = true;
-		mMarked = false;
-	}
+	abstract public void modeSelected();
 	
-	public void modeNormal() {
-		mHighlighted = false;
-		mMarked = false;
-	}
+	abstract public void modeNormal();
 	
-	public void modeMarked() {
-		mMarked = true;
-		mHighlighted = false;
-	}
+	abstract public void modeMarked();
 	
 	
 	public boolean isSelected() {

@@ -32,7 +32,7 @@ public class Rectangle extends AbstractElement {
 	public Rectangle(Context context, int id, int x, int y, int width, int height) {
 		super(context, id, x,y,width,height);
 		mShape = context.getResources().getDrawable(R.drawable.shape_rectangle);
-		mShape.setBounds(x, y, x+height, y+width);
+		mShape.setBounds(mBounds);
 	}
 
 	@Override
