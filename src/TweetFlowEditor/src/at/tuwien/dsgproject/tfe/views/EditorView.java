@@ -39,11 +39,13 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.PopupWindow.OnDismissListener;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.Rectangle;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
+import at.tuwien.dsgproject.tfe.quickAction.CustomPopupWindow;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateFree;
@@ -548,6 +550,14 @@ public class EditorView extends View {
     
     public void openContextMenu() {    	
     	final QuickAction qa = new QuickAction(this);
+    	
+    	class OwnOnDismissListener implements OnDismissListener{
+			public void onDismiss() {
+				redraw();
+			}
+		}
+    	
+    	qa.setOnDismissListener(new OwnOnDismissListener());
     	
     	ActionItem delete = new ActionItem();
     	delete.setTitle("Delete");
