@@ -19,7 +19,7 @@ public class StateTouchVoid extends State {
 		final int offX = x - editorView.mOldX;
 		final int offY = y - editorView.mOldY;
 		
-		if(Math.sqrt(offX*offX + offY*offY) > editorView.mMoveOffset) {
+		if(Math.sqrt(offX*offX + offY*offY) > editorView.MOVE_OFFSET) {
 			editorView.mPosX += offX;
 			editorView.mPosY += offY;
 			

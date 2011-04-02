@@ -25,7 +25,6 @@ public class StateSelected extends State {
 			xGrid = editorView.getTouchOnGrid(x);
 			editorView.selectElementsOnGrid(xGrid);
 			editorView.setState(EDITOR_STATE.MOVE_SELECTED); //TODO
-			
 			editorView.redraw();
     	}
 		else {

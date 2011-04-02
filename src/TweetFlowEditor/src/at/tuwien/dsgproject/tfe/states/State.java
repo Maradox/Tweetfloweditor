@@ -12,7 +12,7 @@ public abstract class State {
 		this.editorView = editorView;
 	}
 	
-	public void onTouchEvent(MotionEvent event) {
+	final public void onTouchEvent(MotionEvent event) {
 		final int action = event.getAction();
     	
     	switch (action & MotionEvent.ACTION_MASK) {
@@ -47,7 +47,7 @@ public abstract class State {
 	protected void onActionMove(MotionEvent event) {}
 	protected void onActionUp(MotionEvent event) {}
 	
-    protected void onActionPointerUp(int action, MotionEvent event) {
+    final protected void onActionPointerUp(int action, MotionEvent event) {
         // get index of the pointer that left the screen
 		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
         >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
@@ -68,11 +68,11 @@ public abstract class State {
 	
 	
 	
-	protected int scaleX(int x) {
+	final protected int scaleX(int x) {
 		return (int)((x-editorView.mPosX)/editorView.mScaleFactor);
 	}
 	
-	protected int scaleY(int y) {
+	final protected int scaleY(int y) {
 		return (int)((y-editorView.mPosY)/editorView.mScaleFactor);
 	}
 }
