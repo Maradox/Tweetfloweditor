@@ -148,13 +148,6 @@ public class EditorView extends View {
 	
 	public OnLongClickListener mOnLongClickListener = new OnLongClickListener() {
 		public boolean onLongClick(View v) {
-//	    	if(state instanceof StateTouchVoid) {
-//	    		addRectangle(mOldX, mOldY);
-//	    	} else if(state instanceof StateTouchElement) {
-//	    		//openContextMenu = true; //TODO
-//	    		openContextMenu();
-//	    	}
-    		
 	    	return mCurrState.handleLongClick();
 	    }
 	};
@@ -167,7 +160,6 @@ public class EditorView extends View {
 	        
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
-
 //            mCurrMode = TouchMode.SCALE;
 	        
 	        mScalePivotX = (int)detector.getFocusX();
@@ -188,8 +180,7 @@ public class EditorView extends View {
 //			state = stateFree;
 //			super.onScaleEnd(detector);
 //		}
-	    
-	    
+	       
 	}
 	
 	
