@@ -22,30 +22,31 @@
 package at.tuwien.dsgproject.tfe.activities;
 
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
 
 public class Editor extends ActionbarActivity {
 	
-	private EditorView editorView;
+	private EditorView mEditorView;
+	private TweetFlow mTweetFlow;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editor); 
+        setContentView(R.layout.activity_editor);
         
-        editorView = (EditorView) findViewById(R.id.editor_view);
+        mTweetFlow = new TweetFlow(this);
         
-        registerForContextMenu(editorView);  
+        mEditorView = (EditorView) findViewById(R.id.editor_view);      
+        registerForContextMenu(mEditorView);  
+        mEditorView.setTweetFlow(mTweetFlow);
     }	
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,13 +59,13 @@ public class Editor extends ActionbarActivity {
     }
     
     public boolean onPrepareOptionsMenu(Menu menu) {   	
-    	if(editorView.somethingSelected()) {
+    	if(mTweetFlow.somethingSelected()) {
     		menu.findItem(R.id.deselect).setVisible(true);
     	} else {
     		menu.findItem(R.id.deselect).setVisible(false);
     	}
     	
-    	if(editorView.isRasterOn()) {  
+    	if(mEditorView.isRasterOn()) {  
     		menu.findItem(R.id.raster_add).setVisible(false);
     		menu.findItem(R.id.raster_remove).setVisible(true);
         }     	
@@ -73,11 +74,11 @@ public class Editor extends ActionbarActivity {
     		menu.findItem(R.id.raster_remove).setVisible(false);
         }
         
-    	if(editorView.getSnapMode() == SnapMode.NOTHING)
+    	if(mEditorView.getSnapMode() == SnapMode.NOTHING)
     		menu.findItem(R.id.snapping_nothing).setChecked(true);
-    	else if(editorView.getSnapMode() == SnapMode.RASTER) 
+    	else if(mEditorView.getSnapMode() == SnapMode.RASTER) 
         	menu.findItem(R.id.snapping_raster).setChecked(true);
-        else if(editorView.getSnapMode() == SnapMode.GRID) 
+        else if(mEditorView.getSnapMode() == SnapMode.GRID) 
         	menu.findItem(R.id.snapping_grid).setChecked(true);
         
 		return true;
@@ -88,42 +89,42 @@ public class Editor extends ActionbarActivity {
     	
     	switch (menuItem.getItemId()) {
     		case R.id.deselect:
-    			editorView.delesectAll();
-    			editorView.redraw();
+    			mTweetFlow.deselectAll();
+    			mEditorView.redraw();
     			break;
     		case R.id.raster_add:
-    			editorView.setRasterOn(true);
-    			editorView.redraw();
+    			mEditorView.setRasterOn(true);
+    			mEditorView.redraw();
     			break;
     		case R.id.raster_remove:	
-    			editorView.setRasterOn(false);
-    			editorView.redraw();
+    			mEditorView.setRasterOn(false);
+    			mEditorView.redraw();
     			break;
     		case R.id.snapping:
     			break;
     		case R.id.snapping_nothing:
     			menuItem.setChecked(true);
-    			editorView.setSnapMode(SnapMode.NOTHING);
-    			editorView.redraw();
+    			mEditorView.setSnapMode(SnapMode.NOTHING);
+    			mEditorView.redraw();
     			break;
     		case R.id.snapping_raster:
     			menuItem.setChecked(true);
-    			editorView.setSnapMode(SnapMode.RASTER);
-    			editorView.redraw();
+    			mEditorView.setSnapMode(SnapMode.RASTER);
+    			mEditorView.redraw();
     			break;
     		case R.id.snapping_grid:
     			menuItem.setChecked(true);
-    			editorView.setSnapMode(SnapMode.GRID);
-    			editorView.redraw();
+    			mEditorView.setSnapMode(SnapMode.GRID);
+    			mEditorView.redraw();
     			break;
     		case R.id.undo:
-    			editorView.undo();
+    			mEditorView.undo();
     			break;	
     		case R.id.redo:
-    			editorView.redo();
+    			mEditorView.redo();
     			break;		
     		case R.id.add_open_sequence:
-    			editorView.addOpenSequence();
+    			mTweetFlow.addOpenSequence();
     			break;		
     			
     		default:	

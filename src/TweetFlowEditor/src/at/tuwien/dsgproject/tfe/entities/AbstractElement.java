@@ -24,9 +24,10 @@ package at.tuwien.dsgproject.tfe.entities;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
 
 public abstract class AbstractElement {
 	
@@ -41,10 +42,11 @@ public abstract class AbstractElement {
 	protected final int fillColor = Color.RED;
 	protected final int borderColor = Color.BLACK;
 	
-	protected int mId;
+	protected Integer mId;
 	
 	protected Context mContext;
 	
+	protected AbstractElement mClosedSequenceNext = null;
 	
 	AbstractElement(Context context, int id, int x, int y, int width, int height) {
 		mContext = context;
@@ -57,6 +59,21 @@ public abstract class AbstractElement {
 	}
 	
 	abstract public void draw(Canvas canvas);
+	
+	
+	private void drawClosedSequence(Canvas canvas) {
+		if(mClosedSequenceNext != null) {
+			final Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.BLACK);
+			paint.setAntiAlias(true);
+			canvas.drawLine(getMiddleX(), 
+					getBotY(), 
+					mClosedSequenceNext.getMiddleX(), 
+					mClosedSequenceNext.getTopY(), 
+					paint);
+		}
+	}
 	
 	public void move(int xOff, int yOff) {
 		mX += xOff;
@@ -119,8 +136,12 @@ public abstract class AbstractElement {
 		this.mShape = mShape;
 	}
 	
+	public void setClosedSequenceNext(AbstractElement elem) {
+		mClosedSequenceNext = elem;
+	}
 	
-	
-	
+	public void removeClosedSequenceNext() {
+		mClosedSequenceNext = null;
+	}
 	
 }

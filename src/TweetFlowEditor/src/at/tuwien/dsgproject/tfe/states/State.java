@@ -1,15 +1,18 @@
 package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
+import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public abstract class State {
 
-	EditorView editorView;
+	protected EditorView mEditorView;	
+	protected TweetFlow mTweetFlow;
 	
-	public State(EditorView editorView) {
-		this.editorView = editorView;
+	public State(EditorView editorView, TweetFlow tweetFlow) {
+		mEditorView = editorView;
+		mTweetFlow = tweetFlow;
 	}
 	
 	final public void onTouchEvent(MotionEvent event) {
@@ -29,8 +32,8 @@ public abstract class State {
     		break;
     	 
     	case MotionEvent.ACTION_CANCEL:
-	    	editorView.setState(EDITOR_STATE.FREE);
-	    	editorView.mActivePointerId = editorView.INVALID_POINTER_ID;
+    		mEditorView.setState(EDITOR_STATE.FREE);
+    		mEditorView.invalidatePointerId();
     		break;
     		 	
     	case MotionEvent.ACTION_POINTER_UP:
@@ -50,14 +53,14 @@ public abstract class State {
     final protected void onActionPointerUp(int action, MotionEvent event) {
         // get index of the pointer that left the screen
 		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
-        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+        		>> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 	    final int pId = event.getPointerId(pIndex);
-	    if (pId == editorView.mActivePointerId) {
+	    if (pId == mEditorView.getActivePointerId()) {
 	        // choose new active pointer
 	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
-	        editorView.mOldX = (int)event.getX(newPointerIndex);
-	        editorView.mOldY = (int)event.getY(newPointerIndex);
-	        editorView.mActivePointerId = event.getPointerId(newPointerIndex);
+	        mEditorView.setLastTouch((int)event.getX(newPointerIndex),
+	        		(int)event.getY(newPointerIndex));
+	        mEditorView.setActivePointerId(event.getPointerId(newPointerIndex));
 	    }    
     }
     
@@ -65,14 +68,20 @@ public abstract class State {
     public boolean handleLongClick() {
     	return false;
     }
-	
-	
-	
-	final protected int scaleX(int x) {
-		return (int)((x-editorView.mPosX)/editorView.mScaleFactor);
+
+	public void setTweetFlow(TweetFlow tweetFlow) {
+		this.mTweetFlow = tweetFlow;
 	}
+    
+    
 	
-	final protected int scaleY(int y) {
-		return (int)((y-editorView.mPosY)/editorView.mScaleFactor);
-	}
+	
+	
+//	final protected int scaleX(int x) {
+//		return (int)((x-editorView.mPosX)/editorView.mScaleFactor);
+//	}
+//	
+//	final protected int scaleY(int y) {
+//		return (int)((y-editorView.mPosY)/editorView.mScaleFactor);
+//	}
 }

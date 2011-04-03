@@ -2,78 +2,64 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import android.widget.Toast;
+import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class StateTouchElement extends State {
-		
-	public StateTouchElement(EditorView editorView) {
-		super(editorView);
+	
+	public StateTouchElement(EditorView editorView, TweetFlow tweetFlow) {
+		super(editorView, tweetFlow);
 	}
 	
 	public void onActionDown(MotionEvent event) {} 
 	
 	public void onActionMove(MotionEvent event) {	
-		final int pointerIndex = event.findPointerIndex(editorView.mActivePointerId);
+		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-		final int offX = x - editorView.mOldX;
-		final int offY = y - editorView.mOldY;
-			
-		if(editorView.mTouchElement != null) {
+		final int offX = x - mEditorView.getLastTouchX();
+		final int offY = y - mEditorView.getLastTouchY();
 	
-			if(editorView.mSelected.containsValue(editorView.mTouchElement)) {
-				if(Math.sqrt(offX*offX + offY*offY) > editorView.MOVE_OFFSET) {
-					editorView.moveSelected(offX, offY);
-					editorView.setState(EDITOR_STATE.MOVE_SELECTED);
-				}	
+		if(Math.sqrt(offX*offX + offY*offY) > mEditorView.MOVE_OFFSET) {
+			if(mTweetFlow.isSelected(mEditorView.getTouchElementId())) {
+				mTweetFlow.moveSelected(offX, offY);
+				mEditorView.setState(EDITOR_STATE.MOVE_SELECTED);
+			} else {
+				mEditorView.moveTouchElement(offX, offY);
+				mEditorView.setState(EDITOR_STATE.MOVE_ELEMENT);
 			}
-			else {
-				if(Math.sqrt(offX*offX + offY*offY) > editorView.MOVE_OFFSET) {
-					editorView.mTouchElement.move(offX, offY);
-					editorView.setState(EDITOR_STATE.MOVE_ELEMENT);
-				}	
-			}
-						
-			editorView.redraw();
-			
-		} else {
-			Toast.makeText(editorView.getContext(), "!!select mode, but element == null?", Toast.LENGTH_SHORT).show();		
-		}
-		
-		editorView.mOldX = x;
-		editorView.mOldY = y;
+			mEditorView.redraw();
+		}				
+		mEditorView.setLastTouch(x, y);
 	}	
 	
 	public void onActionUp(MotionEvent event) {
-		final int id = editorView.mTouchElement.getId();
-		if(!editorView.mSelected.containsKey(id)) { // add to selected elements, on first click
-			editorView.mSelected.put(id, editorView.mTouchElement);
-			editorView.mTouchElement.modeSelected();
+		final Integer id = mEditorView.getTouchElementId();
+		if(!mTweetFlow.isSelected(id)) { // add to selected elements, on first click
+			mTweetFlow.selectElementById(id);
 		} else { // deselect item on 2nd click
-			editorView.mSelected.remove(id);
-			editorView.mTouchElement.modeNormal();
-			//mTouchElement = null;
+			mTweetFlow.deselectElementById(id);
 		}
 		
-		if(editorView.mSelected.isEmpty()) {
-			editorView.setState(EDITOR_STATE.FREE);
+		if(!mTweetFlow.somethingSelected()) {
+			mEditorView.setState(EDITOR_STATE.FREE);
 		} else {
-			editorView.setState(EDITOR_STATE.SELECTED);
+			mEditorView.setState(EDITOR_STATE.SELECTED);
 		}
 		
-		editorView.redraw();
+		mEditorView.redraw();
 	}
 
 	@Override
 	public boolean handleLongClick() {
-		editorView.openContextMenu();
-		if(editorView.mSelected.isEmpty()) {
-			editorView.setState(EDITOR_STATE.FREE);
+		mEditorView.openContextMenu();
+		if(!mTweetFlow.somethingSelected()) {
+			mEditorView.setState(EDITOR_STATE.FREE);
 		} else {
-			editorView.setState(EDITOR_STATE.SELECTED);
+			mEditorView.setState(EDITOR_STATE.SELECTED);
 		}
-		editorView.mTouchElement.modeNormal();
+		mEditorView.getTouchElement().modeNormal();
 		return true;
 	}
 	
