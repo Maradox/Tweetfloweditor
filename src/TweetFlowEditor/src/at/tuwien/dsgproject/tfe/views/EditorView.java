@@ -442,6 +442,7 @@ public class EditorView extends View {
     	
     	qa.setOnDismissListener(new OwnOnDismissListener());
 
+
     	ActionItem delete = new ActionItem();
     	delete.setTitle("Delete");
     	delete.setIcon(getResources().getDrawable(R.drawable.chart));
