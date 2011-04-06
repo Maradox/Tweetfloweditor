@@ -68,11 +68,6 @@ public class Editor extends ActionbarActivity {
     
     
     
-    
-    
-    
-    
-    
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
     	
