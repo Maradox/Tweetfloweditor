@@ -33,8 +33,7 @@ public abstract class AbstractElement {
 	
 	protected int mX, mY, mWidth, mHeight;
 	
-	protected boolean mHighlighted;
-	protected boolean mMarked;
+	protected boolean mSelected;
 	
 	protected Drawable mShape;
 	protected Rect mBounds;
@@ -102,10 +101,10 @@ public abstract class AbstractElement {
 	abstract public void modeNormal();
 	
 	abstract public void modeMarked();
-	
+
 	
 	public boolean isSelected() {
-		return mHighlighted;
+		return mSelected;
 	}
 	
 	public int getId() {

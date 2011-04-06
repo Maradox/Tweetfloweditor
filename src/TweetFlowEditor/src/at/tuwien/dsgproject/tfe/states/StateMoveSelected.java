@@ -21,12 +21,15 @@ public class StateMoveSelected extends State {
 		final int offY = y - mEditorView.getLastTouchY();
 			
 		mTweetFlow.moveSelected(offX, offY);
-		mEditorView.redraw();
 		mEditorView.setLastTouch(x, y);	
+		mEditorView.redraw();
+		
 	}	
 	
 	public void onActionUp(MotionEvent event) {
+		mTweetFlow.setTouchElementModeSelected();
 		mEditorView.setState(EDITOR_STATE.SELECTED);
+		mEditorView.redraw();
 	}
 	
 	

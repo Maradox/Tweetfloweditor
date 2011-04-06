@@ -5,7 +5,7 @@
     <corners
         android:radius="3px" />
     <solid
-        android:color="@color/blue_light_trans" />
+        android:color="@android:color/transparent" />
     <stroke
         android:width="5px"
         android:color="@color/blue_medium"

@@ -21,8 +21,9 @@ public class StateMoveElement extends State {
         final int offX = x - mEditorView.getLastTouchX();
 		final int offY = y - mEditorView.getLastTouchY();
 			
-		mEditorView.moveTouchElement(offX, offY);
+		mTweetFlow.moveTouchElement(offX, offY);
 		mEditorView.setLastTouch(x, y);
+		mEditorView.redraw();
 	}	
 	
 	public void onActionUp(MotionEvent event) {
@@ -39,9 +40,12 @@ public class StateMoveElement extends State {
 //			editorView.moveSingleOn(gridX, y-editorView.mPosY);
 //		}	
 		
-		mEditorView.getTouchElement().modeNormal();
-		mEditorView.setState(EDITOR_STATE.FREE);
-		mEditorView.setLastTouch(x, y);
+		mTweetFlow.setTouchElementModeNormal();
+		if(!mTweetFlow.somethingSelected()) {
+			mEditorView.setState(EDITOR_STATE.FREE);
+		} else {
+			mEditorView.setState(EDITOR_STATE.SELECTED);
+		}
 		mEditorView.redraw();
 	}
 	

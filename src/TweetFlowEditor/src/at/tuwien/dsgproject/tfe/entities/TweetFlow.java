@@ -15,6 +15,8 @@ public class TweetFlow {
 	private HashMap<Integer, AbstractElement> mSelected;
 	//public HashMap<Integer, OpenSequence> mOpenSequences;
 	
+	private AbstractElement mTouchElement = null;
+	
 	private Integer mElemCounter;
 	
 	public TweetFlow(Context context) {
@@ -55,18 +57,22 @@ public class TweetFlow {
 	}
 	
 	/**
-	 * Checks if an element is at the given location and returns it.
+	 * Checks if an element is at the given location.
+	 * If an element is found it is set as the current touch element and its mode 
+	 * is set to modeMarked()
 	 * @param x x coordinate
 	 * @param y y coordinate
 	 * @return The element at the given location or null.
 	 */
-	public AbstractElement elementAt(int x, int y) {
+	public boolean elementAt(int x, int y) {
 		for(AbstractElement r : mElements.values()) {
 			if(r.isFocused(x,y)) {
-				return r;
+				mTouchElement = r;
+				return true;
 			}	
 		}
-		return null;
+		mTouchElement = null;
+		return false;
 	}
 	
 	public void draw(Canvas canvas) {
@@ -80,6 +86,12 @@ public class TweetFlow {
 			e.move(offX, offY);
 		}
     }
+    
+	public void moveTouchElement(int offX, int offY) {
+		if(mTouchElement != null) {
+			mTouchElement.move(offX, offY);
+		}
+	}
     
     public void deselectAll() {
     	for(AbstractElement e : mSelected.values()) {
@@ -127,6 +139,16 @@ public class TweetFlow {
 		}	
 	}
 	
+	public boolean selectTouchElement() {
+		if(mTouchElement != null) {
+			mSelected.put(mTouchElement.getId(), mTouchElement);
+			mTouchElement.modeSelected();
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean deselectElementById(Integer id) {
 		final AbstractElement elem = mSelected.get(id);
 		if(elem != null) {
@@ -136,6 +158,50 @@ public class TweetFlow {
 		} else {
 			return false;
 		}	
+	}
+	
+	public boolean deselectTouchElement() {
+		if(mTouchElement != null) {
+			mTouchElement.modeNormal();
+			mSelected.remove(mTouchElement.getId());
+			return true;
+		} else {
+			return false;
+		}	
+	}
+	
+	public AbstractElement getTouchElement() {
+		return mTouchElement;
+	}
+	
+	public boolean isTouchElementSelected() {
+		if(mTouchElement != null) {
+			return mTouchElement.isSelected();
+		} else {
+			return false;
+		}
+	}
+	
+	public void toggleTouchElementSelected() {
+		if(mTouchElement != null) {
+			if(mSelected.containsKey(mTouchElement.getId())) {
+				deselectTouchElement();
+			} else {
+				selectTouchElement();
+			}
+		}
+	}
+	
+	public void setTouchElementModeNormal() {
+		if(mTouchElement != null) mTouchElement.modeNormal();
+	}
+	
+	public void setTouchElementModeMarked() {
+		if(mTouchElement != null) mTouchElement.modeMarked();
+	}
+	
+	public void setTouchElementModeSelected() {
+		if(mTouchElement != null) mTouchElement.modeSelected();
 	}
     
     

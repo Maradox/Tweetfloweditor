@@ -32,8 +32,9 @@ public abstract class State {
     		break;
     	 
     	case MotionEvent.ACTION_CANCEL:
-    		mEditorView.setState(EDITOR_STATE.FREE);
-    		mEditorView.invalidatePointerId();
+//    		mEditorView.setState(EDITOR_STATE.FREE);
+//    		mEditorView.invalidatePointerId();
+    		onActionUp(event);
     		break;
     		 	
     	case MotionEvent.ACTION_POINTER_UP:

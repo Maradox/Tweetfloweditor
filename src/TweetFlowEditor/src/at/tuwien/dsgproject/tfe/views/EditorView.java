@@ -76,7 +76,7 @@ public class EditorView extends View {
 	
 
 
-	private AbstractElement mTouchElement = null;
+	//private AbstractElement mTouchElement = null;
 
 	public boolean setRaster = false;
 	public int horizontalRasterCT;
@@ -277,7 +277,7 @@ public class EditorView extends View {
     
     public void setState(EDITOR_STATE state) {
     	if(!mAvailableStates.containsKey(state)) {
-    		//TODO fixme
+    		//TODO should not occur, check if all states are assigned in prepareStates()
     		Toast.makeText(getContext(), "INVALID STATE", Toast.LENGTH_SHORT).show();
     	} else {
     		mCurrState = mAvailableStates.get(state);
@@ -285,27 +285,22 @@ public class EditorView extends View {
     }
     
     
-    public void moveTouchElement(int offX, int offY) {
-    	if(mTouchElement != null) {
-    		mTouchElement.move(offX, offY);
-    		redraw();
-    	}
-    }
+
     
-	private int scaledX(int x) {
+	public int scaledX(int x) {
 		return (int)((x-mOffsetX)/mScaleFactor);
 	}
 	
 	
-	private int scaledY(int y) {
+	public int scaledY(int y) {
 		return (int)((y-mOffsetY)/mScaleFactor);
 	}
 
 	
-    public void moveSingleOn(int x, int y) {
-    	if(mTouchElement != null)
-    		mTouchElement.moveOn(x, y);
-    }
+//    public void moveSingleOn(int x, int y) {
+//    	if(mTouchElement != null)
+//    		mTouchElement.moveOn(x, y);
+//    }
      
     
     public void redraw() {
@@ -446,13 +441,13 @@ public class EditorView extends View {
 		}
     	
     	qa.setOnDismissListener(new OwnOnDismissListener());
-    	
+
     	ActionItem delete = new ActionItem();
     	delete.setTitle("Delete");
     	delete.setIcon(getResources().getDrawable(R.drawable.chart));
     	delete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				mTweetFlow.deleteElement(mTouchElement.getId());
+				mTweetFlow.deleteElement(mTweetFlow.getTouchElement().getId());
 				redraw();
 				qa.dismiss();
 			}
@@ -471,13 +466,13 @@ public class EditorView extends View {
 		});
 		qa.addActionItem(changeData);
 
-		if(mTouchElement.isSelected()) {
+		if(mTweetFlow.getTouchElement().isSelected()) {
 			ActionItem deselect = new ActionItem();
 			deselect.setTitle("Deselect");
 			deselect.setIcon(getResources().getDrawable(R.drawable.production));
 			deselect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					mTweetFlow.deleteElement(mTouchElement.getId());
+					mTweetFlow.deleteElement(mTweetFlow.getTouchElement().getId());
 					redraw();
 					qa.dismiss();
 				}
@@ -488,7 +483,7 @@ public class EditorView extends View {
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		
 		Rect rect = new Rect();
-		rect.set(mTouchElement.getmShape().getBounds().left, mTouchElement.getmShape().getBounds().top, mTouchElement.getmShape().getBounds().right, mTouchElement.getmShape().getBounds().bottom);
+		rect.set(mTweetFlow.getTouchElement().getmShape().getBounds());
 		rect.offset(mOffsetX,this.getTop()+mOffsetY+24);
 				
 		qa.show(rect);
@@ -544,22 +539,7 @@ public class EditorView extends View {
 		mOffsetX += offX;
 		mOffsetY += offY;
 	}
-	
-	public void setTouchElement(AbstractElement elem) {
-		mTouchElement = elem;
-	}
-	
-	public AbstractElement getTouchElement() {
-		return mTouchElement;
-	}
 
-	public Integer getTouchElementId() {
-		if(mTouchElement != null) {
-			return mTouchElement.getId();
-		} else {
-			return -1;
-		}
-	}
 	
 	public void setTweetFlow(TweetFlow tweetFlow) {
 		mTweetFlow = tweetFlow;

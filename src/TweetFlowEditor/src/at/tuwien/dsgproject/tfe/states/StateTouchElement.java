@@ -1,7 +1,6 @@
 package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
-import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -22,11 +21,11 @@ public class StateTouchElement extends State {
 		final int offY = y - mEditorView.getLastTouchY();
 	
 		if(Math.sqrt(offX*offX + offY*offY) > mEditorView.MOVE_OFFSET) {
-			if(mTweetFlow.isSelected(mEditorView.getTouchElementId())) {
+			if(mTweetFlow.isTouchElementSelected()) {
 				mTweetFlow.moveSelected(offX, offY);
 				mEditorView.setState(EDITOR_STATE.MOVE_SELECTED);
 			} else {
-				mEditorView.moveTouchElement(offX, offY);
+				mTweetFlow.moveTouchElement(offX, offY);
 				mEditorView.setState(EDITOR_STATE.MOVE_ELEMENT);
 			}
 			mEditorView.redraw();
@@ -35,12 +34,7 @@ public class StateTouchElement extends State {
 	}	
 	
 	public void onActionUp(MotionEvent event) {
-		final Integer id = mEditorView.getTouchElementId();
-		if(!mTweetFlow.isSelected(id)) { // add to selected elements, on first click
-			mTweetFlow.selectElementById(id);
-		} else { // deselect item on 2nd click
-			mTweetFlow.deselectElementById(id);
-		}
+		mTweetFlow.toggleTouchElementSelected();
 		
 		if(!mTweetFlow.somethingSelected()) {
 			mEditorView.setState(EDITOR_STATE.FREE);
@@ -59,7 +53,7 @@ public class StateTouchElement extends State {
 		} else {
 			mEditorView.setState(EDITOR_STATE.SELECTED);
 		}
-		mEditorView.getTouchElement().modeNormal();
+		mTweetFlow.setTouchElementModeNormal();
 		return true;
 	}
 	

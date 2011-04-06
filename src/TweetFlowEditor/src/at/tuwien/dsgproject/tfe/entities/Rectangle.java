@@ -41,22 +41,18 @@ public class Rectangle extends AbstractElement {
 	}	
 	
 	public void modeSelected() {
-		mHighlighted = true;
-		mMarked = false;
+		mSelected = true;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle_selected);
 		mShape.setBounds(mBounds);	
 	}
 	
 	public void modeNormal() {
-		mHighlighted = false;
-		mMarked = false;
+		mSelected = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle);
 		mShape.setBounds(mBounds);
 	}
 		
 	public void modeMarked() {
-		mHighlighted = false;
-		mMarked = true;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_rectangle_marked);
 		mShape.setBounds(mBounds);
 	}

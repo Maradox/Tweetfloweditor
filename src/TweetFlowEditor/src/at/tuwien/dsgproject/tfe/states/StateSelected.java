@@ -1,7 +1,6 @@
 package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
-import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -16,10 +15,10 @@ public class StateSelected extends State {
 		final int xGrid;
 		final int x = (int) event.getX();
 		final int y = (int) event.getY();
-		final AbstractElement elem = mTweetFlow.elementAt(x, y);
     	
-		if (elem != null) {
-			mEditorView.setTouchElement(elem);
+		if (mTweetFlow.elementAt(mEditorView.scaledX(x), mEditorView.scaledY(y))) {
+//			mEditorView.setTouchElement(elem);
+			mTweetFlow.setTouchElementModeMarked();
 			mEditorView.setState(EDITOR_STATE.TOUCH_ELEMENT);
 			mEditorView.redraw();
 		}   

@@ -17,11 +17,9 @@ public class StateFree extends State {
 		
 		final int x = (int) event.getX();
 		final int y = (int) event.getY();
-		final AbstractElement elem = mTweetFlow.elementAt(x, y);
 			
-		if (elem != null) {
-			elem.modeMarked();
-			mEditorView.setTouchElement(elem);
+		if (mTweetFlow.elementAt(mEditorView.scaledX(x), mEditorView.scaledY(y))) {
+			mTweetFlow.setTouchElementModeMarked();
 			mEditorView.setState(EDITOR_STATE.TOUCH_ELEMENT);	
 			mEditorView.redraw();
 //		} else if( editorView.snapMode == SnapMode.GRID && 
