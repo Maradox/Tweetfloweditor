@@ -1,14 +1,20 @@
 package at.tuwien.dsgproject.tfe.entities;
 
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Point;
 
-public class TweetFlow {
+public class TweetFlow implements Serializable {
 	
+	/**
+	 * serializable ID
+	 */
+	private static final long serialVersionUID = -1549177934192038606L;
+	
+	public static final String TF_ID = "TweetFlow";
+
 	private Context mContext;
 	
 	private HashMap<Integer, AbstractElement> mElements;
@@ -203,9 +209,8 @@ public class TweetFlow {
 	public void setTouchElementModeSelected() {
 		if(mTouchElement != null) mTouchElement.modeSelected();
 	}
-    
-    
 	
-
-
+	public void setContext(Context context) {
+		mContext = context;
+	}
 }

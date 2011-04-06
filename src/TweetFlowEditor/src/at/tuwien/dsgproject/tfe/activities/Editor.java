@@ -21,6 +21,8 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
+import java.io.Serializable;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,12 +44,27 @@ public class Editor extends ActionbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         
-        mTweetFlow = new TweetFlow(this);
+        mTweetFlow = (savedInstanceState == null) ? null :
+        		(TweetFlow) savedInstanceState.getSerializable(TweetFlow.TF_ID);
+        if (mTweetFlow != null) {
+        	mTweetFlow.setContext(this);
+        } else {
+        	mTweetFlow = new TweetFlow(this);
+        }
         
         mEditorView = (EditorView) findViewById(R.id.editor_view);      
         registerForContextMenu(mEditorView);  
         mEditorView.setTweetFlow(mTweetFlow);
     }	
+    
+    
+    
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(TweetFlow.TF_ID, mTweetFlow);
+    }
     
     
     
