@@ -31,15 +31,67 @@
     
 	</LinearLayout> <!-- ActionBar -->
 	
-	<LinearLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/white"> 
+        android:padding="6dip"
+        android:background="@android:color/white" >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_editor"
+                style="@style/DashboardButton"
+                android:onClick="openEditor"
+                android:text="@string/editor"
+                android:drawableTop="@drawable/dashboard_editor"/>
+            <Button android:id="@+id/dashboard_btn_tweetflow"
+                style="@style/DashboardButton"
+                android:onClick="openMyTwitter"
+                android:text="@string/timeline"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
         
-			
-	</LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="@string/open_tweetflow"
+                android:drawableTop="@drawable/dashboard_foo"/>
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="@string/whatever"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="Foo"
+                android:drawableTop="@drawable/dashboard_foo"/>
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="Bar"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+
     
     
 </LinearLayout>
