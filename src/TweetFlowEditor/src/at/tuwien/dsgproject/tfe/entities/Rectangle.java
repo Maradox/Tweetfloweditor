@@ -23,6 +23,9 @@ package at.tuwien.dsgproject.tfe.entities;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 
 
@@ -38,6 +41,22 @@ public class Rectangle extends AbstractElement {
 	@Override
 	public void draw(Canvas canvas) {
 		mShape.draw(canvas);	
+				
+		if(mClosedSequenceNext != null) {			
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.DKGRAY);
+			paint.setAntiAlias(true);
+			canvas.drawLine(getMiddleX(), getBotY(), mClosedSequenceNext.getMiddleX(), mClosedSequenceNext.getTopY(), paint);
+		}
+		else if(mClosedSequenceMaybeNext != null) {
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.GRAY);
+			paint.setAntiAlias(true);
+
+			canvas.drawLine(getMiddleX(), getBotY(), mClosedSequenceMaybeNext.getMiddleX(), mClosedSequenceMaybeNext.getTopY(), paint);
+		}
 	}	
 	
 	public void modeSelected() {

@@ -21,6 +21,8 @@ public class StateMoveElement extends State {
         final int offX = x - mEditorView.getLastTouchX();
 		final int offY = y - mEditorView.getLastTouchY();
 			
+		mTweetFlow.setMaybeConnection();
+		
 		mTweetFlow.moveTouchElement(offX, offY);
 		mEditorView.setLastTouch(x, y);
 		mEditorView.redraw();
@@ -38,7 +40,9 @@ public class StateMoveElement extends State {
 //		else if(editorView.snapMode == SnapMode.GRID && editorView.isThereGridHorizontal(x)) {
 //			int gridX = editorView.findGridHorizontal(x);
 //			editorView.moveSingleOn(gridX, y-editorView.mPosY);
-//		}	
+//		}
+		
+		mTweetFlow.convertMaybeIntoFixConnection();
 		
 		mTweetFlow.setTouchElementModeNormal();
 		if(!mTweetFlow.somethingSelected()) {
