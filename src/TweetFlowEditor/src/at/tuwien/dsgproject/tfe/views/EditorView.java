@@ -28,6 +28,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -68,8 +69,6 @@ public class EditorView extends View {
 	
 	
 	public static final int RASTER_HORIZONTAL_WIDTH = 70;
-	public static final int DISTANCE_FOR_AUTO_CONNECTION_X = 70;
-	public static final int DISTANCE_FOR_AUTO_CONNECTION_Y = 120;
 	
 	public static final int MOVE_OFFSET = 8;
 		
@@ -246,20 +245,20 @@ public class EditorView extends View {
 		
 	    mTweetFlow.draw(canvas);
 
-
-//		if(mCurrState instanceof StateMoveElement) {
-//			Point ids = findElementForConnection();
-//			Paint paint = new Paint();
-//			paint.setStrokeWidth(5);
-//			paint.setColor(Color.GRAY);
-//			paint.setAntiAlias(true);
-//			if(ids.x != -1) {
-//				canvas.drawLine(mElements.get(ids.x).getMiddleX(),  mElements.get(ids.x).getTopY(), mTouchElement.getMiddleX(), mTouchElement.getBotY(), paint);
-//			}	
-//			if(ids.y != -1) {
-//				canvas.drawLine(mElements.get(ids.y).getMiddleX(),  mElements.get(ids.y).getBotY(), mTouchElement.getMiddleX(), mTouchElement.getTopY(), paint);
-//			}	
-//		}
+	    /*
+		if(mCurrState instanceof StateMoveElement) {
+			Point ids = mTweetFlow.findElementForConnection();
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.GRAY);
+			paint.setAntiAlias(true);
+			if(ids.x != -1) {
+				canvas.drawLine(mElements.get(ids.x).getMiddleX(),  mElements.get(ids.x).getTopY(), mTouchElement.getMiddleX(), mTouchElement.getBotY(), paint);
+			}	
+			if(ids.y != -1) {
+				canvas.drawLine(mElements.get(ids.y).getMiddleX(),  mElements.get(ids.y).getBotY(), mTouchElement.getMiddleX(), mTouchElement.getTopY(), paint);
+			}	
+		}*/
 		
 		canvas.restore();
 

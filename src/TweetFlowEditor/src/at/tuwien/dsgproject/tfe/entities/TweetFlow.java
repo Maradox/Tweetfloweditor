@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Point;
+import android.widget.Toast;
 
 public class TweetFlow implements Serializable {
 	
@@ -12,6 +14,10 @@ public class TweetFlow implements Serializable {
 	 * serializable ID
 	 */
 	private static final long serialVersionUID = -1549177934192038606L;
+	public static final int DISTANCE_FOR_AUTO_CONNECTION_X = 70;
+	public static final int DISTANCE_FOR_AUTO_CONNECTION_Y = 120;
+	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_X = 100;
+	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_Y = 150;
 	
 	public static final String TF_ID = "TweetFlow";
 
@@ -105,25 +111,80 @@ public class TweetFlow implements Serializable {
     	}
     	mSelected.clear();
     }
+    /*
+    public Point findElementForConnection() {	
+    	Point ids = new Point(-1,-1);
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e.getId() != mTouchElement.getId()) {
+				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
+				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
+				
+				if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
+					if(offY < 0) 
+						ids.x = e.getId();
+					else 
+						ids.y = e.getId();
+				}
+			}	
+    	}
+    	return ids;
+    }
+    */
     
-//    public Point findElementForConnection() {	
-//    	Point ids = new Point(-1,-1);
-//    	
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e.getId() != mTouchElement.getId()) {
-//				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
-//				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
-//				
-//				if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
-//					if(offY < 0) 
-//						ids.x = e.getId();
-//					else 
-//						ids.y = e.getId();
-//				}
-//			}	
-//    	}
-//    	return ids;
-//    }
+    public void setMaybeConnection() {	 
+    	mTouchElement.setmClosedSequenceMaybeNext(null);
+    	for(AbstractElement e : mElements.values()) {
+    		e.setmClosedSequenceMaybeNext(null);
+    	}	
+    	
+    	for(AbstractElement e : mElements.values()) {
+			if(e.getId() != mTouchElement.getId()) {
+				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
+				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
+				
+				if(offY > 0 && mTouchElement.getmClosedSequenceNext() == e) {
+					mTouchElement.setmClosedSequenceNext(null);
+				}
+				else if(offY < 0 && e.getmClosedSequenceNext() == mTouchElement) {
+					e.setmClosedSequenceNext(null);
+				}
+				
+				if((Math.abs(offX) > DISTANCE_FOR_AUTO_DISCONNECTION_X) || (Math.abs(offY) > DISTANCE_FOR_AUTO_DISCONNECTION_Y)) {
+					if(offY > 0) {
+						if(e.getmClosedSequenceNext() == mTouchElement)
+							e.setmClosedSequenceNext(null);
+					}	
+					else {
+						if(mTouchElement.getmClosedSequenceNext() == e)
+							mTouchElement.setmClosedSequenceNext(null);
+					}
+				}
+				
+				else if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
+					if(offY > 0) {
+						if(e.getmClosedSequenceNext() == null) {
+							e.setmClosedSequenceMaybeNext(mTouchElement);
+						}
+					}	
+					else {
+						if(mTouchElement.getmClosedSequenceNext() == null) {
+							mTouchElement.setmClosedSequenceMaybeNext(e);
+						}	
+					}
+				}
+			}	
+    	}
+
+    }
+    
+    public void convertMaybeIntoFixConnection() {
+    	for(AbstractElement e : mElements.values()) {
+    		if(e.getmClosedSequenceMaybeNext() != null)
+    			e.setmClosedSequenceNext(e.getmClosedSequenceMaybeNext());
+    		e.setmClosedSequenceMaybeNext(null);
+    	}	
+    }
     
     
 	public boolean somethingSelected() {

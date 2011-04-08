@@ -46,6 +46,7 @@ public abstract class AbstractElement {
 	protected Context mContext;
 	
 	protected AbstractElement mClosedSequenceNext = null;
+	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
 	AbstractElement(Context context, int id, int x, int y, int width, int height) {
 		mContext = context;
@@ -134,13 +135,25 @@ public abstract class AbstractElement {
 	public void setmShape(Drawable mShape) {
 		this.mShape = mShape;
 	}
-	
-	public void setClosedSequenceNext(AbstractElement elem) {
-		mClosedSequenceNext = elem;
+		
+	public AbstractElement getmClosedSequenceMaybeNext() {
+		return mClosedSequenceMaybeNext;
+	}
+
+	public void setmClosedSequenceMaybeNext(AbstractElement mClosedSequenceMaybeNext) {
+		this.mClosedSequenceMaybeNext = mClosedSequenceMaybeNext;
+	}
+
+	public AbstractElement getmClosedSequenceNext() {
+		return mClosedSequenceNext;
+	}
+
+	public void setmClosedSequenceNext(AbstractElement mClosedSequenceNext) {
+		this.mClosedSequenceNext = mClosedSequenceNext;
 	}
 	
-	public void removeClosedSequenceNext() {
-		mClosedSequenceNext = null;
-	}
+	
+	
+	
 	
 }
