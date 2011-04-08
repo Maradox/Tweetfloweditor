@@ -51,13 +51,15 @@ public class StateTouchElement extends State {
 
 	@Override
 	public boolean handleLongClick() {
-		mEditorView.openContextMenu();
-		if(!mTweetFlow.somethingSelected()) {
-			mEditorView.setState(EDITOR_STATE.FREE);
-		} else {
-			mEditorView.setState(EDITOR_STATE.SELECTED);
+		if(!mEditorView.scaleDetectorActive()) {
+			mEditorView.openContextMenu();
+			if(!mTweetFlow.somethingSelected()) {
+				mEditorView.setState(EDITOR_STATE.FREE);
+			} else {
+				mEditorView.setState(EDITOR_STATE.SELECTED);
+			}
+			mTweetFlow.setTouchElementModeNormal();
 		}
-		mTweetFlow.setTouchElementModeNormal();
 		return true;
 	}
 	
