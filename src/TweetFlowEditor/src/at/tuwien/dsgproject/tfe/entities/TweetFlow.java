@@ -74,7 +74,7 @@ public class TweetFlow implements Serializable {
 	 * is set to modeMarked()
 	 * @param x x coordinate
 	 * @param y y coordinate
-	 * @return The element at the given location or null.
+	 * @return true if element was fount and set as current touch element, false otherwise
 	 */
 	public boolean elementAt(int x, int y) {
 		for(AbstractElement r : mElements.values()) {
@@ -111,6 +111,7 @@ public class TweetFlow implements Serializable {
     	}
     	mSelected.clear();
     }
+    
     /*
     public Point findElementForConnection() {	
     	Point ids = new Point(-1,-1);
@@ -150,7 +151,8 @@ public class TweetFlow implements Serializable {
 					e.setmClosedSequenceNext(null);
 				}
 				
-				if((Math.abs(offX) > DISTANCE_FOR_AUTO_DISCONNECTION_X) || (Math.abs(offY) > DISTANCE_FOR_AUTO_DISCONNECTION_Y)) {
+				if((Math.abs(offX) > DISTANCE_FOR_AUTO_DISCONNECTION_X) || 
+						(Math.abs(offY) > DISTANCE_FOR_AUTO_DISCONNECTION_Y)) {
 					if(offY > 0) {
 						if(e.getmClosedSequenceNext() == mTouchElement)
 							e.setmClosedSequenceNext(null);
@@ -161,7 +163,8 @@ public class TweetFlow implements Serializable {
 					}
 				}
 				
-				else if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
+				else if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && 
+						(Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
 					if(offY > 0) {
 						if(e.getmClosedSequenceNext() == null) {
 							e.setmClosedSequenceMaybeNext(mTouchElement);

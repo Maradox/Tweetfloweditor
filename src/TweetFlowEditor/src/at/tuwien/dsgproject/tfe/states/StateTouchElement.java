@@ -17,23 +17,27 @@ public class StateTouchElement extends State {
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-		final int offX = x - mEditorView.getLastTouchX();
-		final int offY = y - mEditorView.getLastTouchY();
-	
-		if(Math.sqrt(offX*offX + offY*offY) > mEditorView.MOVE_OFFSET) {
-			if(mTweetFlow.isTouchElementSelected()) {
-				mTweetFlow.moveSelected(offX, offY);
-				mEditorView.setState(EDITOR_STATE.MOVE_SELECTED);
-			} else {
-				mTweetFlow.moveTouchElement(offX, offY);
-				mEditorView.setState(EDITOR_STATE.MOVE_ELEMENT);
-			}
-			mEditorView.redraw();
-		}				
+        
+        if(!mEditorView.scaleDetectorActive()) {
+			final int offX = x - mEditorView.getLastTouchX();
+			final int offY = y - mEditorView.getLastTouchY();
+		
+			if(Math.sqrt(offX*offX + offY*offY) > mEditorView.MOVE_OFFSET) {
+				if(mTweetFlow.isTouchElementSelected()) {
+					mTweetFlow.moveSelected(offX, offY);
+					mEditorView.setState(EDITOR_STATE.MOVE_SELECTED);
+				} else {
+					mTweetFlow.moveTouchElement(offX, offY);
+					mEditorView.setState(EDITOR_STATE.MOVE_ELEMENT);
+				}
+				mEditorView.redraw();
+			}				
+        }
 		mEditorView.setLastTouch(x, y);
 	}	
 	
 	public void onActionUp(MotionEvent event) {
+		super.onActionUp(event);
 		mTweetFlow.toggleTouchElementSelected();
 		
 		if(!mTweetFlow.somethingSelected()) {

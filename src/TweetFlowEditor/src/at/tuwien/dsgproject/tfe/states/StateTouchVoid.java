@@ -13,23 +13,28 @@ public class StateTouchVoid extends State {
 	
 	public void onActionDown(MotionEvent event) {} 
 	
-	public void onActionMove(MotionEvent event) {	
+	public void onActionMove(MotionEvent event) {
+		//TODO catch index exception with strange multitouch glitches
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-		final int offX = x - mEditorView.getLastTouchX();
-		final int offY = y - mEditorView.getLastTouchY();
-		
-		if(Math.sqrt(offX*offX + offY*offY) > EditorView.MOVE_OFFSET) {
-			mEditorView.offset(offX, offY);
-			mEditorView.setState(EDITOR_STATE.MOVE_ALL);
-			mEditorView.redraw();
-		}
-		
+        
+        if(!mEditorView.scaleDetectorActive()) {
+    		final int offX = x - mEditorView.getLastTouchX();
+    		final int offY = y - mEditorView.getLastTouchY();
+    		
+    		if(Math.sqrt(offX*offX + offY*offY) > EditorView.MOVE_OFFSET) {
+    			mEditorView.offset(offX, offY);
+    			mEditorView.setState(EDITOR_STATE.MOVE_ALL);
+    			mEditorView.redraw();
+    		}
+        }
+
 		mEditorView.setLastTouch(x, y);
 	}	
 	
 	public void onActionUp(MotionEvent event) {
+		super.onActionUp(event);
 		if(!mTweetFlow.somethingSelected()) {
 			mEditorView.setState(EDITOR_STATE.FREE);
 		}
@@ -40,9 +45,11 @@ public class StateTouchVoid extends State {
 
 	@Override
 	public boolean handleLongClick() {
-		mTweetFlow.addRectangle(mEditorView.getLastTouchX(), 
-				mEditorView.getLastTouchY());
-		mEditorView.redraw();
+		if(!mEditorView.scaleDetectorActive()) {
+			mTweetFlow.addRectangle(mEditorView.getLastTouchX(), 
+					mEditorView.getLastTouchY());
+			mEditorView.redraw();
+		}
 		return true;
 	}
 	

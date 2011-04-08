@@ -18,19 +18,24 @@ public class StateMoveElement extends State {
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-        final int offX = x - mEditorView.getLastTouchX();
-		final int offY = y - mEditorView.getLastTouchY();
-			
-		mTweetFlow.setMaybeConnection();
-		
-		mTweetFlow.moveTouchElement(offX, offY);
+        
+	    if(!mEditorView.scaleDetectorActive()) {
+	        final int offX = x - mEditorView.getLastTouchX();
+			final int offY = y - mEditorView.getLastTouchY();
+				
+			mTweetFlow.setMaybeConnection();
+			mTweetFlow.moveTouchElement(offX, offY);
+			mEditorView.redraw();
+	        }
 		mEditorView.setLastTouch(x, y);
-		mEditorView.redraw();
+		
 	}	
 	
 	public void onActionUp(MotionEvent event) {
+		super.onActionUp(event);
 		final int x = (int)event.getX();
 		final int y = (int)event.getY();
+		
 		
 //		if(editorView.snapMode == SnapMode.RASTER) {
 //			int rasterX = editorView.findRasterHorizontal(editorView.mOldX);
