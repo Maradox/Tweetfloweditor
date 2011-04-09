@@ -5,8 +5,6 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Point;
-import android.widget.Toast;
 
 public class TweetFlow implements Serializable {
 	
@@ -44,18 +42,16 @@ public class TweetFlow implements Serializable {
 	
 	
 	public void fillElements() {
-		addRectangle(100,100);
-		addRectangle(200,350);
-		addRectangle(300,500);
+		addServiceRequest(100,100);
+		addServiceRequest(200,350);
+		addServiceRequest(300,500);
 		
 		addOpenSequence();
 	}
 	
 	
-	public void addRectangle(int x, int y) {
-		//ugly hack to insert rectangle centered on touch event
-		//maybe x and y should be the center of AbstractElements instead of the upper left corner
-		mElements.put(mElemCounter, new Rectangle(mContext, mElemCounter++, x-75, y-40, 150, 80));
+	public void addServiceRequest(int x, int y) {
+		mElements.put(mElemCounter, new ServiceRequest(mContext, mElemCounter++, x-25, y-40));
 	}
 	
 	
