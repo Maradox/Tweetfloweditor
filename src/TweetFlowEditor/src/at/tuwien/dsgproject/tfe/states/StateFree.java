@@ -14,7 +14,7 @@ public class StateFree extends State {
 	}
 	
 	public void onActionDown(MotionEvent event) {
-		
+		super.onActionDown(event);
 		final int x = (int) event.getX();
 		final int y = (int) event.getY();
 			
@@ -34,8 +34,7 @@ public class StateFree extends State {
 			mEditorView.setState(EDITOR_STATE.TOUCH_VOID);
     	}
 		
-		mEditorView.setLastTouch(x, y);
-		mEditorView.setActivePointerId(event.getPointerId(0)); 			
+		mEditorView.setLastTouch(x, y);		
     } 
 	
 }

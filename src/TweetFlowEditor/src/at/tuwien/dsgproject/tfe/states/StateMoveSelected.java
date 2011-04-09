@@ -11,8 +11,6 @@ public class StateMoveSelected extends State {
 		super(editorView, tweetFlow);
 	}
 	
-	public void onActionDown(MotionEvent event) {} 
-	
 	public void onActionMove(MotionEvent event) {
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);

@@ -48,7 +48,10 @@ public abstract class State {
     	}
 	}
 	
-	protected void onActionDown(MotionEvent event) {}
+	
+	protected void onActionDown(MotionEvent event) {
+		mEditorView.setActivePointerId(event.getPointerId(0));
+	}
 	
 	
 	protected void onActionMove(MotionEvent event) {}

@@ -11,8 +11,6 @@ public class StateTouchVoid extends State {
 		super(editorView, tweetFlow);
 	}
 	
-	public void onActionDown(MotionEvent event) {} 
-	
 	public void onActionMove(MotionEvent event) {
 		//TODO catch index exception with strange multitouch glitches
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
@@ -46,7 +44,7 @@ public class StateTouchVoid extends State {
 	@Override
 	public boolean handleLongClick() {
 		if(!mEditorView.scaleDetectorActive()) {
-			mTweetFlow.addRectangle(mEditorView.getLastTouchX(), 
+			mTweetFlow.addServiceRequest(mEditorView.getLastTouchX(), 
 					mEditorView.getLastTouchY());
 			mEditorView.redraw();
 		}
