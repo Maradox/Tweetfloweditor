@@ -116,6 +116,8 @@ public class TweetFlow implements Serializable {
 
     
     private void updateMoveSelectedConnections() {
+    	//TODO: needed?
+		resetAllMaybeConnections();
     	for(AbstractElement selected : mSelected.values()) {
     		updateSelectedElementConnections(selected);
     	}
@@ -124,7 +126,8 @@ public class TweetFlow implements Serializable {
     private void updateTouchElementConnections() {
     	mTouchElement.checkRemoveNext();
     	mTouchElement.checkRemovePrev();
-    	mTouchElement.resetMaybeConnections();
+    	//TODO: needed?
+    	resetAllMaybeConnections();
     	for(AbstractElement e : mElements.values()) {
     		if(!mTouchElement.equals(e)) {
     			mTouchElement.checkMaybeConnections(e);
@@ -133,7 +136,14 @@ public class TweetFlow implements Serializable {
     	
     }
     
-
+    
+    private void resetAllMaybeConnections() {
+    	for(AbstractElement e : mElements.values()) {
+    		e.resetMaybeConnections();
+    	}
+    }
+    
+    //improvements: select best = shortest maybe connection if several exist
     private void updateSelectedElementConnections(AbstractElement selected) {
 		// check if closed sequence connections still valid?
 		if(selected.mClosedSequenceNext != null) {
@@ -152,7 +162,6 @@ public class TweetFlow implements Serializable {
 			
 		if(selected.mClosedSequenceNext == null ||
 				selected.mClosedSequencePrev == null) {
-	  		//TODO: reset all maybeconnections before first loop?
     		selected.resetMaybeConnections();
     		for(AbstractElement candidate : mElements.values()) {
     			//no need to compare selected elements

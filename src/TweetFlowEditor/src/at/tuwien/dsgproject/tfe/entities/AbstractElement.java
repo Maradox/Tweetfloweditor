@@ -227,25 +227,26 @@ public abstract class AbstractElement {
     	final int offX = getMiddleX()-candidate.getMiddleX();
 		//selected element above new candidate to be cs next
 		//next element is null and candidate has no previous element
-		if(mClosedSequenceNext == null && 
-				candidate.mClosedSequencePrev == null) {
-			final int offY = candidate.getTopY()-getBotY();
-			//selected above e?
-			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
-					Math.abs(offX) < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_X) {
-				mClosedSequenceMaybeNext = candidate;
-			}
-			
-		//candidate above selected??
-		} else if (candidate.mClosedSequenceNext == null &&
-				mClosedSequencePrev == null ){
-			final int offY = getTopY()-candidate.getBotY();
-			//selected below e?
-			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
-					Math.abs(offX) < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_X) {
-				candidate.mClosedSequenceMaybeNext = this;
-			}
-		} 
+    	if(Math.abs(offX) < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_X) {
+    		if(mClosedSequenceNext == null && 
+    				candidate.mClosedSequencePrev == null) {
+    			final int offY = candidate.getTopY()-getBotY();
+    			//selected above e?
+    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y) {
+    				mClosedSequenceMaybeNext = candidate;
+    			}
+    		
+    		} 
+    		//candidate above selected??
+    		if (candidate.mClosedSequenceNext == null &&
+    				mClosedSequencePrev == null ){
+    			final int offY = getTopY()-candidate.getBotY();
+    			//selected below e?
+    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y) {
+    				candidate.mClosedSequenceMaybeNext = this;
+    			}
+    		} 
+    	}
     }
 	
 	
