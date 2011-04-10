@@ -23,14 +23,13 @@ package at.tuwien.dsgproject.tfe.views;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -47,7 +46,6 @@ import at.tuwien.dsgproject.tfe.states.StateFree;
 import at.tuwien.dsgproject.tfe.states.StateMoveAll;
 import at.tuwien.dsgproject.tfe.states.StateMoveElement;
 import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
-import at.tuwien.dsgproject.tfe.states.StateScale;
 import at.tuwien.dsgproject.tfe.states.StateSelected;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
 import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
@@ -61,8 +59,7 @@ public class EditorView extends View {
 		MOVE_ELEMENT,
 		MOVE_SELECTED,
 		TOUCH_VOID,
-		MOVE_ALL,
-		SCALE
+		MOVE_ALL
 	}
 
 	private State mCurrState;
@@ -70,14 +67,8 @@ public class EditorView extends View {
 	
 	
 	public static final int RASTER_HORIZONTAL_WIDTH = 70;
-	
 	public static final int MOVE_OFFSET = 8;
 		
-	
-
-
-	//private AbstractElement mTouchElement = null;
-
 	public boolean setRaster = false;
 	public int horizontalRasterCT;
 	
@@ -99,6 +90,8 @@ public class EditorView extends View {
 	private ScaleGestureDetector mScaleDetector;
 	private float mScaleFactor = 1.f;
 	
+	private GestureDetector mTapDetector;
+	
 	// coordinates of last touch input
 	private int mLastTouchX, mLastTouchY;
 	// canvas offset
@@ -119,6 +112,8 @@ public class EditorView extends View {
 		setOnLongClickListener(mOnLongClickListener);
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
+		mTapDetector = new GestureDetector(context, new DoubleTapListener());
+		
 	
 		prepareStates();
 		
@@ -135,7 +130,6 @@ public class EditorView extends View {
 		mAvailableStates.put(EDITOR_STATE.MOVE_SELECTED, new StateMoveSelected(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.TOUCH_VOID, new StateTouchVoid(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.MOVE_ALL, new StateMoveAll(this, mTweetFlow));
-		mAvailableStates.put(EDITOR_STATE.SCALE, new StateScale(this, mTweetFlow));
 		
 		//TODO: just as a security measure
 		for(EDITOR_STATE s : EDITOR_STATE.values()) {
@@ -186,15 +180,18 @@ public class EditorView extends View {
 	}
 	
 	
-
+    private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+    	
+    	@Override
+    	public boolean onDoubleTap(MotionEvent e) {
+    		mOffsetX = mOffsetY = 0;
+    		mScaleFactor = 1.f;
+    		redraw();
+    		return true;
+    	}
+    }
 	
 	
-
-	
-	
-
-	
-
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -272,7 +269,7 @@ public class EditorView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
     	super.onTouchEvent(event);
-    	
+    	mTapDetector.onTouchEvent(event);
     	mScaleDetector.onTouchEvent(event);
     	mCurrState.onTouchEvent(event);
     	return true;	

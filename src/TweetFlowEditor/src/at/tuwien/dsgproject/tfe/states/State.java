@@ -15,7 +15,7 @@ public abstract class State {
 		mTweetFlow = tweetFlow;
 	}
 	
-	final public void onTouchEvent(MotionEvent event) {
+	final public boolean onTouchEvent(MotionEvent event) {
 		final int action = event.getAction();
     	
     	switch (action & MotionEvent.ACTION_MASK) {
@@ -34,6 +34,7 @@ public abstract class State {
     	case MotionEvent.ACTION_CANCEL:
 //    		mEditorView.setState(EDITOR_STATE.FREE);
 //    		mEditorView.invalidatePointerId();
+    		//TODO handle different than action_up???
     		onActionUp(event);
     		break;
     		 	
@@ -43,22 +44,33 @@ public abstract class State {
             
     	default:
     		//nothing
+    		return false;
     	
     	}
+    	return true;
 	}
 	
-	protected void onActionDown(MotionEvent event) {}
+	
+	protected void onActionDown(MotionEvent event) {
+		mEditorView.setActivePointerId(event.getPointerId(0));
+	}
+	
+	
 	protected void onActionMove(MotionEvent event) {}
-	protected void onActionUp(MotionEvent event) {}
+	
+	
+	protected void onActionUp(MotionEvent event) {
+		mEditorView.invalidatePointerId();
+	}
 	
     final protected void onActionPointerUp(int action, MotionEvent event) {
         // get index of the pointer that left the screen
-		final int pIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
+		final int index = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) 
         		>> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-	    final int pId = event.getPointerId(pIndex);
-	    if (pId == mEditorView.getActivePointerId()) {
+	    final int id = event.getPointerId(index);
+	    if (id == mEditorView.getActivePointerId()) {
 	        // choose new active pointer
-	        final int newPointerIndex = pIndex == 0 ? 1 : 0;
+	        final int newPointerIndex = index == 0 ? 1 : 0;
 	        mEditorView.setLastTouch((int)event.getX(newPointerIndex),
 	        		(int)event.getY(newPointerIndex));
 	        mEditorView.setActivePointerId(event.getPointerId(newPointerIndex));

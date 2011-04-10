@@ -144,6 +144,7 @@ public class Editor extends ActionbarActivity {
     			break;		
     		case R.id.add_open_sequence:
     			mTweetFlow.addOpenSequence();
+    			mEditorView.redraw();
     			break;		
     			
     		default:	

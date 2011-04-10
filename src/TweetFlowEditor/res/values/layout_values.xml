@@ -2,5 +2,6 @@
 <resources>
 	<dimen name="actionbar_height">50dip</dimen>
 	<dimen name="actionbar_icon_height">30dip</dimen>
-	<dimen name="actionbar_text">7pt</dimen>
+	<dimen name="actionbar_text">8pt</dimen>
+	<dimen name="dashboard_text">7pt</dimen>
 </resources>
