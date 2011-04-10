@@ -12,7 +12,7 @@ import at.tuwien.dsgproject.tfe.R;
 public class ServiceRequest extends AbstractElement {
 	
 	//private Rect mShapeBounds;
-	private String mRequestText = "@foo foo.bar foobar";
+	private String mRequestText = "@foo foo.bar ";
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
 
@@ -35,9 +35,10 @@ public class ServiceRequest extends AbstractElement {
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		mShape.draw(canvas);
-		canvas.drawText(mRequestText, mX+mTextOffsetX, mY+25, mTextPaint);
-		canvas.drawText("more Text, >:D foobarfoobar", mX+mTextOffsetX, mY+45, mTextPaint);
-		canvas.drawText("3rd line. last line", mX+mTextOffsetX, mY+65, mTextPaint);
+		canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
+		canvas.drawText("mbnext: "+ ((mClosedSequenceMaybeNext != null) ? mClosedSequenceMaybeNext.toString() : " null "), mX+mTextOffsetX, mY+45, mTextPaint);
+		canvas.drawText("p: "+ ((mClosedSequencePrev != null) ? mClosedSequencePrev.toString() : " N ") + 
+				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);
 
 	}
 	
@@ -53,8 +54,7 @@ public class ServiceRequest extends AbstractElement {
 	public boolean isFocused(int x, int y) {
 		//TODO when is it focused? only touch on circle, or text also?
 		//FIXME ugly hack
-		if( x > mX && x < mX + 400 &&
-				y > mY && y < mY + mHeight) {
+		if( x > mX && x < mX + 400 && y > mY && y < mY + mHeight) {
 			return true;
 		} else {
 			return false;
@@ -87,6 +87,11 @@ public class ServiceRequest extends AbstractElement {
 	public void modeMarked() {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_service_request_marked);
 		mShape.setBounds(mBounds);
+	}
+	
+	@Override
+	public String toString() {
+		return "SR: "+ mId.toString();
 	}
 
 }

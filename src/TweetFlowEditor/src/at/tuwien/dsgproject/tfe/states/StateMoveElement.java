@@ -21,7 +21,6 @@ public class StateMoveElement extends State {
 	        final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
 				
-			mTweetFlow.setMaybeConnection();
 			mTweetFlow.moveTouchElement(offX, offY);
 			mEditorView.redraw();
 	        }

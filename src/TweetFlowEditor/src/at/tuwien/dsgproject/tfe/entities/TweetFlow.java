@@ -12,10 +12,10 @@ public class TweetFlow implements Serializable {
 	 * serializable ID
 	 */
 	private static final long serialVersionUID = -1549177934192038606L;
-	public static final int DISTANCE_FOR_AUTO_CONNECTION_X = 70;
-	public static final int DISTANCE_FOR_AUTO_CONNECTION_Y = 120;
-	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_X = 100;
-	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_Y = 150;
+	public static final int DISTANCE_FOR_AUTO_CONNECTION_X = 50;
+	public static final int DISTANCE_FOR_AUTO_CONNECTION_Y = 70;
+	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_X = 80;
+	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_Y = 120;
 	
 	public static final String TF_ID = "TweetFlow";
 
@@ -62,7 +62,7 @@ public class TweetFlow implements Serializable {
 	public void deleteElement(Integer id) {
 		AbstractElement elem = mElements.get(id);
 		if(elem != null) {
-			elem.removeFromClosedSequence();
+			elem.removeClosedSequencePrev();
 		}
 		mSelected.remove(id);
 		mElements.remove(id);
@@ -97,11 +97,13 @@ public class TweetFlow implements Serializable {
 		for(AbstractElement e : mSelected.values()) {
 			e.move(offX, offY);
 		}
+		updateMoveSelectedConnections();
     }
     
 	public void moveTouchElement(int offX, int offY) {
 		if(mTouchElement != null) {
 			mTouchElement.move(offX, offY);
+			updateTouchElementConnections();
 		}
 	}
     
@@ -111,74 +113,59 @@ public class TweetFlow implements Serializable {
     	}
     	mSelected.clear();
     }
-    
-    /*
-    public Point findElementForConnection() {	
-    	Point ids = new Point(-1,-1);
-    	
-    	for(AbstractElement e : mElements.values()) {
-			if(e.getId() != mTouchElement.getId()) {
-				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
-				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
-				
-				if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && (Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
-					if(offY < 0) 
-						ids.x = e.getId();
-					else 
-						ids.y = e.getId();
-				}
-			}	
-    	}
-    	return ids;
-    }
-    */
-    
-    public void setMaybeConnection() {	 
-    	mTouchElement.setClosedSequenceMaybeNext(null);
-    	for(AbstractElement e : mElements.values()) {
-    		e.setClosedSequenceMaybeNext(null);
-    	}	
-    	
-    	for(AbstractElement e : mElements.values()) {
-			if(e.getId() != mTouchElement.getId()) {
-				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
-				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
-				
-				if(offY > 0 && mTouchElement.getClosedSequenceNext() == e) {
-					mTouchElement.setClosedSequenceNext(null);
-				}
-				else if(offY < 0 && e.getClosedSequenceNext() == mTouchElement) {
-					e.setClosedSequenceNext(null);
-				}
-				
-				if((Math.abs(offX) > DISTANCE_FOR_AUTO_DISCONNECTION_X) || 
-						(Math.abs(offY) > DISTANCE_FOR_AUTO_DISCONNECTION_Y)) {
-					if(offY > 0) {
-						if(e.getClosedSequenceNext() == mTouchElement)
-							e.setClosedSequenceNext(null);
-					}	
-					else {
-						if(mTouchElement.getClosedSequenceNext() == e)
-							mTouchElement.setClosedSequenceNext(null);
-					}
-				}
-				
-				else if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && 
-						(Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
-					if(offY > 0) {
-						if(e.getClosedSequenceNext() == null) {
-							e.setClosedSequenceMaybeNext(mTouchElement);
-						}
-					}	
-					else {
-						if(mTouchElement.getClosedSequenceNext() == null) {
-						}	
-					}
-				}
-			}	
-    	}
 
+    
+    private void updateMoveSelectedConnections() {
+    	for(AbstractElement selected : mSelected.values()) {
+    		updateSelectedElementConnections(selected);
+    	}
     }
+    
+    private void updateTouchElementConnections() {
+    	mTouchElement.checkRemoveNext();
+    	mTouchElement.checkRemovePrev();
+    	mTouchElement.resetMaybeConnections();
+    	for(AbstractElement e : mElements.values()) {
+    		if(!mTouchElement.equals(e)) {
+    			mTouchElement.checkMaybeConnections(e);
+    		}
+    	}
+    	
+    }
+    
+
+    private void updateSelectedElementConnections(AbstractElement selected) {
+		// check if closed sequence connections still valid?
+		if(selected.mClosedSequenceNext != null) {
+			if(!mSelected.containsKey(selected.mClosedSequenceNext.getId())) {
+    			selected.checkRemoveNext();
+			}
+		}
+		
+		if(selected.mClosedSequencePrev != null) {
+			final AbstractElement prev = selected.mClosedSequencePrev;
+			if(!mSelected.containsKey(prev.getId())) {
+				selected.checkRemovePrev();
+	    		
+			}
+		}
+			
+		if(selected.mClosedSequenceNext == null ||
+				selected.mClosedSequencePrev == null) {
+	  		//TODO: reset all maybeconnections before first loop?
+    		selected.resetMaybeConnections();
+    		for(AbstractElement candidate : mElements.values()) {
+    			//no need to compare selected elements
+    			if(!mSelected.containsKey(candidate.getId())) {
+    				selected.checkMaybeConnections(candidate);
+    			}
+    		}
+		}
+    }
+    
+
+    
+
     
     public void convertMaybeIntoFixConnection() {
     	for(AbstractElement e : mElements.values()) {
@@ -290,5 +277,9 @@ public class TweetFlow implements Serializable {
 		} else {
 			return false;
 		}
+	}
+	
+	public int getSelectedElementsCount() {
+		return mSelected.size();
 	}
 }

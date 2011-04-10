@@ -184,10 +184,81 @@ public abstract class AbstractElement {
 		}
 	}
 	
-	public void removeFromClosedSequence() {
+	public void removeClosedSequencePrev() {
 		if(mClosedSequencePrev != null) {
 			mClosedSequencePrev.mClosedSequenceNext = null;
+			mClosedSequencePrev = null;
 		}
+	}
+	
+	public void removeClosedSequenceNext() {
+		if(mClosedSequenceNext != null) {
+			mClosedSequenceNext.mClosedSequencePrev = null;
+			mClosedSequenceNext = null;
+		}
+	}
+	
+    
+    public void checkRemoveNext() {
+    	if(mClosedSequenceNext != null) {
+    		final int offX = getMiddleX()-mClosedSequenceNext.getMiddleX();
+    		final int offY = mClosedSequenceNext.getTopY()-getBotY();
+    		if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || 
+    				Math.abs(offX) > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_X) {
+    			removeClosedSequenceNext();
+    		}
+    	}
+    }
+    
+    
+    public void checkRemovePrev() {
+    	if(mClosedSequencePrev != null) {
+			final int offX = getMiddleX()-mClosedSequencePrev.getMiddleX();
+			final int offY = getTopY()-mClosedSequencePrev.getBotY();
+			if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || 
+					Math.abs(offX) > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_X) {
+				removeClosedSequencePrev();
+			}
+    	}
+	}
+    
+    //TODO: reorder to improve performance
+    public void checkMaybeConnections(AbstractElement candidate) {
+    	final int offX = getMiddleX()-candidate.getMiddleX();
+		//selected element above new candidate to be cs next
+		//next element is null and candidate has no previous element
+		if(mClosedSequenceNext == null && 
+				candidate.mClosedSequencePrev == null) {
+			final int offY = candidate.getTopY()-getBotY();
+			//selected above e?
+			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
+					Math.abs(offX) < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_X) {
+				mClosedSequenceMaybeNext = candidate;
+			}
+			
+		//candidate above selected??
+		} else if (candidate.mClosedSequenceNext == null &&
+				mClosedSequencePrev == null ){
+			final int offY = getTopY()-candidate.getBotY();
+			//selected below e?
+			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
+					Math.abs(offX) < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_X) {
+				candidate.mClosedSequenceMaybeNext = this;
+			}
+		} 
+    }
+	
+	
+	
+	
+	
+	
+	public void resetMaybeConnections() {
+		mClosedSequenceMaybeNext = null;
+	}
+	
+	public boolean equals(AbstractElement e) {
+		return this.mId == e.mId;
 	}
 	
 	

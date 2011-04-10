@@ -29,6 +29,7 @@ public class StateMoveSelected extends State {
 	
 	public void onActionUp(MotionEvent event) {
 		super.onActionUp(event);
+		mTweetFlow.convertMaybeIntoFixConnection();
 		mTweetFlow.setTouchElementModeSelected();
 		mEditorView.setState(EDITOR_STATE.SELECTED);
 		mEditorView.redraw();
