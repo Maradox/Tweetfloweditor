@@ -1,6 +1,7 @@
 package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -50,13 +51,22 @@ public class StateTouchElement extends State {
 	@Override
 	public boolean handleLongClick() {
 		if(!mEditorView.scaleDetectorActive()) {
-			mEditorView.openContextMenu();
+			if(mTweetFlow.isTextFocused(mEditorView.getLastTouchX(), mEditorView.getLastTouchY())) {
+				Toast.makeText(mEditorView.getContext(), "edit text", Toast.LENGTH_SHORT).show();
+			} else {
+				mEditorView.openContextMenu();
+			}
+			
 			if(!mTweetFlow.somethingSelected()) {
 				mEditorView.setState(EDITOR_STATE.FREE);
 			} else {
 				mEditorView.setState(EDITOR_STATE.SELECTED);
+				
 			}
-			mTweetFlow.setTouchElementModeNormal();
+			
+			mTweetFlow.unmarkTouchElement();
+			
+			
 		}
 		return true;
 	}

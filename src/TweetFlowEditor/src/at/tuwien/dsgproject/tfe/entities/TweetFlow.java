@@ -60,6 +60,10 @@ public class TweetFlow implements Serializable {
 	}
 	
 	public void deleteElement(Integer id) {
+		AbstractElement elem = mElements.get(id);
+		if(elem != null) {
+			elem.removeFromClosedSequence();
+		}
 		mSelected.remove(id);
 		mElements.remove(id);
 	}
@@ -130,9 +134,9 @@ public class TweetFlow implements Serializable {
     */
     
     public void setMaybeConnection() {	 
-    	mTouchElement.setmClosedSequenceMaybeNext(null);
+    	mTouchElement.setClosedSequenceMaybeNext(null);
     	for(AbstractElement e : mElements.values()) {
-    		e.setmClosedSequenceMaybeNext(null);
+    		e.setClosedSequenceMaybeNext(null);
     	}	
     	
     	for(AbstractElement e : mElements.values()) {
@@ -140,35 +144,34 @@ public class TweetFlow implements Serializable {
 				int offX = mTouchElement.getMiddleX()-e.getMiddleX();
 				int offY = mTouchElement.getMiddleY()-e.getMiddleY();
 				
-				if(offY > 0 && mTouchElement.getmClosedSequenceNext() == e) {
-					mTouchElement.setmClosedSequenceNext(null);
+				if(offY > 0 && mTouchElement.getClosedSequenceNext() == e) {
+					mTouchElement.setClosedSequenceNext(null);
 				}
-				else if(offY < 0 && e.getmClosedSequenceNext() == mTouchElement) {
-					e.setmClosedSequenceNext(null);
+				else if(offY < 0 && e.getClosedSequenceNext() == mTouchElement) {
+					e.setClosedSequenceNext(null);
 				}
 				
 				if((Math.abs(offX) > DISTANCE_FOR_AUTO_DISCONNECTION_X) || 
 						(Math.abs(offY) > DISTANCE_FOR_AUTO_DISCONNECTION_Y)) {
 					if(offY > 0) {
-						if(e.getmClosedSequenceNext() == mTouchElement)
-							e.setmClosedSequenceNext(null);
+						if(e.getClosedSequenceNext() == mTouchElement)
+							e.setClosedSequenceNext(null);
 					}	
 					else {
-						if(mTouchElement.getmClosedSequenceNext() == e)
-							mTouchElement.setmClosedSequenceNext(null);
+						if(mTouchElement.getClosedSequenceNext() == e)
+							mTouchElement.setClosedSequenceNext(null);
 					}
 				}
 				
 				else if((Math.abs(offX) < DISTANCE_FOR_AUTO_CONNECTION_X) && 
 						(Math.abs(offY) < DISTANCE_FOR_AUTO_CONNECTION_Y)) {
 					if(offY > 0) {
-						if(e.getmClosedSequenceNext() == null) {
-							e.setmClosedSequenceMaybeNext(mTouchElement);
+						if(e.getClosedSequenceNext() == null) {
+							e.setClosedSequenceMaybeNext(mTouchElement);
 						}
 					}	
 					else {
-						if(mTouchElement.getmClosedSequenceNext() == null) {
-							mTouchElement.setmClosedSequenceMaybeNext(e);
+						if(mTouchElement.getClosedSequenceNext() == null) {
 						}	
 					}
 				}
@@ -179,9 +182,9 @@ public class TweetFlow implements Serializable {
     
     public void convertMaybeIntoFixConnection() {
     	for(AbstractElement e : mElements.values()) {
-    		if(e.getmClosedSequenceMaybeNext() != null)
-    			e.setmClosedSequenceNext(e.getmClosedSequenceMaybeNext());
-    		e.setmClosedSequenceMaybeNext(null);
+    		if(e.getClosedSequenceMaybeNext() != null)
+    			e.setClosedSequenceNext(e.getClosedSequenceMaybeNext());
+    		e.setClosedSequenceMaybeNext(null);
     	}	
     }
     
@@ -258,6 +261,13 @@ public class TweetFlow implements Serializable {
 		}
 	}
 	
+	public void unmarkTouchElement() {
+		if(mTouchElement != null) {
+			if(mTouchElement.isSelected()) mTouchElement.modeSelected();
+			else mTouchElement.modeNormal();
+		}
+	}
+	
 	public void setTouchElementModeNormal() {
 		if(mTouchElement != null) mTouchElement.modeNormal();
 	}
@@ -272,5 +282,13 @@ public class TweetFlow implements Serializable {
 	
 	public void setContext(Context context) {
 		mContext = context;
+	}
+	
+	public boolean isTextFocused(int x, int y) {
+		if(mTouchElement != null) {
+			return mTouchElement.isTextFocused(x, y);
+		} else {
+			return false;
+		}
 	}
 }

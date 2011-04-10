@@ -66,7 +66,6 @@ public class EditorView extends View {
 	
 	
 	public static final int RASTER_HORIZONTAL_WIDTH = 70;
-	
 	public static final int MOVE_OFFSET = 8;
 		
 	public boolean setRaster = false;

@@ -46,6 +46,7 @@ public abstract class AbstractElement {
 	protected Context mContext;
 	
 	protected AbstractElement mClosedSequenceNext = null;
+	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
 	AbstractElement(Context context, int id, int x, int y, int width, int height) {
@@ -58,14 +59,11 @@ public abstract class AbstractElement {
 		mBounds = new Rect(x, y, x+width, y+height);
 	}
 	
-	abstract public void draw(Canvas canvas);
-	
-	
-	private void drawClosedSequence(Canvas canvas) {
-		if(mClosedSequenceNext != null) {
-			final Paint paint = new Paint();
+	public void draw(Canvas canvas) {
+		if(mClosedSequenceNext != null) {			
+			Paint paint = new Paint();
 			paint.setStrokeWidth(5);
-			paint.setColor(Color.BLACK);
+			paint.setColor(Color.DKGRAY);
 			paint.setAntiAlias(true);
 			canvas.drawLine(getMiddleX(), 
 					getBotY(), 
@@ -73,7 +71,34 @@ public abstract class AbstractElement {
 					mClosedSequenceNext.getTopY(), 
 					paint);
 		}
+		else if(mClosedSequenceMaybeNext != null) {
+			Paint paint = new Paint();
+			paint.setStrokeWidth(5);
+			paint.setColor(Color.GRAY);
+			paint.setAntiAlias(true);
+
+			canvas.drawLine(getMiddleX(), 
+					getBotY(), 
+					mClosedSequenceMaybeNext.getMiddleX(), 
+					mClosedSequenceMaybeNext.getTopY(), 
+					paint);
+		}
 	}
+	
+	
+//	private void drawClosedSequence(Canvas canvas) {
+//		if(mClosedSequenceNext != null) {
+//			final Paint paint = new Paint();
+//			paint.setStrokeWidth(5);
+//			paint.setColor(Color.BLACK);
+//			paint.setAntiAlias(true);
+//			canvas.drawLine(getMiddleX(), 
+//					getBotY(), 
+//					mClosedSequenceNext.getMiddleX(), 
+//					mClosedSequenceNext.getTopY(), 
+//					paint);
+//		}
+//	}
 	
 	public void move(int xOff, int yOff) {
 		mX += xOff;
@@ -81,15 +106,19 @@ public abstract class AbstractElement {
 		mBounds.offset(xOff, yOff);
 		mShape.setBounds(mBounds);
 	}
-	
-	public void moveOn(int centerX, int centerY) {
-		mX = centerX-mWidth/2;
-		mY = centerY-mHeight/2;
-		mBounds.set(centerX-mWidth/2, centerY-mHeight/2, centerX+mWidth/2, centerY+mHeight/2);
-		mShape.setBounds(mBounds);
-	}
+//	
+//	public void moveOn(int centerX, int centerY) {
+//		mX = centerX-mWidth/2;
+//		mY = centerY-mHeight/2;
+//		mBounds.set(centerX-mWidth/2, centerY-mHeight/2, centerX+mWidth/2, centerY+mHeight/2);
+//		mShape.setBounds(mBounds);
+//	}
 	
 	abstract public boolean isFocused(int x, int y);
+	
+	public boolean isTextFocused(int x, int y) {
+		return false;
+	}
 
 	// TODO: elements should have 3 visual states:
 	// - normal
@@ -136,21 +165,31 @@ public abstract class AbstractElement {
 		this.mShape = mShape;
 	}
 		
-	public AbstractElement getmClosedSequenceMaybeNext() {
+	public AbstractElement getClosedSequenceMaybeNext() {
 		return mClosedSequenceMaybeNext;
 	}
 
-	public void setmClosedSequenceMaybeNext(AbstractElement mClosedSequenceMaybeNext) {
-		this.mClosedSequenceMaybeNext = mClosedSequenceMaybeNext;
+	public void setClosedSequenceMaybeNext(AbstractElement closedSequenceMaybeNext) {
+		mClosedSequenceMaybeNext = closedSequenceMaybeNext;
 	}
 
-	public AbstractElement getmClosedSequenceNext() {
+	public AbstractElement getClosedSequenceNext() {
 		return mClosedSequenceNext;
 	}
 
-	public void setmClosedSequenceNext(AbstractElement mClosedSequenceNext) {
-		this.mClosedSequenceNext = mClosedSequenceNext;
+	public void setClosedSequenceNext(AbstractElement closedSequenceNext) {
+		if(closedSequenceNext != null) {
+			mClosedSequenceNext = closedSequenceNext;
+			closedSequenceNext.mClosedSequencePrev = this;
+		}
 	}
+	
+	public void removeFromClosedSequence() {
+		if(mClosedSequencePrev != null) {
+			mClosedSequencePrev.mClosedSequenceNext = null;
+		}
+	}
+	
 	
 	
 	

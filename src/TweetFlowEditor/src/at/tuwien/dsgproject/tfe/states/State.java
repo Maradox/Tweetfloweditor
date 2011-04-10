@@ -15,7 +15,7 @@ public abstract class State {
 		mTweetFlow = tweetFlow;
 	}
 	
-	final public void onTouchEvent(MotionEvent event) {
+	final public boolean onTouchEvent(MotionEvent event) {
 		final int action = event.getAction();
     	
     	switch (action & MotionEvent.ACTION_MASK) {
@@ -44,8 +44,10 @@ public abstract class State {
             
     	default:
     		//nothing
+    		return false;
     	
     	}
+    	return true;
 	}
 	
 	

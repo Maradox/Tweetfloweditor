@@ -11,8 +11,11 @@ import at.tuwien.dsgproject.tfe.R;
 
 public class OpenSequence extends AbstractElement {
 	
-	final private int EDGE_RADIUS = 20;
-	final private int CORNER_RADIUS = 30;
+	private final int EDGE_TOUCH_RADIUS = 20;
+	private final int CORNER_TOUCH_RADIUS = 30;
+	private final int MIN_WIDTH = 100;
+	private final int MIN_HEIGHT = 100;
+	
 	
 	private enum TouchFocus 
 	{	TOP, 
@@ -37,6 +40,7 @@ public class OpenSequence extends AbstractElement {
 
 	@Override
 	public void draw(Canvas canvas) {
+		super.draw(canvas);
 		mShape.draw(canvas);
 	}
 
@@ -45,35 +49,35 @@ public class OpenSequence extends AbstractElement {
 		
 		//TODO make this ugly ***** go away :(
 		
-		if(Math.abs(x - mX) < CORNER_RADIUS && 
-				Math.abs(y - mY) < CORNER_RADIUS) {
+		if(Math.abs(x - mX) < CORNER_TOUCH_RADIUS && 
+				Math.abs(y - mY) < CORNER_TOUCH_RADIUS) {
 			mTouchFocus = TouchFocus.TOP_LEFT;
 			return true;
-		} else if(Math.abs(x - mWidth - mX) < CORNER_RADIUS && 
-				Math.abs(y - mY) < CORNER_RADIUS) {
+		} else if(Math.abs(x - mWidth - mX) < CORNER_TOUCH_RADIUS && 
+				Math.abs(y - mY) < CORNER_TOUCH_RADIUS) {
 			mTouchFocus = TouchFocus.TOP_RIGHT;
 			return true;
-		}  else if(Math.abs(x - mX) < CORNER_RADIUS && 
-				Math.abs(y - mHeight - mY) < CORNER_RADIUS) {
+		}  else if(Math.abs(x - mX) < CORNER_TOUCH_RADIUS && 
+				Math.abs(y - mHeight - mY) < CORNER_TOUCH_RADIUS) {
 			mTouchFocus = TouchFocus.BOTTOM_LEFT;
 			return true;
-		}  else if(Math.abs(x - mWidth - mX) < CORNER_RADIUS && 
-				Math.abs(y - mHeight - mY) < CORNER_RADIUS) {
+		}  else if(Math.abs(x - mWidth - mX) < CORNER_TOUCH_RADIUS && 
+				Math.abs(y - mHeight - mY) < CORNER_TOUCH_RADIUS) {
 			mTouchFocus = TouchFocus.BOTTOM_RIGHT;
 			return true;
-		} else if(Math.abs(x - mX) < EDGE_RADIUS && 
+		} else if(Math.abs(x - mX) < EDGE_TOUCH_RADIUS && 
 				mY < y && mY + mHeight > y) {
 			mTouchFocus = TouchFocus.LEFT;
 			return true;
-		} else if (Math.abs(x - mWidth - mX) < EDGE_RADIUS && 
+		} else if (Math.abs(x - mWidth - mX) < EDGE_TOUCH_RADIUS && 
 				mY < y && mY + mHeight > y) {
 			mTouchFocus = TouchFocus.RIGHT;
 			return true;
-		} else if (Math.abs(y - mY) < EDGE_RADIUS && 
+		} else if (Math.abs(y - mY) < EDGE_TOUCH_RADIUS && 
 				mX < x && mX + mWidth > x) {
 			mTouchFocus = TouchFocus.TOP;
 			return true;
-		} else if (Math.abs(y - mHeight - mY) < EDGE_RADIUS && 
+		} else if (Math.abs(y - mHeight - mY) < EDGE_TOUCH_RADIUS && 
 				mX < x && mX + mWidth > x ) { // bottom
 			mTouchFocus = TouchFocus.BOTTOM;
 			return true;
@@ -136,21 +140,33 @@ public class OpenSequence extends AbstractElement {
 	
 	
 	private void growTop(int yOff) {
-		mY += yOff;
-		mHeight -= yOff;
+		final int newHeight = (mHeight - yOff);
+		if(newHeight > MIN_HEIGHT) {
+			mY += yOff;
+			mHeight = newHeight;
+		}
 	}
 	
 	private void growBottom(int yOff) {
-		mHeight += yOff;
+		final int newHeight = (mHeight + yOff);
+		if(newHeight > MIN_HEIGHT) {
+			mHeight = newHeight;
+		}
 	}
 	
 	private void growLeft(int xOff) {
-		mX += xOff;
-		mWidth -= xOff;
+		final int newWidth = (mWidth - xOff);
+		if(newWidth > MIN_WIDTH) {
+			mX += xOff;
+			mWidth = newWidth;
+		}
 	}
 	
 	private void growRight(int xOff) {
-		mWidth += xOff;
+		final int newWidth = (mWidth + xOff);
+		if(newWidth > MIN_WIDTH) {
+			mWidth = newWidth;
+		}
 	}
 	
 	private void updateBounds() {
