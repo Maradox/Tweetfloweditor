@@ -37,6 +37,7 @@ import android.view.View;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
@@ -101,11 +102,12 @@ public class EditorView extends View {
 	// coordinates of last touch input
 	private int mLastTouchX, mLastTouchY;
 	// canvas offset
-	private int mOffsetX, mOffsetY;
+	private Integer mOffsetX = 0, mOffsetY = 0;
 	// scale pivot coordinates
 	private int mScalePivotX, mScalePivotY;
 	
 	private TweetFlow mTweetFlow;
+	private RasterGridHelper rasterGridHelper;
 
 	public EditorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -120,6 +122,7 @@ public class EditorView extends View {
 	
 		prepareStates();
 		
+		rasterGridHelper = new RasterGridHelper(mTweetFlow.getmElements(), mTweetFlow.getTouchElement(), mOffsetX, mOffsetY);
 
 	}
 	
@@ -243,6 +246,7 @@ public class EditorView extends View {
 //			os.draw(canvas);
 //		}
 		
+    	rasterGridHelper.draw(canvas);
 	    mTweetFlow.draw(canvas);
 
 	    /*

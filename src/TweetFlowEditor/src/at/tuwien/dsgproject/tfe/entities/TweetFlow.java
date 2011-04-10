@@ -274,4 +274,16 @@ public class TweetFlow implements Serializable {
 	public void setContext(Context context) {
 		mContext = context;
 	}
+
+
+	public HashMap<Integer, AbstractElement> getmElements() {
+		return mElements;
+	}
+
+
+	public void setmElements(HashMap<Integer, AbstractElement> mElements) {
+		this.mElements = mElements;
+	}
+	
+	
 }
