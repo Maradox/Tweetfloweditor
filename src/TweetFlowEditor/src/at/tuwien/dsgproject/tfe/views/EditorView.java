@@ -37,7 +37,7 @@ import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
-import at.tuwien.dsgproject.tfe.entities.AbstractElement;
+import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
@@ -72,17 +72,9 @@ public class EditorView extends View {
 	public boolean setRaster = false;
 	public int horizontalRasterCT;
 	
-	public boolean rasterOn = false;
-	public SnapMode snapMode = SnapMode.NOTHING;
 	
 	public boolean openContextMenu = false;
 			
-	public enum SnapMode {	
-		NOTHING,
-		RASTER,
-		GRID
-	}
-	
 	
 	private final int INVALID_POINTER_ID = -1;
 	private int mActivePointerId = INVALID_POINTER_ID;
@@ -114,11 +106,10 @@ public class EditorView extends View {
 		
 		mTapDetector = new GestureDetector(context, new DoubleTapListener());
 		
-	
-		prepareStates();
-		
-		rasterGridHelper = new RasterGridHelper(mTweetFlow.getmElements(), mTweetFlow.getTouchElement(), mOffsetX, mOffsetY);
+	//	rasterGridHelper = new RasterGridHelper(mTweetFlow.getmElements(), mTweetFlow.getTouchElement(), mOffsetX, mOffsetY);
+		rasterGridHelper = new RasterGridHelper(mTweetFlow, mOffsetX, mOffsetY);
 
+		prepareStates();
 	}
 	
 	private void prepareStates() {
@@ -203,37 +194,6 @@ public class EditorView extends View {
     	canvas.scale(mScaleFactor, mScaleFactor);
 		//canvas.scale(mScaleFactor, mScaleFactor, mScalePivotX, mScalePivotY);
     	
-//	    if(rasterOn) {
-//			if(!setRaster) {
-//				setRaster = true;
-//				horizontalRasterCT = (canvas.getWidth() / RASTER_HORIZONTAL_WIDTH) + 3;
-//			}
-//			
-//			Paint paint = new Paint();
-//			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
-//						
-//			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
-//				paint.setColor(Color.BLUE);
-//			
-//				ArrayList<Integer> gridLines = createRasterLines();
-//		    	
-//		    	for(int i=0; i<gridLines.size(); i++) {
-//		    		canvas.drawLine(gridLines.get(i), 0-mPosY, gridLines.get(i), canvas.getHeight()-mPosY, paint);
-//		    		canvas.drawText(""+gridLines.get(i), gridLines.get(i), 0, paint);		//TODO delete
-//		    	}
-//			}	
-//			
-//			if(snapMode == SnapMode.GRID) {
-//				paint.setColor(Color.RED);
-//		
-//				for(AbstractElement e : mElements.values()) {
-//					if(e instanceof Rectangle) {
-//						canvas.drawLine(e.getMiddleX(), 0-mPosY, e.getMiddleX(), canvas.getHeight()-mPosY, paint);
-//						canvas.drawText(""+e.getMiddleX(), e.getMiddleX(), 1, paint);		//TODO delete
-//					}					
-//				}
-//			}
-//		}	
 
 	    
 
@@ -243,24 +203,10 @@ public class EditorView extends View {
 //			os.draw(canvas);
 //		}
 		
+     	rasterGridHelper.setOffset(mOffsetX,mOffsetY);
     	rasterGridHelper.draw(canvas);
 	    mTweetFlow.draw(canvas);
-
-	    /*
-		if(mCurrState instanceof StateMoveElement) {
-			Point ids = mTweetFlow.findElementForConnection();
-			Paint paint = new Paint();
-			paint.setStrokeWidth(5);
-			paint.setColor(Color.GRAY);
-			paint.setAntiAlias(true);
-			if(ids.x != -1) {
-				canvas.drawLine(mElements.get(ids.x).getMiddleX(),  mElements.get(ids.x).getTopY(), mTouchElement.getMiddleX(), mTouchElement.getBotY(), paint);
-			}	
-			if(ids.y != -1) {
-				canvas.drawLine(mElements.get(ids.y).getMiddleX(),  mElements.get(ids.y).getBotY(), mTouchElement.getMiddleX(), mTouchElement.getTopY(), paint);
-			}	
-		}*/
-		
+	
 		canvas.restore();
 
 	}
@@ -296,17 +242,17 @@ public class EditorView extends View {
 		return (int)((y-mOffsetY)/mScaleFactor);
 	}
 
-	
-//    public void moveSingleOn(int x, int y) {
-//    	if(mTouchElement != null)
-//    		mTouchElement.moveOn(x, y);
-//    }
-     
+	/*
+    public void moveSingleOn(int x, int y) {
+    	if(mTweetFlow.getTouchElement() != null)
+    		mTweetFlow.getTouchElement().moveOn(x, y);
+    }
+     */
     
     public void redraw() {
     	invalidate();
     }
-    
+    /*
     public int findRasterHorizontal(int xScaled) {
     	int x = xScaled - mOffsetX;
     	ArrayList<Integer> gridLines = createRasterLines();
@@ -322,8 +268,8 @@ public class EditorView extends View {
     	}
     	
     	return -111;
-    }
-    
+    }*/
+    /*
     public ArrayList<Integer> createRasterLines() {
     	ArrayList<Integer> gridLines = new ArrayList<Integer>();
     	
@@ -332,7 +278,7 @@ public class EditorView extends View {
     	}
     	
     	return gridLines;
-    }
+    }*/
     
 
     
@@ -492,22 +438,20 @@ public class EditorView extends View {
 
 
 	public boolean isRasterOn() {
-		return rasterOn;
+		return rasterGridHelper.getRasterOn();
 	}
 
 
 	public void setRasterOn(boolean rasterOn) {
-		this.rasterOn = rasterOn;
+		rasterGridHelper.setRasterOn(rasterOn);
 	}
-
 
 	public SnapMode getSnapMode() {
-		return snapMode;
+		return rasterGridHelper.getSnapMode();
 	}
-
-
+	
 	public void setSnapMode(SnapMode snapMode) {
-		this.snapMode = snapMode;
+		rasterGridHelper.setSnapMode(snapMode);
 	}
 	
 	public void invalidatePointerId() {
@@ -547,12 +491,23 @@ public class EditorView extends View {
 		for(State s : mAvailableStates.values()) {
 			s.setTweetFlow(tweetFlow);
 		}
+		rasterGridHelper.setTweetFlow(mTweetFlow);
 		redraw();
 	}
 	
 	public boolean scaleDetectorActive() {
 		return mScaleDetector.isInProgress();
 	}
+
+	public RasterGridHelper getRasterGridHelper() {
+		return rasterGridHelper;
+	}
+
+	public Integer getmOffsetX() {
+		return mOffsetX;
+	}
+	
+	
 	
   
 }

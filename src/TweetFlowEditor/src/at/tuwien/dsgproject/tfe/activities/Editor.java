@@ -22,7 +22,6 @@
 package at.tuwien.dsgproject.tfe.activities;
 
 import java.io.Serializable;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +30,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
-import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
+import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 
 public class Editor extends ActionbarActivity {
 	

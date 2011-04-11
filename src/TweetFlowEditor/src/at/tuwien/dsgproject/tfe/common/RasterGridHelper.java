@@ -7,17 +7,21 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
-import at.tuwien.dsgproject.tfe.entities.Rectangle;
+import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
+import at.tuwien.dsgproject.tfe.entities.TweetFlow;
+import at.tuwien.dsgproject.tfe.states.State;
 
 public class RasterGridHelper {
 	
 	public static final int RASTER_HORIZONTAL_WIDTH = 70;
 	
-	private boolean rasterOn;
+	private Boolean rasterOn = false;
 	private int horizontalRasterCT;
-	private Integer mOffsetX, mOffsetY;
-	private HashMap<Integer, AbstractElement> mElements;
-	private AbstractElement mTouchElement;
+	public Integer mOffsetX, mOffsetY;
+	//private HashMap<Integer, AbstractElement> mElements;
+	//private AbstractElement mTouchElement;
+	
+	private TweetFlow tweetFlow;
 	
 	public SnapMode snapMode = SnapMode.NOTHING;
 				
@@ -27,11 +31,10 @@ public class RasterGridHelper {
 		GRID
 	}
 	
-	public RasterGridHelper(HashMap<Integer, AbstractElement> mElements, AbstractElement mTouchElement, Integer mOffsetX, Integer mOffsetY) {
+	public RasterGridHelper(TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY) {
 		this.mOffsetX = mOffsetX;
 		this.mOffsetY = mOffsetY;
-		this.mElements = mElements;
-		this.mTouchElement = mTouchElement;
+		this.tweetFlow = tweetFlow;
 	}
 	
 	public void draw(Canvas canvas) {
@@ -51,17 +54,15 @@ public class RasterGridHelper {
     	
 	    	for(int i=0; i<gridLines.size(); i++) {
 	    		canvas.drawLine(gridLines.get(i), 0-mOffsetY, gridLines.get(i), canvas.getHeight()-mOffsetY, paint);
-	    		canvas.drawText(""+gridLines.get(i), gridLines.get(i), 0, paint);		//TODO delete
 	    	}
 		}	
 
 		if(snapMode == SnapMode.GRID) {
 			paint.setColor(Color.RED);
 	
-			for(AbstractElement e : mElements.values()) {
-				if(e instanceof Rectangle) {
+			for(AbstractElement e : tweetFlow.getmElements().values()) {
+				if(e instanceof ServiceRequest) {
 					canvas.drawLine(e.getMiddleX(), 0-mOffsetY, e.getMiddleX(), canvas.getHeight()-mOffsetY, paint);
-					canvas.drawText(""+e.getMiddleX(), e.getMiddleX(), 1, paint);		//TODO delete
 				}					
 			}
 		}	
@@ -78,13 +79,18 @@ public class RasterGridHelper {
 	}	
 	
 	 
-	public boolean isThereGridHorizontal(int xScaled) {
-		int x = xScaled - mOffsetX;
+//	public boolean isThereGridHorizontal(int xScaled) {
+	public boolean isThereGridHorizontal() {
+		int x = tweetFlow.getTouchElement().getMiddleX();
+	//	int x = xScaled;// - mOffsetX;
 		int xDiff = Integer.MAX_VALUE;
-		    	
-		for(AbstractElement e : mElements.values()) {
-			if(e instanceof Rectangle) {
-				if(mTouchElement.getId() != e.getId()) {
+		
+		//if(tweetFlow.getTouchElement() == null)
+			//return false;
+		
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if(tweetFlow.getTouchElement().getId() != e.getId()) {
 					if((Math.abs(x - e.getMiddleX())) < xDiff) {
 						xDiff = Math.abs(x - e.getMiddleX());
 					}
@@ -99,14 +105,14 @@ public class RasterGridHelper {
 	}
 
 
-	public int findGridHorizontal(int xScaled) {
-		int x = xScaled - mOffsetX;
+	public int findGridHorizontal() {
+		int x = tweetFlow.getTouchElement().getMiddleX();
 		int xDiff = Integer.MAX_VALUE;
 		int xNew = 0;
 		    	
-		for(AbstractElement e : mElements.values()) {
-			if(e instanceof Rectangle) {
-				if(mTouchElement.getId() != e.getId()) {
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if(tweetFlow.getTouchElement().getId() != e.getId()) {
 					if((Math.abs(x - e.getMiddleX())) < xDiff) {
 						xDiff = Math.abs(x - e.getMiddleX());
 						xNew = e.getMiddleX();		
@@ -123,8 +129,8 @@ public class RasterGridHelper {
 		int x = xScaled - mOffsetX;
 		int xDiff = Integer.MAX_VALUE;
 		
-		for(AbstractElement e : mElements.values()) {
-			if(e instanceof Rectangle) {
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
 				if((Math.abs(x - e.getMiddleX())) < xDiff) {
 					xDiff = Math.abs(x - e.getMiddleX());
 				}
@@ -142,8 +148,8 @@ public class RasterGridHelper {
 		int xDiff = Integer.MAX_VALUE;
 		int xNew = 0;
 		
-		for(AbstractElement e : mElements.values()) {
-			if(e instanceof Rectangle) {
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
 				if((Math.abs(x - e.getMiddleX())) < xDiff) {
 					xDiff = Math.abs(x - e.getMiddleX());
 					xNew = e.getMiddleX();		
@@ -153,6 +159,24 @@ public class RasterGridHelper {
 	
 	    return xNew;
 	}
+	
+	public int findRasterHorizontal(int xScaled) {
+    	int x = xScaled;
+    	ArrayList<Integer> gridLines = createRasterLines();
+    	
+    	for(int i=0; i<gridLines.size()-1; i++) {
+    		if(x>gridLines.get(i) && x<gridLines.get(i+1)) {
+    			if((x-gridLines.get(i)) < (gridLines.get(i+1) - x)) {
+    				return gridLines.get(i);
+    			} else {
+    				return gridLines.get(i+1);
+    			}
+    		}
+    	}
+    	
+    	return -111;
+    }
+	
 	/*
 	public void selectElementsOnGrid(int x) {
 		for(AbstractElement e : mElements.values()) {
@@ -164,6 +188,35 @@ public class RasterGridHelper {
 			}
 		}
 	}*/
+	
+	public void setTweetFlow(TweetFlow tweetFlow) {
+		this.tweetFlow = tweetFlow;
+	}
 
+	public Boolean getRasterOn() {
+		return rasterOn;
+	}
+
+	public void setRasterOn(Boolean rasterOn) {
+		this.rasterOn = rasterOn;
+	}
+
+	public SnapMode getSnapMode() {
+		return snapMode;
+	}
+
+	public void setSnapMode(SnapMode snapMode) {
+		this.snapMode = snapMode;
+	}
+	
+	public void setOffset(Integer mOffsetX, Integer mOffsetY) {
+		this.mOffsetX = mOffsetX;
+		this.mOffsetY = mOffsetY;
+	}
+	
+	
+	
+
+	
 	
 }

@@ -5,7 +5,6 @@ import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
-import at.tuwien.dsgproject.tfe.views.EditorView.SnapMode;
 
 public class StateFree extends State {
 		
