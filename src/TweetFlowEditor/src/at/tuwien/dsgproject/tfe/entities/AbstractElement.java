@@ -203,7 +203,7 @@ public abstract class AbstractElement {
     	if(mClosedSequenceNext != null) {
     		final int offX = getMiddleX()-mClosedSequenceNext.getMiddleX();
     		final int offY = mClosedSequenceNext.getTopY()-getBotY();
-    		if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || 
+    		if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || offY < 0 ||
     				Math.abs(offX) > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_X) {
     			removeClosedSequenceNext();
     		}
@@ -215,7 +215,7 @@ public abstract class AbstractElement {
     	if(mClosedSequencePrev != null) {
 			final int offX = getMiddleX()-mClosedSequencePrev.getMiddleX();
 			final int offY = getTopY()-mClosedSequencePrev.getBotY();
-			if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || 
+			if(offY > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_Y || offY < 0 ||
 					Math.abs(offX) > TweetFlow.DISTANCE_FOR_AUTO_DISCONNECTION_X) {
 				removeClosedSequencePrev();
 			}
