@@ -90,8 +90,7 @@ public class RasterGridHelper {
 		
 		return false;
 	}
-
-
+	
 	public int findGridHorizontal() {
 		int x = tweetFlow.getTouchElement().getMiddleX();
 		int xDiff = Integer.MAX_VALUE;
@@ -104,6 +103,80 @@ public class RasterGridHelper {
 						xDiff = Math.abs(x - e.getMiddleX());
 						xNew = e.getMiddleX();		
 					}
+				}
+			}					
+		}
+		
+		return xNew;
+	}
+	
+	public boolean isThereGridNearGridHorizontal(ArrayList<ServiceRequest> gridElements) {
+		if(gridElements.isEmpty())
+			return false;
+		
+		int x = gridElements.get(0).getMiddleX();
+		int xDiff = Integer.MAX_VALUE;
+		
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if((!gridElements.contains(e)) && ((Math.abs(x - e.getMiddleX())) < xDiff)) {
+					xDiff = Math.abs(x - e.getMiddleX());
+				}
+			}					
+		}
+		
+		if(xDiff < 15) 
+			return true;
+		
+		return false;
+	}
+
+
+	public int findGridNearGridHorizontal(ArrayList<ServiceRequest> gridElements) {		
+		int x = gridElements.get(0).getMiddleX();
+		int xDiff = Integer.MAX_VALUE;
+		int xNew = 0;
+		    	
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if((!gridElements.contains(e)) && ((Math.abs(x - e.getMiddleX())) < xDiff)) {
+					xDiff = Math.abs(x - e.getMiddleX());
+					xNew = e.getMiddleX();		
+				}
+			}					
+		}
+		
+		return xNew;
+	}
+	
+	public boolean isThereGridNearElementHorizontal(AbstractElement element) {
+		int x = element.getMiddleX();
+		int xDiff = Integer.MAX_VALUE;
+		
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if((element.getId() != e.getId()) && ((Math.abs(x - e.getMiddleX())) < xDiff)) {
+					xDiff = Math.abs(x - e.getMiddleX());
+				}
+			}					
+		}
+		
+		if(xDiff < 15) 
+			return true;
+		
+		return false;
+	}
+	
+	public int findGridNearElementHorizontal(AbstractElement element) {		
+		int x = element.getMiddleX();
+		int xDiff = Integer.MAX_VALUE;
+		int xNew = 0;
+		    	
+		for(AbstractElement e : tweetFlow.getmElements().values()) {
+			if(e instanceof ServiceRequest) {
+				if((element.getId() != e.getId()) && ((Math.abs(x - e.getMiddleX())) < xDiff)) {
+					xDiff = Math.abs(x - e.getMiddleX());
+					xNew = e.getMiddleX();		
 				}
 			}					
 		}

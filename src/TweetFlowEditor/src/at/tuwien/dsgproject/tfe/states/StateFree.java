@@ -26,7 +26,6 @@ public class StateFree extends State {
 			mEditorView.setState(EDITOR_STATE.TOUCH_ELEMENT);	
 			mEditorView.redraw();			
 		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(x))	{
-			//rasterGridHelper.selectElementsOnGrid(xGrid);
 			mEditorView.setState(EDITOR_STATE.MOVE_GRID);	
 			mEditorView.redraw();
     	} else {

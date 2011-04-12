@@ -105,7 +105,7 @@ public class TweetFlow implements Serializable {
 		for(AbstractElement e : gridElements) {
 			e.move(offX, offY);
 		}
-		updateMoveSelectedConnections();
+		updateMoveGridConnections(gridElements);
     }
     
 	public void moveTouchElement(int offX, int offY) {
@@ -128,6 +128,14 @@ public class TweetFlow implements Serializable {
 		resetAllMaybeConnections();
     	for(AbstractElement selected : mSelected.values()) {
     		updateSelectedElementConnections(selected);
+    	}
+    }
+    
+    private void updateMoveGridConnections(ArrayList<ServiceRequest> gridElements) {
+    	//TODO: needed?
+		resetAllMaybeConnections();
+    	for(AbstractElement e : gridElements) {
+    		updateElementConnections(e);
     	}
     }
     
@@ -180,6 +188,34 @@ public class TweetFlow implements Serializable {
 		}
     }
     
+  //improvements: select best = shortest maybe connection if several exist
+    public void updateElementConnections(AbstractElement e) {
+		// check if closed sequence connections still valid?
+		if(e.mClosedSequenceNext != null) {
+			if(!mSelected.containsKey(e.mClosedSequenceNext.getId())) {
+    			e.checkRemoveNext();
+			}
+		}
+		
+		if(e.mClosedSequencePrev != null) {
+			final AbstractElement prev = e.mClosedSequencePrev;
+			if(!mSelected.containsKey(prev.getId())) {
+				e.checkRemovePrev();
+	    		
+			}
+		}
+			
+		if(e.mClosedSequenceNext == null ||
+				e.mClosedSequencePrev == null) {
+    		e.resetMaybeConnections();
+    		for(AbstractElement candidate : mElements.values()) {
+    			//no need to compare selected elements
+    			if(!mSelected.containsKey(candidate.getId())) {
+    				e.checkMaybeConnections(candidate);
+    			}
+    		}
+		}
+    }
 
     
 
