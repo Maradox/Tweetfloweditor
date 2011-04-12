@@ -5,9 +5,9 @@
     android:width="@dimen/sr_width"
     android:height="@dimen/sr_height" >
     <solid
-        android:color="@color/orange" />
+        android:color="@color/sr_background" />
     <stroke
-        android:width="3px"
-        android:color="#ffbedf5d" />
+        android:width="@dimen/sr_stroke_width_marked"
+        android:color="@color/sr_stroke_marked" />
 </shape>
 
