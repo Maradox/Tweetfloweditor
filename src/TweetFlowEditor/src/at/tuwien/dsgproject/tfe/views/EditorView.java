@@ -236,11 +236,12 @@ public class EditorView extends View {
 	public int scaledY(int y) {
 		return (int)((y-mOffsetY)/mScaleFactor);
 	}
+
     
     public void redraw() {
     	invalidate();
     }
-    
+
     public void undo() {
     	//TODO
     }
