@@ -45,6 +45,7 @@ import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateFree;
 import at.tuwien.dsgproject.tfe.states.StateMoveAll;
 import at.tuwien.dsgproject.tfe.states.StateMoveElement;
+import at.tuwien.dsgproject.tfe.states.StateMoveGrid;
 import at.tuwien.dsgproject.tfe.states.StateMoveSelected;
 import at.tuwien.dsgproject.tfe.states.StateSelected;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
@@ -59,20 +60,16 @@ public class EditorView extends View {
 		MOVE_ELEMENT,
 		MOVE_SELECTED,
 		TOUCH_VOID,
-		MOVE_ALL
+		MOVE_ALL,
+		MOVE_GRID
 	}
 
 	private State mCurrState;
 	private HashMap <EDITOR_STATE, State> mAvailableStates;
 	
 	
-	public static final int RASTER_HORIZONTAL_WIDTH = 70;
 	public static final int MOVE_OFFSET = 8;
-		
-	public boolean setRaster = false;
-	public int horizontalRasterCT;
-	
-	
+			
 	public boolean openContextMenu = false;
 			
 	
@@ -106,7 +103,6 @@ public class EditorView extends View {
 		
 		mTapDetector = new GestureDetector(context, new DoubleTapListener());
 		
-	//	rasterGridHelper = new RasterGridHelper(mTweetFlow.getmElements(), mTweetFlow.getTouchElement(), mOffsetX, mOffsetY);
 		rasterGridHelper = new RasterGridHelper(mTweetFlow, mOffsetX, mOffsetY);
 
 		prepareStates();
@@ -121,6 +117,7 @@ public class EditorView extends View {
 		mAvailableStates.put(EDITOR_STATE.MOVE_SELECTED, new StateMoveSelected(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.TOUCH_VOID, new StateTouchVoid(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.MOVE_ALL, new StateMoveAll(this, mTweetFlow));
+		mAvailableStates.put(EDITOR_STATE.MOVE_GRID, new StateMoveGrid(this, mTweetFlow));
 		
 		//TODO: just as a security measure
 		for(EDITOR_STATE s : EDITOR_STATE.values()) {
@@ -195,7 +192,6 @@ public class EditorView extends View {
 		//canvas.scale(mScaleFactor, mScaleFactor, mScalePivotX, mScalePivotY);
     	
 
-	    
 
 		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
 	    //TODO: clipping
@@ -231,7 +227,6 @@ public class EditorView extends View {
     }
     
     
-
     
 	public int scaledX(int x) {
 		return (int)((x-mOffsetX)/mScaleFactor);
@@ -241,133 +236,10 @@ public class EditorView extends View {
 	public int scaledY(int y) {
 		return (int)((y-mOffsetY)/mScaleFactor);
 	}
-
-	/*
-    public void moveSingleOn(int x, int y) {
-    	if(mTweetFlow.getTouchElement() != null)
-    		mTweetFlow.getTouchElement().moveOn(x, y);
-    }
-     */
     
     public void redraw() {
     	invalidate();
     }
-    /*
-    public int findRasterHorizontal(int xScaled) {
-    	int x = xScaled - mOffsetX;
-    	ArrayList<Integer> gridLines = createRasterLines();
-    	
-    	for(int i=0; i<gridLines.size()-1; i++) {
-    		if(x>gridLines.get(i) && x<gridLines.get(i+1)) {
-    			if((x-gridLines.get(i)) < (gridLines.get(i+1) - x)) {
-    				return gridLines.get(i);
-    			} else {
-    				return gridLines.get(i+1);
-    			}
-    		}
-    	}
-    	
-    	return -111;
-    }*/
-    /*
-    public ArrayList<Integer> createRasterLines() {
-    	ArrayList<Integer> gridLines = new ArrayList<Integer>();
-    	
-    	for(int i=0; i<horizontalRasterCT; i++) {
-    		gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH - RASTER_HORIZONTAL_WIDTH/2 + mOffsetX % RASTER_HORIZONTAL_WIDTH - mOffsetX));
-    	}
-    	
-    	return gridLines;
-    }*/
-    
-
-    
-//    public boolean isThereGridHorizontal(int xScaled) {
-//    	int x = xScaled - mPosX;
-//    	int xDiff = Integer.MAX_VALUE;
-//    	    	
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e instanceof Rectangle) {
-//				if(mTouchElement.getId() != e.getId()) {
-//					if((Math.abs(x - e.getMiddleX())) < xDiff) {
-//						xDiff = Math.abs(x - e.getMiddleX());
-//					}
-//				}
-//			}					
-//		}
-//    	
-//    	if(xDiff < 15) 
-//    		return true;
-//    	
-//    	return false;
-//    }
-//    
-//    
-//    public int findGridHorizontal(int xScaled) {
-//    	int x = xScaled - mPosX;
-//    	int xDiff = Integer.MAX_VALUE;
-//    	int xNew = 0;
-//    	    	
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e instanceof Rectangle) {
-//				if(mTouchElement.getId() != e.getId()) {
-//					if((Math.abs(x - e.getMiddleX())) < xDiff) {
-//						xDiff = Math.abs(x - e.getMiddleX());
-//						xNew = e.getMiddleX();		
-//					}
-//				}
-//			}					
-//		}
-//    	
-//    	return xNew;
-//    }
-//
-//    
-//    public boolean isTouchOnGrid(int xScaled) {
-//    	int x = xScaled - mPosX;
-//    	int xDiff = Integer.MAX_VALUE;
-//    	
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e instanceof Rectangle) {
-//				if((Math.abs(x - e.getMiddleX())) < xDiff) {
-//					xDiff = Math.abs(x - e.getMiddleX());
-//				}
-//			}
-//    	}	
-//    	
-//		if(xDiff < 30) 
-//	    	return true;
-//    	
-//		return false;
-//    }
-//   
-//    public int getTouchOnGrid(int xScaled) {
-//    	int x = xScaled - mPosX;
-//    	int xDiff = Integer.MAX_VALUE;
-//    	int xNew = 0;
-//    	
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e instanceof Rectangle) {
-//				if((Math.abs(x - e.getMiddleX())) < xDiff) {
-//					xDiff = Math.abs(x - e.getMiddleX());
-//					xNew = e.getMiddleX();		
-//				}
-//			}
-//    	}	
-//   
-//	    return xNew;
-//    }
-//    
-//    public void selectElementsOnGrid(int x) {
-//    	for(AbstractElement e : mElements.values()) {
-//			if(e instanceof Rectangle) {
-//				if(e.getMiddleX() == x) {
-//					mSelected.put(e.getId(), e);
-//					e.modeSelected();
-//				}
-//			}
-//    	}
-//    }
     
     public void undo() {
     	//TODO
@@ -419,7 +291,7 @@ public class EditorView extends View {
 			deselect.setIcon(getResources().getDrawable(R.drawable.production));
 			deselect.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					mTweetFlow.deleteElement(mTweetFlow.getTouchElement().getId());
+					mTweetFlow.getTouchElement().modeNormal();
 					redraw();
 					qa.dismiss();
 				}

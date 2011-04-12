@@ -1,6 +1,7 @@
 package at.tuwien.dsgproject.tfe.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -95,6 +96,13 @@ public class TweetFlow implements Serializable {
 	
     public void moveSelected(int offX, int offY) {
 		for(AbstractElement e : mSelected.values()) {
+			e.move(offX, offY);
+		}
+		updateMoveSelectedConnections();
+    }
+    
+    public void moveGridElements(ArrayList<ServiceRequest> gridElements, int offX, int offY) {
+		for(AbstractElement e : gridElements) {
 			e.move(offX, offY);
 		}
 		updateMoveSelectedConnections();
@@ -302,5 +310,12 @@ public class TweetFlow implements Serializable {
 	public int getSelectedElementsCount() {
 		return mSelected.size();
 	}
+
+
+	public HashMap<Integer, AbstractElement> getmSelected() {
+		return mSelected;
+	}
+	
+	
 
 }
