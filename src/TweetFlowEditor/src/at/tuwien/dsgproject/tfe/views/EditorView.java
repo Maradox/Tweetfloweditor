@@ -42,6 +42,7 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
+import at.tuwien.dsgproject.tfe.states.StateCreateLoop;
 import at.tuwien.dsgproject.tfe.states.StateFree;
 import at.tuwien.dsgproject.tfe.states.StateMoveAll;
 import at.tuwien.dsgproject.tfe.states.StateMoveElement;
@@ -61,7 +62,8 @@ public class EditorView extends View {
 		MOVE_SELECTED,
 		TOUCH_VOID,
 		MOVE_ALL,
-		MOVE_GRID
+		MOVE_GRID,
+		CREATE_LOOP
 	}
 
 	private State mCurrState;
@@ -118,6 +120,7 @@ public class EditorView extends View {
 		mAvailableStates.put(EDITOR_STATE.TOUCH_VOID, new StateTouchVoid(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.MOVE_ALL, new StateMoveAll(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.MOVE_GRID, new StateMoveGrid(this, mTweetFlow));
+		mAvailableStates.put(EDITOR_STATE.CREATE_LOOP, new StateCreateLoop(this, mTweetFlow));
 		
 		//TODO: just as a security measure
 		for(EDITOR_STATE s : EDITOR_STATE.values()) {
@@ -299,6 +302,22 @@ public class EditorView extends View {
 			});
 			qa.addActionItem(deselect);
 		}	
+				
+		qa.setAnimStyle(QuickAction.ANIM_AUTO);
+		
+		ActionItem deselect = new ActionItem();
+		deselect.setTitle("Add loop");
+		deselect.setIcon(getResources().getDrawable(R.drawable.production));
+		deselect.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setState(EDITOR_STATE.CREATE_LOOP);
+				mTweetFlow.getTouchElement().modeMarked();
+				((StateCreateLoop) mCurrState).setStartID(mTweetFlow.getTouchElement().getId());
+				redraw();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(deselect);	
 				
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		

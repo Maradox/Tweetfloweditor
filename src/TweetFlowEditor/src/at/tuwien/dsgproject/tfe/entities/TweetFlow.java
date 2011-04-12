@@ -350,8 +350,6 @@ public class TweetFlow implements Serializable {
 
 	public HashMap<Integer, AbstractElement> getmSelected() {
 		return mSelected;
-	}
-	
-	
+	}	
 
 }
