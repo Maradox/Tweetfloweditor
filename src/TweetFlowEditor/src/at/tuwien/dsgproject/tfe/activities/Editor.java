@@ -30,6 +30,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
+import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 
 public class Editor extends ActionbarActivity {
@@ -144,6 +145,9 @@ public class Editor extends ActionbarActivity {
     		case R.id.add_open_sequence:
     			mTweetFlow.addOpenSequence();
     			mEditorView.redraw();
+    			break;		
+    		case R.id.create_loop:
+    			mEditorView.setState(EDITOR_STATE.CREATE_LOOP);
     			break;		
     			
     		default:	

@@ -1,17 +1,22 @@
 package at.tuwien.dsgproject.tfe.states;
 
+import java.util.ArrayList;
+
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
-public class StateMoveElement extends State {
+public class StateMoveGrid extends State {
 		
 	private RasterGridHelper rasterGridHelper;
+	private ArrayList<ServiceRequest> gridElements;
+	private boolean isRunning = false;
 	
-	public StateMoveElement(EditorView editorView, TweetFlow tweetFlow) {
+	public StateMoveGrid(EditorView editorView, TweetFlow tweetFlow) {
 		super(editorView, tweetFlow);
 		rasterGridHelper = editorView.getRasterGridHelper();
 	}
@@ -21,32 +26,32 @@ public class StateMoveElement extends State {
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
         
-	    if(!mEditorView.scaleDetectorActive()) {
+        if(!isRunning) {
+        	int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.getLastTouchX());
+    		gridElements = rasterGridHelper.getElementsOnGrid(xGrid);
+    		isRunning = true;
+        }
+        
+        if(!mEditorView.scaleDetectorActive()) {
 	        final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
 				
-			mTweetFlow.moveTouchElement(offX, offY);
+			mTweetFlow.moveGridElements(gridElements,offX, offY);
 			mEditorView.redraw();
-	       }
-		mEditorView.setLastTouch(x, y);
-		
+        }
+        
+		mEditorView.setLastTouch(x, y);	
 	}	
 	
 	public void onActionUp(MotionEvent event) {
 		super.onActionUp(event);
 		
-		if(mEditorView.getSnapMode() == SnapMode.RASTER) {
-			int rasterX = rasterGridHelper.findRasterHorizontal(mTweetFlow.getTouchElement().getMiddleX());
-			final int offX = rasterX - mTweetFlow.getTouchElement().getMiddleX();
-			mTweetFlow.moveTouchElement(offX, 0);
-		}	
-		
-		else if(mEditorView.getSnapMode() == SnapMode.GRID && rasterGridHelper.isThereGridHorizontal()) {
-			int gridX = rasterGridHelper.findGridHorizontal();
-			final int offX = gridX - mTweetFlow.getTouchElement().getMiddleX();
-			mTweetFlow.moveTouchElement(offX, 0);
+		if(mEditorView.getSnapMode() == SnapMode.GRID && rasterGridHelper.isThereGridNearGridHorizontal(gridElements)) {
+			int gridX = rasterGridHelper.findGridNearGridHorizontal(gridElements);
+			final int offX = gridX - gridElements.get(0).getMiddleX();
+			mTweetFlow.moveGridElements(gridElements,offX, 0);
 		}
-		
+		isRunning = false;
 		mTweetFlow.convertMaybeIntoFixConnection();
 		
 		mTweetFlow.setTouchElementModeNormal();

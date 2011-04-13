@@ -1,6 +1,7 @@
 package at.tuwien.dsgproject.tfe.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -100,6 +101,13 @@ public class TweetFlow implements Serializable {
 		updateMoveSelectedConnections();
     }
     
+    public void moveGridElements(ArrayList<ServiceRequest> gridElements, int offX, int offY) {
+		for(AbstractElement e : gridElements) {
+			e.move(offX, offY);
+		}
+		updateMoveGridConnections(gridElements);
+    }
+    
 	public void moveTouchElement(int offX, int offY) {
 		if(mTouchElement != null) {
 			mTouchElement.move(offX, offY);
@@ -120,6 +128,14 @@ public class TweetFlow implements Serializable {
 		resetAllMaybeConnections();
     	for(AbstractElement selected : mSelected.values()) {
     		updateSelectedElementConnections(selected);
+    	}
+    }
+    
+    private void updateMoveGridConnections(ArrayList<ServiceRequest> gridElements) {
+    	//TODO: needed?
+		resetAllMaybeConnections();
+    	for(AbstractElement e : gridElements) {
+    		updateElementConnections(e);
     	}
     }
     
@@ -172,6 +188,34 @@ public class TweetFlow implements Serializable {
 		}
     }
     
+  //improvements: select best = shortest maybe connection if several exist
+    public void updateElementConnections(AbstractElement e) {
+		// check if closed sequence connections still valid?
+		if(e.mClosedSequenceNext != null) {
+			if(!mSelected.containsKey(e.mClosedSequenceNext.getId())) {
+    			e.checkRemoveNext();
+			}
+		}
+		
+		if(e.mClosedSequencePrev != null) {
+			final AbstractElement prev = e.mClosedSequencePrev;
+			if(!mSelected.containsKey(prev.getId())) {
+				e.checkRemovePrev();
+	    		
+			}
+		}
+			
+		if(e.mClosedSequenceNext == null ||
+				e.mClosedSequencePrev == null) {
+    		e.resetMaybeConnections();
+    		for(AbstractElement candidate : mElements.values()) {
+    			//no need to compare selected elements
+    			if(!mSelected.containsKey(candidate.getId())) {
+    				e.checkMaybeConnections(candidate);
+    			}
+    		}
+		}
+    }
 
     
 
@@ -302,5 +346,10 @@ public class TweetFlow implements Serializable {
 	public int getSelectedElementsCount() {
 		return mSelected.size();
 	}
+
+
+	public HashMap<Integer, AbstractElement> getmSelected() {
+		return mSelected;
+	}	
 
 }

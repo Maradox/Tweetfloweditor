@@ -49,6 +49,8 @@ public abstract class AbstractElement {
 	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
+	protected AbstractElement mLoop = null;
+	
 	AbstractElement(Context context, int id, int x, int y, int width, int height) {
 		mContext = context;
 		mId = id;
@@ -83,8 +85,99 @@ public abstract class AbstractElement {
 					mClosedSequenceMaybeNext.getTopY(), 
 					paint);
 		}
+		
+		if(mLoop != null)
+			drawLoop(canvas);
 	}
 	
+	public void drawLoop(Canvas canvas) {
+		Paint paint = new Paint();
+		paint.setStrokeWidth(5);
+		paint.setColor(Color.GREEN);
+		paint.setAntiAlias(true);
+		
+		
+		if((mLoop.getRightX() - mX + 40) < 0) {
+			canvas.drawLine(mX, 
+					getMiddleY(), 
+					mLoop.getRightX() + 20, 
+					getMiddleY(), 
+					paint);
+			
+			canvas.drawLine(mLoop.getRightX() + 20, 
+					getMiddleY(), 
+					mLoop.getRightX() + 20, 
+					mLoop.getMiddleY(), 
+					paint);
+			
+			
+			canvas.drawLine(mLoop.getRightX() + 20, 
+					mLoop.getMiddleY(), 
+					mLoop.getRightX(), 
+					mLoop.getMiddleY(), 
+					paint);
+		}
+		else if ((getRightX() + 40 - mLoop.getmX()) < 0){		
+			canvas.drawLine(mX, 
+					getMiddleY(), 
+					mX - 20, 
+					getMiddleY(), 
+					paint);
+			
+			canvas.drawLine(mX - 20, 
+					getMiddleY(), 
+					mX - 20, 
+					mLoop.getMiddleY(), 
+					paint);
+			
+			canvas.drawLine(mX - 20, 
+					mLoop.getMiddleY(), 
+					mLoop.getmX(), 
+					mLoop.getMiddleY(), 
+					paint);
+		}	
+		
+		else {
+			if(mX < mLoop.getmX()) {
+				canvas.drawLine(mX, 
+						getMiddleY(), 
+						mX - 20, 
+						getMiddleY(), 
+						paint);
+				
+				canvas.drawLine(mX - 20, 
+						getMiddleY(), 
+						mX - 20, 
+						mLoop.getMiddleY(), 
+						paint);
+				
+				canvas.drawLine(mX - 20, 
+						mLoop.getMiddleY(), 
+						mLoop.getmX(), 
+						mLoop.getMiddleY(), 
+						paint);
+			}
+		 	else {
+				canvas.drawLine(mX, 
+						getMiddleY(), 
+						mLoop.getmX() - 20, 
+						getMiddleY(), 
+						paint);
+				
+				canvas.drawLine(mLoop.getmX() - 20, 
+						getMiddleY(), 
+						mLoop.getmX() - 20, 
+						mLoop.getMiddleY(), 
+						paint);
+				
+				canvas.drawLine(mLoop.getmX() - 20, 
+						mLoop.getMiddleY(), 
+						mLoop.getmX(), 
+						mLoop.getMiddleY(), 
+						paint);
+		 	}
+		}
+	}
 	
 //	private void drawClosedSequence(Canvas canvas) {
 //		if(mClosedSequenceNext != null) {
@@ -125,7 +218,7 @@ public abstract class AbstractElement {
 	// - highlighted -> if current element receives touch event
 	// - selected -> if it has been selected, after ACTION_UP
 	
-	
+		
 	abstract public void modeSelected();
 	
 	abstract public void modeNormal();
@@ -143,6 +236,10 @@ public abstract class AbstractElement {
 
 	public int getMiddleX() {
 		return mX+mWidth/2;
+	}
+	
+	public int getRightX() {
+		return mX+mWidth;
 	}
 	
 	public int getMiddleY() {
@@ -254,12 +351,24 @@ public abstract class AbstractElement {
 	
 	
 	
+	public AbstractElement getmLoop() {
+		return mLoop;
+	}
+
+	public void setmLoop(AbstractElement mLoop) {
+		this.mLoop = mLoop;
+	}
+
 	public void resetMaybeConnections() {
 		mClosedSequenceMaybeNext = null;
 	}
 	
 	public boolean equals(AbstractElement e) {
 		return this.mId == e.mId;
+	}
+
+	public int getmX() {
+		return mX;
 	}
 	
 	
