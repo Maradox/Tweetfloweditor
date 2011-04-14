@@ -6,15 +6,15 @@
 	<integer name="sr_text_size">20</integer>
 	<color name="sr_text">@+android:color/black</color>
 	
-	<color name="sr_background">@+color/blue_light_trans</color>
+	<color name="sr_background">@+color/blue_light</color>
 	
-	<dimen name="sr_stroke_width_normal">2dip</dimen>
-	<color name="sr_stroke_normal">@+color/blue_medium</color>
+	<dimen name="sr_stroke_width_normal">1dip</dimen>
+	<color name="sr_stroke_normal">@+color/blue_dark</color>
 	
-	<dimen name="sr_stroke_width_marked">4dip</dimen>
-	<color name="sr_stroke_marked">@+android:color/orange</color>
+	<dimen name="sr_stroke_width_marked">3dip</dimen>
+	<color name="sr_stroke_marked">@+color/orange</color>
 	
-	<dimen name="sr_stroke_width_selected">4dip</dimen>
+	<dimen name="sr_stroke_width_selected">3dip</dimen>
 	<color name="sr_stroke_selected">@+color/blue_dark</color>
 	
 </resources>

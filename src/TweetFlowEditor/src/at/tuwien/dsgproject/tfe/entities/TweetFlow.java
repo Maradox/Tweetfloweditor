@@ -13,6 +13,7 @@ public class TweetFlow implements Serializable {
 	 * serializable ID
 	 */
 	private static final long serialVersionUID = -1549177934192038606L;
+	
 	public static final int DISTANCE_FOR_AUTO_CONNECTION_X = 50;
 	public static final int DISTANCE_FOR_AUTO_CONNECTION_Y = 70;
 	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_X = 80;
@@ -21,6 +22,7 @@ public class TweetFlow implements Serializable {
 	public static final String TF_ID = "TweetFlow";
 
 	private Context mContext;
+	private String mName;
 	
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
@@ -38,11 +40,13 @@ public class TweetFlow implements Serializable {
 		mSelected = new HashMap<Integer, AbstractElement>();
 		//mOpenSequences = new HashMap<Integer, OpenSequence>();
 		
+		
+		//TODO: add constructor that parses file or add method that fills an empty tweetflow
 		fillElements();
 	}
 	
 	
-	public void fillElements() {
+	private void fillElements() {
 		addServiceRequest(100,100);
 		addServiceRequest(200,350);
 		addServiceRequest(300,500);
@@ -350,6 +354,9 @@ public class TweetFlow implements Serializable {
 
 	public HashMap<Integer, AbstractElement> getmSelected() {
 		return mSelected;
-	}	
+	}
+	
+	
+
 
 }

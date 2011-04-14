@@ -190,5 +190,12 @@ public class OpenSequence extends AbstractElement {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_marked);
 		mShape.setBounds(mBounds);
 	}
+	
+	public String getElementInfoString() {
+		String s = "OS ";
+		s += generalElementInfo();
+			
+		return s;
+	}
 
 }

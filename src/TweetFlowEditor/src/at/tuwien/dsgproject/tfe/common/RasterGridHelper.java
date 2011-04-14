@@ -1,19 +1,22 @@
 package at.tuwien.dsgproject.tfe.common;
 
 import java.util.ArrayList;
+
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public class RasterGridHelper {
 	
-	public static final int RASTER_HORIZONTAL_WIDTH = 70;
+	public final int RASTER_HORIZONTAL_WIDTH;
 	
-	private Boolean rasterOn = true;
+	private boolean rasterOn = true;
 	private int horizontalRasterCT;
 	public Integer mOffsetX, mOffsetY;	
 	private TweetFlow tweetFlow;
@@ -25,10 +28,12 @@ public class RasterGridHelper {
 		GRID
 	}
 	
-	public RasterGridHelper(TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY) {
+	public RasterGridHelper(Context context, TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY) {
 		this.mOffsetX = mOffsetX;
 		this.mOffsetY = mOffsetY;
 		this.tweetFlow = tweetFlow;
+		RASTER_HORIZONTAL_WIDTH = context.getResources().getInteger(R.integer.raster_horiz_width);
+		
 	}
 	
 	public void draw(Canvas canvas) {

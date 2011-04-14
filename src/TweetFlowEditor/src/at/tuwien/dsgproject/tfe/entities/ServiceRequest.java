@@ -93,5 +93,14 @@ public class ServiceRequest extends AbstractElement {
 	public String toString() {
 		return "SR: "+ mId.toString();
 	}
-
+	
+	@Override
+	public String getElementInfoString() {
+		String s = "SR ";
+		s += generalElementInfo();
+		
+		return s;
+	}
+	
 }
+

@@ -213,9 +213,9 @@ public abstract class AbstractElement {
 		return false;
 	}
 
-	// TODO: elements should have 3 visual states:
+	// elements have 3 visual states:
 	// - normal
-	// - highlighted -> if current element receives touch event
+	// - marked -> if current element receives touch event
 	// - selected -> if it has been selected, after ACTION_UP
 	
 		
@@ -369,6 +369,21 @@ public abstract class AbstractElement {
 
 	public int getmX() {
 		return mX;
+	}
+	
+	public abstract String getElementInfoString();
+	
+	protected String generalElementInfo() {
+		String s = new String();
+		s += mX + " ";
+		s += mY + " ";
+		s += mWidth + " ";
+		s += mHeight + " ";
+		if(mClosedSequenceNext != null) s += "CSN " + mClosedSequenceNext.getId() + " ";
+		if(mClosedSequencePrev != null) s += "CSP " + mClosedSequencePrev.getId() + " ";
+		//TODO Loop if all fixed
+		
+		return s;
 	}
 	
 	

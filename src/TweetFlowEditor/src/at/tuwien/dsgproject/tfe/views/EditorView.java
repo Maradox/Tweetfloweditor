@@ -97,15 +97,13 @@ public class EditorView extends View {
 		super(context, attrs);
 		
 		mTweetFlow = new TweetFlow(getContext());
-		mTweetFlow.fillElements();
 		
 		
 		setOnLongClickListener(mOnLongClickListener);
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
 		
-		mTapDetector = new GestureDetector(context, new DoubleTapListener());
-		
-		rasterGridHelper = new RasterGridHelper(mTweetFlow, mOffsetX, mOffsetY);
+		mTapDetector = new GestureDetector(context, new DoubleTapListener());		
+		rasterGridHelper = new RasterGridHelper(context, mTweetFlow, mOffsetX, mOffsetY);
 
 		prepareStates();
 	}
