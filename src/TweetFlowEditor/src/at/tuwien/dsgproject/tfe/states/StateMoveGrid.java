@@ -27,7 +27,7 @@ public class StateMoveGrid extends State {
         final int y = (int)event.getY(pointerIndex);
         
         if(!isRunning) {
-        	int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.getLastTouchX());
+        	int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.scaledX(mEditorView.getLastTouchX()));
     		gridElements = rasterGridHelper.getElementsOnGrid(xGrid);
     		isRunning = true;
         }
@@ -35,8 +35,9 @@ public class StateMoveGrid extends State {
         if(!mEditorView.scaleDetectorActive()) {
 	        final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
-				
-			mTweetFlow.moveGridElements(gridElements,offX, offY);
+			
+			float scale = mEditorView.getmScaleFactor();		
+			mTweetFlow.moveGridElements(gridElements,(int) (offX / scale),(int) (offY / scale));
 			mEditorView.redraw();
         }
         

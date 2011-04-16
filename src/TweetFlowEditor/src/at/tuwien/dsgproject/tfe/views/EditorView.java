@@ -105,7 +105,7 @@ public class EditorView extends View {
 		
 		mTapDetector = new GestureDetector(context, new DoubleTapListener());
 		
-		rasterGridHelper = new RasterGridHelper(mTweetFlow, mOffsetX, mOffsetY);
+		rasterGridHelper = new RasterGridHelper(mTweetFlow, mOffsetX, mOffsetY,this);
 
 		prepareStates();
 	}
@@ -398,6 +398,11 @@ public class EditorView extends View {
 	public Integer getmOffsetX() {
 		return mOffsetX;
 	}
+
+	public float getmScaleFactor() {
+		return mScaleFactor;
+	}
+	
 	
 	
 	

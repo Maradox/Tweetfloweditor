@@ -24,8 +24,9 @@ public class StateMoveElement extends State {
 	    if(!mEditorView.scaleDetectorActive()) {
 	        final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
-				
-			mTweetFlow.moveTouchElement(offX, offY);
+			
+			float scale = mEditorView.getmScaleFactor();
+			mTweetFlow.moveTouchElement((int) (offX / scale),(int) (offY / scale));
 			mEditorView.redraw();
 	       }
 		mEditorView.setLastTouch(x, y);
