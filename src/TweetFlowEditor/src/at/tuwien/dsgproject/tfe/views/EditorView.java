@@ -38,6 +38,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
@@ -283,6 +284,8 @@ public class EditorView extends View {
 		changeData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Toast.makeText(EditorView.this.getContext(), "Change data", Toast.LENGTH_SHORT).show();
+			//	ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext());
+		//		changeDataDialog.show();
 				redraw();
 				qa.dismiss();
 			}
