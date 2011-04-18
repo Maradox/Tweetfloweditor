@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+	android:id="@+id/linearLayout1" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <LinearLayout style="@style/ActionBar">
+      <TextView
+        	style="@style/ActionBarText"
+			android:id="@+id/actionbar_text"
+			android:text="@string/app_name" />
+
+        <ImageView style="@style/ActionBarSeparator" />
+	    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarEditor"
+			android:src="@drawable/btn_editor"
+			android:onClick="openEditor" />
+			
+		<ImageView style="@style/ActionBarSeparator" />
+	    
+		<ImageButton 
+			style="@style/ActionBarButton"	
+			android:id="@+id/actionbarMyTwitter"
+			android:src="@drawable/btn_twitter"
+	  		android:onClick="openMyTwitter" />    
+    
+	</LinearLayout> <!-- ActionBar -->
+	
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="6dip"
+        android:background="@android:color/white" >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_editor"
+                style="@style/DashboardButton"
+                android:onClick="openEditor"
+                android:text="@string/editor"
+                android:drawableTop="@drawable/dashboard_editor"/>
+            <Button android:id="@+id/dashboard_btn_tweetflow"
+                style="@style/DashboardButton"
+                android:onClick="openMyTwitter"
+                android:text="@string/timeline"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="@string/open_tweetflow"
+                android:drawableTop="@drawable/dashboard_foo"/>
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="@string/whatever"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="Foo"
+                android:drawableTop="@drawable/dashboard_foo"/>
+            <Button android:id="@+id/dashboard_btn_foo"
+                style="@style/DashboardButton"
+                android:onClick="doFoo"
+                android:text="Bar"
+                android:drawableTop="@drawable/dashboard_foo"/>
+        </LinearLayout>
+        
+        
+    </LinearLayout>
+
+    
+    
+</LinearLayout>
