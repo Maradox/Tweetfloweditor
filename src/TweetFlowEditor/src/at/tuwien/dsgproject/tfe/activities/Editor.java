@@ -168,5 +168,12 @@ public class Editor extends ActionbarActivity {
     	  
     	}
     	return true;  
-    }	 
+    }
+
+
+
+	public EditorView getEditorView() {
+		return mEditorView;
+	}
+    
 }

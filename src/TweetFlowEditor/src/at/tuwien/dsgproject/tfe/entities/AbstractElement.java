@@ -30,10 +30,22 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.widget.EditText;
 import at.tuwien.dsgproject.tfe.R;
 
 public abstract class AbstractElement {
+
+	//TweetData
+	private String user;
+	private String operation;
+	private String service;
+	private String inputdata;
+	private String condition;
 	
+	private String selfLoopCondition;
+	private String closedLoopCondition;
+	
+	//Gui Data
 	protected int mX, mY, mWidth, mHeight;
 	
 	protected boolean mSelected;
@@ -398,6 +410,62 @@ public abstract class AbstractElement {
 
 	public void setSelfLoop(Boolean selfLoop) {
 		this.selfLoop = selfLoop;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public String getInputdata() {
+		return inputdata;
+	}
+
+	public void setInputdata(String inputdata) {
+		this.inputdata = inputdata;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getSelfLoopCondition() {
+		return selfLoopCondition;
+	}
+
+	public void setSelfLoopCondition(String selfLoopCondition) {
+		this.selfLoopCondition = selfLoopCondition;
+	}
+
+	public String getClosedLoopCondition() {
+		return closedLoopCondition;
+	}
+
+	public void setClosedLoopCondition(String closedLoopCondition) {
+		this.closedLoopCondition = closedLoopCondition;
 	}
 	
 	

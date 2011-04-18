@@ -284,8 +284,8 @@ public class EditorView extends View {
 		changeData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Toast.makeText(EditorView.this.getContext(), "Change data", Toast.LENGTH_SHORT).show();
-			//	ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext());
-		//		changeDataDialog.show();
+				ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext(),EditorView.this,mTweetFlow.getTouchElement());
+				changeDataDialog.show();
 				redraw();
 				qa.dismiss();
 			}
