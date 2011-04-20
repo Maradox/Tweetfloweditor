@@ -109,7 +109,7 @@ public class StorageHandler {
 				BufferedReader in = null;
 				try {
 					in = new BufferedReader(new FileReader(file));
-					return readFile(in);
+					return parseFileToTweetFlow(in);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -134,7 +134,7 @@ public class StorageHandler {
 		return null;
 	}
 	
-	private TweetFlow readFile(BufferedReader in) throws IOException {
+	private TweetFlow parseFileToTweetFlow(BufferedReader in) throws IOException {
 		TweetFlow tf = new TweetFlow(null);
 		String s = null;
 		while((s = in.readLine()) != null) {
