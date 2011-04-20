@@ -22,15 +22,20 @@
 package at.tuwien.dsgproject.tfe.activities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
+import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 
 public class Editor extends ActionbarActivity {
@@ -137,6 +142,14 @@ public class Editor extends ActionbarActivity {
     			mEditorView.redraw();
     			break;
     		case R.id.undo:
+ 			//TODO wrong
+    			
+    			ArrayList<AbstractElement> elements = new ArrayList<AbstractElement>();
+    			for(AbstractElement element : mTweetFlow.getmElements().values()) {
+    				elements.add(element);
+    			}
+    			Toast.makeText(this," "+ TweeterParser.parseTweetFlow(elements), Toast.LENGTH_LONG).show();
+    			
     			mEditorView.undo();
     			break;	
     		case R.id.redo:
@@ -146,7 +159,7 @@ public class Editor extends ActionbarActivity {
     			mTweetFlow.addOpenSequence();
     			mEditorView.redraw();
     			break;		
-    		case R.id.create_loop:
+    		case R.id.create_bigloop:
     			mEditorView.setState(EDITOR_STATE.CREATE_LOOP);
     			break;		
     			
@@ -155,5 +168,12 @@ public class Editor extends ActionbarActivity {
     	  
     	}
     	return true;  
-    }	 
+    }
+
+
+
+	public EditorView getEditorView() {
+		return mEditorView;
+	}
+    
 }

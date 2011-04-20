@@ -26,7 +26,8 @@ public class StateMoveSelected extends State {
 	        final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
 				
-			mTweetFlow.moveSelected(offX, offY);
+			float scale = mEditorView.getmScaleFactor();
+			mTweetFlow.moveSelected((int) (offX / scale),(int) (offY / scale));
 			mEditorView.redraw();
         }
         

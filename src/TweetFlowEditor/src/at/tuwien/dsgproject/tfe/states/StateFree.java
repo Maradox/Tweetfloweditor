@@ -25,7 +25,7 @@ public class StateFree extends State {
 			mTweetFlow.setTouchElementModeMarked();
 			mEditorView.setState(EDITOR_STATE.TOUCH_ELEMENT);	
 			mEditorView.redraw();			
-		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(x))	{
+		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(mEditorView.scaledX(x)))	{
 			mEditorView.setState(EDITOR_STATE.MOVE_GRID);	
 			mEditorView.redraw();
     	} else {

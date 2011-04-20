@@ -9,9 +9,9 @@
 		android:icon="@drawable/editor_menue_redo"
         android:title="Redo" />
        
-    <item android:id="@+id/create_loop"
+    <item android:id="@+id/create_bigloop"
 		android:icon="@drawable/editor_menue_redo"
-        android:title="Create Loop" />   
+        android:title="Create big loop" />   
        
     <item android:id="@+id/deselect"
         android:icon="@drawable/editor_menue_deselect"
