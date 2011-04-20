@@ -2,6 +2,8 @@ package at.tuwien.dsgproject.tfe.entities;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -38,8 +40,13 @@ public class ServiceRequest extends AbstractElement {
 		canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
 		canvas.drawText("mbnext: "+ ((mClosedSequenceMaybeNext != null) ? mClosedSequenceMaybeNext.toString() : " null "), mX+mTextOffsetX, mY+45, mTextPaint);
 		canvas.drawText("p: "+ ((mClosedSequencePrev != null) ? mClosedSequencePrev.toString() : " N ") + 
-				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);
+				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);		
 
+	}
+	
+	@Override
+	public void drawSelfLoop(Canvas canvas) {
+        canvas.drawBitmap(selfLoopImage, mX-15, mY, null);  
 	}
 	
 	public void move(int xOff, int yOff) {

@@ -11,6 +11,7 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class RasterGridHelper {
 	
@@ -21,6 +22,7 @@ public class RasterGridHelper {
 	public Integer mOffsetX, mOffsetY;	
 	private TweetFlow tweetFlow;
 	public SnapMode snapMode = SnapMode.GRID;
+	private EditorView editorView;
 				
 	public enum SnapMode {	
 		NOTHING,
@@ -28,12 +30,12 @@ public class RasterGridHelper {
 		GRID
 	}
 	
-	public RasterGridHelper(Context context, TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY) {
+	public RasterGridHelper(Context context, TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY, EditorView editorView) {
 		this.mOffsetX = mOffsetX;
 		this.mOffsetY = mOffsetY;
 		this.tweetFlow = tweetFlow;
 		RASTER_HORIZONTAL_WIDTH = context.getResources().getInteger(R.integer.raster_horiz_width);
-		
+		this.editorView = editorView;
 	}
 	
 	public void draw(Canvas canvas) {
@@ -42,6 +44,7 @@ public class RasterGridHelper {
 			
 			Paint paint = new Paint();
 			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
+			float scale = editorView.getmScaleFactor();
 						
 			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
 				paint.setColor(Color.BLUE);
@@ -49,7 +52,7 @@ public class RasterGridHelper {
 				ArrayList<Integer> gridLines = createRasterLines();
 	    	
 		    	for(int i=0; i<gridLines.size(); i++) {
-		    		canvas.drawLine(gridLines.get(i), 0-mOffsetY, gridLines.get(i), canvas.getHeight()-mOffsetY, paint);
+		    		canvas.drawLine(gridLines.get(i),(int) ((0-mOffsetY)/scale), gridLines.get(i),(int) ((canvas.getHeight()-mOffsetY)/scale), paint);
 		    	}
 			}	
 
@@ -58,7 +61,7 @@ public class RasterGridHelper {
 		
 				for(AbstractElement e : tweetFlow.getmElements().values()) {
 					if(e instanceof ServiceRequest) {
-						canvas.drawLine(e.getMiddleX(), 0-mOffsetY, e.getMiddleX(), canvas.getHeight()-mOffsetY, paint);
+						canvas.drawLine(e.getMiddleX(),(int) ((0-mOffsetY)/scale), e.getMiddleX(),(int) ((canvas.getHeight()-mOffsetY)/scale), paint);
 					}					
 				}
 			}	
@@ -90,7 +93,7 @@ public class RasterGridHelper {
 			}					
 		}
 		
-		if(xDiff < 15) 
+		if(xDiff < 30) 
 			return true;
 		
 		return false;
@@ -289,10 +292,5 @@ public class RasterGridHelper {
 		this.mOffsetX = mOffsetX;
 		this.mOffsetY = mOffsetY;
 	}
-	
-	
-	
-
-	
-	
+		
 }

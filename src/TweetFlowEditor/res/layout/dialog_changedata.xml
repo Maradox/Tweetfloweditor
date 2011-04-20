@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout 
+	android:id="@+id/linearLayout1" 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:stretchColumns="1"
+    	android:paddingLeft="8dp"
+    	android:paddingRight="8dp">
+
+    	<TableRow>
+    	    <TextView
+     	        android:text="User"
+			/>
+			
+     	    <EditText
+     	    	android:id="@+id/dialog_user"
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow>
+    	    <TextView
+     	        android:text="Operation"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_operation"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow>
+    	    <TextView
+     	        android:text="Service"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_service"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow>
+    	    <TextView
+     	        android:text="Inputdata"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_inputdata"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow>
+    	    <TextView
+     	        android:text="Condition"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_condition"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow>
+    	    <TextView
+     	        android:text="Self loop condition"
+     	        android:layout_marginRight = "25dp"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_selfloopcondition"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+    	
+    	<TableRow android:id="@+id/dialog_row_closedloopcondition">
+    	    <TextView
+     	        android:text="Closed loop condition"
+     	        android:layout_marginRight = "25dp"
+			/>
+			
+     	    <EditText
+     	        android:id="@+id/dialog_closedloopcondition"	
+        	    android:text=""
+				android:gravity="right" 
+			/>
+    	</TableRow>
+
+	</TableLayout>
+	
+	<LinearLayout 
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+          --      android:background="@drawable/footer"
+        
+ 
+        <Button 
+            android:id="@+id/dialog_positiveButton"
+            android:text="Ok"
+            android:layout_marginTop="3dip"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:singleLine="true"/>
+ 
+        <Button 
+            android:id="@+id/dialog_negativeButton"
+            android:text="Cancel"            
+            android:layout_marginTop="3dip"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:singleLine="true"/>
+ 
+    </LinearLayout>
+	
+	
+	
+</LinearLayout>

@@ -38,6 +38,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
@@ -101,9 +102,9 @@ public class EditorView extends View {
 		
 		setOnLongClickListener(mOnLongClickListener);
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-		
+
 		mTapDetector = new GestureDetector(context, new DoubleTapListener());		
-		rasterGridHelper = new RasterGridHelper(context, mTweetFlow, mOffsetX, mOffsetY);
+		rasterGridHelper = new RasterGridHelper(context, mTweetFlow, mOffsetX, mOffsetY, this);
 
 		prepareStates();
 	}
@@ -281,6 +282,8 @@ public class EditorView extends View {
 		changeData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				Toast.makeText(EditorView.this.getContext(), "Change data", Toast.LENGTH_SHORT).show();
+				ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext(),EditorView.this,mTweetFlow.getTouchElement());
+				changeDataDialog.show();
 				redraw();
 				qa.dismiss();
 			}
@@ -303,10 +306,10 @@ public class EditorView extends View {
 				
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		
-		ActionItem deselect = new ActionItem();
-		deselect.setTitle("Add loop");
-		deselect.setIcon(getResources().getDrawable(R.drawable.production));
-		deselect.setOnClickListener(new OnClickListener() {
+		ActionItem bigLoop = new ActionItem();
+		bigLoop.setTitle("Add big loop");
+		bigLoop.setIcon(getResources().getDrawable(R.drawable.production));
+		bigLoop.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				setState(EDITOR_STATE.CREATE_LOOP);
 				mTweetFlow.getTouchElement().modeMarked();
@@ -315,7 +318,32 @@ public class EditorView extends View {
 				qa.dismiss();
 			}
 		});
-		qa.addActionItem(deselect);	
+		qa.addActionItem(bigLoop);
+		
+		ActionItem selfLoop = new ActionItem();
+		if(!mTweetFlow.getTouchElement().getSelfLoop()) {
+			selfLoop.setTitle("Add self loop");
+			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
+			selfLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mTweetFlow.getTouchElement().setSelfLoop(true);
+					redraw();
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(selfLoop);	
+		} else {
+			selfLoop.setTitle("Remove self loop");
+			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
+			selfLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mTweetFlow.getTouchElement().setSelfLoop(false);
+					redraw();
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(selfLoop);	
+		}
 				
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		
@@ -396,6 +424,11 @@ public class EditorView extends View {
 	public Integer getmOffsetX() {
 		return mOffsetX;
 	}
+
+	public float getmScaleFactor() {
+		return mScaleFactor;
+	}
+	
 	
 	
 	

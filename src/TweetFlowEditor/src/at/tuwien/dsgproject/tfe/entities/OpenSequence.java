@@ -44,6 +44,10 @@ public class OpenSequence extends AbstractElement {
 		mShape.draw(canvas);
 	}
 
+	@Override
+	public void drawSelfLoop(Canvas canvas) {
+        canvas.drawBitmap(selfLoopImage, mX-20, mY-20, null);  
+	}
 	
 	public boolean isFocused(int x, int y) {
 		

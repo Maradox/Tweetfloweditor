@@ -18,16 +18,14 @@ public class StateSelected extends State {
 	
 	public void onActionDown(MotionEvent event) {
 		super.onActionDown(event);
-		final int xGrid;
 		final int x = (int) event.getX();
 		final int y = (int) event.getY();
     	
 		if (mTweetFlow.elementAt(mEditorView.scaledX(x), mEditorView.scaledY(y))) {
-//			mEditorView.setTouchElement(elem);
 			mTweetFlow.setTouchElementModeMarked();
 			mEditorView.setState(EDITOR_STATE.TOUCH_ELEMENT);
 			mEditorView.redraw(); 
-		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(x))	{
+		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(mEditorView.scaledX(x)))	{
 		mEditorView.setState(EDITOR_STATE.MOVE_GRID);	
 		mEditorView.redraw();
 		} else {

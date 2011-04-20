@@ -22,15 +22,30 @@
 package at.tuwien.dsgproject.tfe.entities;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.widget.EditText;
+import at.tuwien.dsgproject.tfe.R;
 
 public abstract class AbstractElement {
+
+	//TweetData
+	private String user;
+	private String operation;
+	private String service;
+	private String inputdata;
+	private String condition;
 	
+	private String selfLoopCondition;
+	private String closedLoopCondition;
+	
+	//Gui Data
 	protected int mX, mY, mWidth, mHeight;
 	
 	protected boolean mSelected;
@@ -50,6 +65,10 @@ public abstract class AbstractElement {
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
 	protected AbstractElement mLoop = null;
+	protected Boolean selfLoop = false;
+	
+	protected Bitmap selfLoopImage;
+
 	
 	AbstractElement(Context context, int id, int x, int y, int width, int height) {
 		mContext = context;
@@ -59,6 +78,7 @@ public abstract class AbstractElement {
 		mWidth = width;
 		mHeight = height;
 		mBounds = new Rect(x, y, x+width, y+height);
+		selfLoopImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.loop);            
 	}
 	
 	public void draw(Canvas canvas) {
@@ -88,6 +108,14 @@ public abstract class AbstractElement {
 		
 		if(mLoop != null)
 			drawLoop(canvas);
+		
+		if(getSelfLoop()) {
+			drawSelfLoop(canvas);
+		}
+	}
+	
+	public void drawSelfLoop(Canvas canvas) {
+        canvas.drawBitmap(selfLoopImage, mX-18, mY, null);  
 	}
 	
 	public void drawLoop(Canvas canvas) {
@@ -281,6 +309,16 @@ public abstract class AbstractElement {
 		}
 	}
 	
+	
+	
+	public AbstractElement getClosedSequencePrev() {
+		return mClosedSequencePrev;
+	}
+
+	public void setClosedSequencePrev(AbstractElement mClosedSequencePrev) {
+		this.mClosedSequencePrev = mClosedSequencePrev;
+	}
+
 	public void removeClosedSequencePrev() {
 		if(mClosedSequencePrev != null) {
 			mClosedSequencePrev.mClosedSequenceNext = null;
@@ -346,11 +384,6 @@ public abstract class AbstractElement {
     	}
     }
 	
-	
-	
-	
-	
-	
 	public AbstractElement getmLoop() {
 		return mLoop;
 	}
@@ -369,6 +402,70 @@ public abstract class AbstractElement {
 
 	public int getmX() {
 		return mX;
+	}
+
+	public Boolean getSelfLoop() {
+		return selfLoop;
+	}
+
+	public void setSelfLoop(Boolean selfLoop) {
+		this.selfLoop = selfLoop;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public String getInputdata() {
+		return inputdata;
+	}
+
+	public void setInputdata(String inputdata) {
+		this.inputdata = inputdata;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public String getSelfLoopCondition() {
+		return selfLoopCondition;
+	}
+
+	public void setSelfLoopCondition(String selfLoopCondition) {
+		this.selfLoopCondition = selfLoopCondition;
+	}
+
+	public String getClosedLoopCondition() {
+		return closedLoopCondition;
+	}
+
+	public void setClosedLoopCondition(String closedLoopCondition) {
+		this.closedLoopCondition = closedLoopCondition;
 	}
 	
 	public abstract String getElementInfoString();
