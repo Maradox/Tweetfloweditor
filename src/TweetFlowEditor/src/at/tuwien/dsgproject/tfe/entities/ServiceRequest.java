@@ -1,19 +1,21 @@
 package at.tuwien.dsgproject.tfe.entities;
 
+import java.io.IOException;
+
+import org.simpleframework.xml.Element;
+import org.xmlpull.v1.XmlSerializer;
+
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import at.tuwien.dsgproject.tfe.R;
 
 public class ServiceRequest extends AbstractElement {
 	
 	//private Rect mShapeBounds;
+	@Element
 	private String mRequestText = "@foo foo.bar ";
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
@@ -25,6 +27,10 @@ public class ServiceRequest extends AbstractElement {
 		//mShapeBounds = new Rect(x, y, x+80, y+80);
 		mShape.setBounds(mBounds);
 		
+		setTextPaint(res);
+	}
+	
+	private void setTextPaint(Resources res) {
 		mTextPaint = new Paint();
 		mTextPaint.setAntiAlias(true);
 		mTextPaint.setTextSize(res.getInteger(R.integer.sr_text_size));
@@ -102,12 +108,21 @@ public class ServiceRequest extends AbstractElement {
 	}
 	
 	@Override
-	public String getElementInfoString() {
-		String s = "SR ";
-		s += generalElementInfo();
-		
-		return s;
+	public void writeElementToXml(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException {
+		serializer.startTag("", "service_request");
+		writeCommonTags(serializer);
+		//TODO: element text
+		serializer.text("fofofofo");
+		serializer.endTag("", "service_request");
 	}
+	
+//	@Override
+//	public String getElementInfoString() {
+//		String s = "SR ";
+//		s += generalElementInfo();
+//		
+//		return s;
+//	}
 	
 }
 

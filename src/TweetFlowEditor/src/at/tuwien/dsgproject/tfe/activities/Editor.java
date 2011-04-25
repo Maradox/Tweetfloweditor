@@ -21,27 +21,28 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.common.StorageHandler;
+import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
-import at.tuwien.dsgproject.tfe.common.TweeterParser;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 
 public class Editor extends ActionbarActivity {
 	
 	private EditorView mEditorView;
 	private TweetFlow mTweetFlow;
+	private StorageHandler mStorage;
 	
     /** Called when the activity is first created. */
     @Override
@@ -49,6 +50,9 @@ public class Editor extends ActionbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         
+        mStorage = new StorageHandler(this);
+        
+        //try to recover tweetflow
         mTweetFlow = (savedInstanceState == null) ? null :
         		(TweetFlow) savedInstanceState.getSerializable(TweetFlow.TF_ID);
         if (mTweetFlow != null) {
@@ -61,6 +65,11 @@ public class Editor extends ActionbarActivity {
         registerForContextMenu(mEditorView);  
         mEditorView.setTweetFlow(mTweetFlow);
     }	
+    
+    
+    public void saveTweetFlow(View v) {
+    	mStorage.write("foo", mTweetFlow);
+    }
     
     
     

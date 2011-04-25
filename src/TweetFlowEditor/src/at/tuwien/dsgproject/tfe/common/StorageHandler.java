@@ -1,19 +1,15 @@
 package at.tuwien.dsgproject.tfe.common;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.strategy.CycleStrategy;
+import org.simpleframework.xml.strategy.Strategy;
 
 import android.content.Context;
 import android.os.Environment;
-import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public class StorageHandler {
@@ -24,7 +20,10 @@ public class StorageHandler {
 	
 
 	public StorageHandler(Context context) {
-		mFilesDir = context.getExternalFilesDir(null);
+		mFilesDir = new File(Environment.getExternalStorageDirectory(), "Tweetfloweditor");
+		if(!mFilesDir.exists()) {
+			mFilesDir.mkdir();
+		}
 	}
 	
 	public void checkStorageState() {
@@ -51,32 +50,18 @@ public class StorageHandler {
 		else return null;
 	}
 	
-	public void write(String filename, String tweetFlowName, ArrayList<AbstractElement> elements) {
+	public void write(String filename, TweetFlow tweetflow) {
 		checkStorageState();
 		if(mExternalStorageWriteable) {
 			final File file = new File(mFilesDir, filename);
 			if(!file.exists()) {
-				BufferedWriter out = null;
-				try {
-					if(file.createNewFile()) {
-						out = new BufferedWriter(new FileWriter(file));
-						writeToFile(out, tweetFlowName, elements);
-						out.flush();
-					} else {
-						// could not create file TODO
-					}
-				} catch (IOException e) {
+				Strategy strategy = new CycleStrategy("xml_id", "xml_ref");
+				Serializer serializer = new Persister(strategy);
+		        try {
+					serializer.write(tweetflow, file);
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} finally {
-					if(out != null) {
-						try {
-							out.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
 				}
 			} else {
 				//overwrite? TODO: this
@@ -89,40 +74,20 @@ public class StorageHandler {
 		
 	}
 	
-	private void writeToFile(BufferedWriter out,
-			String tweetFlowName,
-			ArrayList<AbstractElement> elements) throws IOException {
-		
-		out.write("TF " + tweetFlowName + "\n");
-			
-		for(AbstractElement e : elements) {
-			out.write(e.getElementInfoString() + "\n");
-		}
-			
-	}
-	
 	public TweetFlow openTweetFlowFile(String filename) {
 		checkStorageState();
 		if(mExternalStorageAvailable) {
 			final File file = new File(mFilesDir, filename);
 			if(file.exists()) {
-				BufferedReader in = null;
-				try {
-					in = new BufferedReader(new FileReader(file));
-					return parseFileToTweetFlow(in);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					if(in != null) {
-						try {
-							in.close();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
+				Strategy strategy = new CycleStrategy("xml_id", "xml_ref");
+				Serializer serializer = new Persister(strategy);
+		        try {
+					TweetFlow tf = serializer.read(TweetFlow.class, file);
+					//TODO: update context, etc. for tweetflow
+					return tf;
+		        } catch (Exception e) {
+		        	e.printStackTrace();
+		        }
 			} else {
 				//no file
 				//TODO exception
@@ -133,32 +98,5 @@ public class StorageHandler {
 		}
 		return null;
 	}
-	
-	private TweetFlow parseFileToTweetFlow(BufferedReader in) throws IOException {
-		TweetFlow tf = new TweetFlow(null);
-		String s = null;
-		while((s = in.readLine()) != null) {
-			if(s.startsWith("TF")) {
-				//set TweetFlow name
-			} else if(s.startsWith("SR")) {
-				//service request
-			} else if(s.startsWith("OS")) {
-				//open sequence
-			} else {
-				//TODO FAIL
-			}
-			
-		}
-		
-		
-		
-		return null;
-	}
-	
-	
-	
-	
-	
-	
 
 }

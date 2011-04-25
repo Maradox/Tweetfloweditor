@@ -1,6 +1,10 @@
 package at.tuwien.dsgproject.tfe.entities;
 
 
+import java.io.IOException;
+
+import org.xmlpull.v1.XmlSerializer;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -195,11 +199,19 @@ public class OpenSequence extends AbstractElement {
 		mShape.setBounds(mBounds);
 	}
 	
-	public String getElementInfoString() {
-		String s = "OS ";
-		s += generalElementInfo();
-			
-		return s;
+//	public String getElementInfoString() {
+//		String s = "OS ";
+//		s += generalElementInfo();
+//			
+//		return s;
+//	}
+
+	@Override
+	public void writeElementToXml(XmlSerializer serializer) 
+			throws IllegalArgumentException, IllegalStateException, IOException {
+		serializer.startTag("", "open_sequence");
+		writeCommonTags(serializer);
+		serializer.endTag("", "open_sequence");
 	}
 
 }

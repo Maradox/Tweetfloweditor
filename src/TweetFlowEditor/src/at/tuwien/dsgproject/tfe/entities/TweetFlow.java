@@ -4,9 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.ElementMap;
+import org.simpleframework.xml.Root;
+
 import android.content.Context;
 import android.graphics.Canvas;
 
+@Root
 public class TweetFlow implements Serializable {
 	
 	/**
@@ -22,14 +27,18 @@ public class TweetFlow implements Serializable {
 	public static final String TF_ID = "TweetFlow";
 
 	private Context mContext;
-	private String mName;
 	
+	@Attribute
+	private String mName = "TWeetFoo"; //TODO remove this
+	
+	@ElementMap(entry="element", key="id", attribute=true, inline=true)
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
 	//public HashMap<Integer, OpenSequence> mOpenSequences;
 	
 	private AbstractElement mTouchElement = null;
 	
+	@Attribute
 	private Integer mElemCounter;
 	
 	public TweetFlow(Context context) {

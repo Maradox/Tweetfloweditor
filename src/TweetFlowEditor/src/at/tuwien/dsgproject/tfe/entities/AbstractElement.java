@@ -21,16 +21,20 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
+import java.io.IOException;
+
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.xmlpull.v1.XmlSerializer;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.widget.EditText;
 import at.tuwien.dsgproject.tfe.R;
 
 public abstract class AbstractElement {
@@ -46,21 +50,28 @@ public abstract class AbstractElement {
 	private String closedLoopCondition;
 	
 	//Gui Data
-	protected int mX, mY, mWidth, mHeight;
+	@Attribute
+	protected int mX;
+	@Attribute
+	protected int mY;
+	@Attribute
+	protected int mWidth;
+	@Attribute
+	protected int mHeight;
 	
 	protected boolean mSelected;
 	
 	protected Drawable mShape;
 	protected Rect mBounds;
 	
-	protected final int fillColor = Color.RED;
-	protected final int borderColor = Color.BLACK;
-	
+	@Element
 	protected Integer mId;
 	
 	protected Context mContext;
 	
+	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
+	@Element(required=false)
 	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
@@ -207,19 +218,6 @@ public abstract class AbstractElement {
 		}
 	}
 	
-//	private void drawClosedSequence(Canvas canvas) {
-//		if(mClosedSequenceNext != null) {
-//			final Paint paint = new Paint();
-//			paint.setStrokeWidth(5);
-//			paint.setColor(Color.BLACK);
-//			paint.setAntiAlias(true);
-//			canvas.drawLine(getMiddleX(), 
-//					getBotY(), 
-//					mClosedSequenceNext.getMiddleX(), 
-//					mClosedSequenceNext.getTopY(), 
-//					paint);
-//		}
-//	}
 	
 	public void move(int xOff, int yOff) {
 		mX += xOff;
@@ -468,21 +466,38 @@ public abstract class AbstractElement {
 		this.closedLoopCondition = closedLoopCondition;
 	}
 	
-	public abstract String getElementInfoString();
+	public abstract void writeElementToXml(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException;
 	
-	protected String generalElementInfo() {
-		String s = new String();
-		s += mX + " ";
-		s += mY + " ";
-		s += mWidth + " ";
-		s += mHeight + " ";
-		if(mClosedSequenceNext != null) s += "CSN " + mClosedSequenceNext.getId() + " ";
-		if(mClosedSequencePrev != null) s += "CSP " + mClosedSequencePrev.getId() + " ";
-		//TODO Loop if all fixed
+	
+	protected void writeCommonTags(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException {
+		serializer.attribute("", "id", Integer.toString(mId));
+		serializer.attribute("", "x", Integer.toString(mX));
+		serializer.attribute("", "y", Integer.toString(mY));
+		serializer.attribute("", "w", Integer.toString(mWidth));
+		serializer.attribute("", "h", Integer.toString(mHeight));
 		
-		return s;
+		if(mClosedSequenceNext != null) {
+			serializer.startTag("", "sequence_next");
+			serializer.text(Integer.toString(mClosedSequenceNext.getId()));
+			serializer.endTag("", "sequence_next");
+		}
+		//TODO loops, other stuff
 	}
 	
+	
+//	protected String generalElementInfo() {
+//		String s = new String();
+//		s += mX + " ";
+//		s += mY + " ";
+//		s += mWidth + " ";
+//		s += mHeight + " ";
+//		if(mClosedSequenceNext != null) s += "CSN " + mClosedSequenceNext.getId() + " ";
+//		if(mClosedSequencePrev != null) s += "CSP " + mClosedSequencePrev.getId() + " ";
+//		//TODO Loop if all fixed
+//		
+//		return s;
+//	}
+//	
 	
 	
 	
