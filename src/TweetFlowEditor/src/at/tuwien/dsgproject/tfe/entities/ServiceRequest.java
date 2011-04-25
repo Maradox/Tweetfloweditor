@@ -1,9 +1,27 @@
+
+/* 
+ *  Tweetfloweditor - a graphical editor to create Tweetflows
+ *  
+ *  Copyright (C) 2011  Matthias Neumayr
+ *  Copyright (C) 2011  Martin Perebner
+ *  
+ *  Tweetfloweditor is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  
+ *  Tweetfloweditor is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tweetfloweditor.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package at.tuwien.dsgproject.tfe.entities;
 
-import java.io.IOException;
-
 import org.simpleframework.xml.Element;
-import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -106,23 +124,6 @@ public class ServiceRequest extends AbstractElement {
 	public String toString() {
 		return "SR: "+ mId.toString();
 	}
-	
-	@Override
-	public void writeElementToXml(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException {
-		serializer.startTag("", "service_request");
-		writeCommonTags(serializer);
-		//TODO: element text
-		serializer.text("fofofofo");
-		serializer.endTag("", "service_request");
-	}
-	
-//	@Override
-//	public String getElementInfoString() {
-//		String s = "SR ";
-//		s += generalElementInfo();
-//		
-//		return s;
-//	}
 	
 }
 

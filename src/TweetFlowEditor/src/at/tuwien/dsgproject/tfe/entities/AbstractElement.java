@@ -464,43 +464,5 @@ public abstract class AbstractElement {
 
 	public void setClosedLoopCondition(String closedLoopCondition) {
 		this.closedLoopCondition = closedLoopCondition;
-	}
-	
-	public abstract void writeElementToXml(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException;
-	
-	
-	protected void writeCommonTags(XmlSerializer serializer) throws IllegalArgumentException, IllegalStateException, IOException {
-		serializer.attribute("", "id", Integer.toString(mId));
-		serializer.attribute("", "x", Integer.toString(mX));
-		serializer.attribute("", "y", Integer.toString(mY));
-		serializer.attribute("", "w", Integer.toString(mWidth));
-		serializer.attribute("", "h", Integer.toString(mHeight));
-		
-		if(mClosedSequenceNext != null) {
-			serializer.startTag("", "sequence_next");
-			serializer.text(Integer.toString(mClosedSequenceNext.getId()));
-			serializer.endTag("", "sequence_next");
-		}
-		//TODO loops, other stuff
-	}
-	
-	
-//	protected String generalElementInfo() {
-//		String s = new String();
-//		s += mX + " ";
-//		s += mY + " ";
-//		s += mWidth + " ";
-//		s += mHeight + " ";
-//		if(mClosedSequenceNext != null) s += "CSN " + mClosedSequenceNext.getId() + " ";
-//		if(mClosedSequencePrev != null) s += "CSP " + mClosedSequencePrev.getId() + " ";
-//		//TODO Loop if all fixed
-//		
-//		return s;
-//	}
-//	
-	
-	
-	
-	
-	
+	}	
 }
