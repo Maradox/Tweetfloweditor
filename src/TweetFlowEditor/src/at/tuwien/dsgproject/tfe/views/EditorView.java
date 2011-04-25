@@ -21,7 +21,6 @@
 
 package at.tuwien.dsgproject.tfe.views;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -154,18 +153,6 @@ public class EditorView extends View {
 	        invalidate();
 	        return true;
 	    }
-
-//		@Override
-//		public boolean onScaleBegin(ScaleGestureDetector detector) {
-//			state = stateScale;
-//			return true;
-//		}
-//
-//		@Override
-//		public void onScaleEnd(ScaleGestureDetector detector) {
-//			state = stateFree;
-//			super.onScaleEnd(detector);
-//		}
 	       
 	}
 	
