@@ -63,20 +63,20 @@ public class TweetFlow implements Serializable {
 	private Integer mElemCounter;
 	
 	public TweetFlow(Context context) {
-		mContext = context;
+		this();
 		
+		mContext = context;
+	}
+	
+	public TweetFlow() {
 		mElemCounter = 0;
 		mElements = new HashMap<Integer, AbstractElement>();
 		mSelected = new HashMap<Integer, AbstractElement>();
 		//mOpenSequences = new HashMap<Integer, OpenSequence>();
-		
-		
-		//TODO: add constructor that parses file or add method that fills an empty tweetflow
-		fillElements();
 	}
 	
 	
-	private void fillElements() {
+	public void fillElements() {
 		addServiceRequest(100,100);
 		addServiceRequest(200,350);
 		addServiceRequest(300,500);
@@ -86,12 +86,16 @@ public class TweetFlow implements Serializable {
 	
 	
 	public void addServiceRequest(int x, int y) {
-		mElements.put(mElemCounter, new ServiceRequest(mContext, mElemCounter++, x-25, y-40));
+		final ServiceRequest sr = new ServiceRequest(mElemCounter++, x-25, y-40);
+		mElements.put(sr.getId(), sr);
+		sr.setContextAndDrawables(mContext);
 	}
 	
 	
 	public void addOpenSequence() {
-		mElements.put(mElemCounter, new OpenSequence(mContext, mElemCounter++, 100, 100, 250, 400));
+		final OpenSequence os = new OpenSequence(mElemCounter++, 100, 100, 250, 400);
+		mElements.put(os.getId(), os);
+		os.setContextAndDrawables(mContext);
 	}
 	
 	public void deleteElement(Integer id) {
@@ -356,6 +360,9 @@ public class TweetFlow implements Serializable {
 	
 	public void setContext(Context context) {
 		mContext = context;
+		for(AbstractElement elem : mElements.values()) {
+			elem.setContextAndDrawables(mContext);
+		}
 	}
 
 
@@ -384,6 +391,12 @@ public class TweetFlow implements Serializable {
 
 	public HashMap<Integer, AbstractElement> getmSelected() {
 		return mSelected;
+	}
+	
+	public void updateClosedSequences() {
+		for(AbstractElement e : mElements.values()) {
+			e.updateClosedSequences();
+		}
 	}
 	
 	

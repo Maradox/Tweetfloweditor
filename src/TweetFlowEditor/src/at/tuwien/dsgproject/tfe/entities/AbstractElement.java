@@ -21,11 +21,9 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
-import java.io.IOException;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
-import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -64,14 +62,14 @@ public abstract class AbstractElement {
 	protected Drawable mShape;
 	protected Rect mBounds;
 	
-	@Element
+	@Attribute
 	protected Integer mId;
 	
 	protected Context mContext;
 	
 	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
-	@Element(required=false)
+	// @Element(required=false) //NOT as @Element, gets set by TweetFlow.updateClosedSequences() after deserialization
 	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
@@ -81,15 +79,18 @@ public abstract class AbstractElement {
 	protected Bitmap selfLoopImage;
 
 	
-	AbstractElement(Context context, int id, int x, int y, int width, int height) {
-		mContext = context;
+	AbstractElement(int id, int x, int y, int width, int height) {
 		mId = id;
 		mX = x;
 		mY = y;
 		mWidth = width;
 		mHeight = height;
-		mBounds = new Rect(x, y, x+width, y+height);
-		selfLoopImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.loop);            
+		mBounds = new Rect(x, y, x+width, y+height);	           
+	}
+	
+	public void setContextAndDrawables(Context context) {
+		mContext = context;
+		selfLoopImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.loop); 
 	}
 	
 	public void draw(Canvas canvas) {
@@ -120,13 +121,14 @@ public abstract class AbstractElement {
 		if(mLoop != null)
 			drawLoop(canvas);
 		
-		if(getSelfLoop()) {
+		if(selfLoop) {
 			drawSelfLoop(canvas);
 		}
 	}
 	
 	public void drawSelfLoop(Canvas canvas) {
-        canvas.drawBitmap(selfLoopImage, mX-18, mY, null);  
+		if(selfLoopImage != null)
+			canvas.drawBitmap(selfLoopImage, mX-18, mY, null);  
 	}
 	
 	public void drawLoop(Canvas canvas) {
@@ -465,4 +467,10 @@ public abstract class AbstractElement {
 	public void setClosedLoopCondition(String closedLoopCondition) {
 		this.closedLoopCondition = closedLoopCondition;
 	}	
+	
+	public void updateClosedSequences() {
+		if(mClosedSequenceNext != null) {
+			mClosedSequenceNext.mClosedSequencePrev = this;
+		}
+	}
 }

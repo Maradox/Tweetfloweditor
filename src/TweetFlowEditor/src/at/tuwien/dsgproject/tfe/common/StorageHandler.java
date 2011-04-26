@@ -81,7 +81,7 @@ public class StorageHandler {
 		if(mExternalStorageWriteable) {
 			final File file = new File(mFilesDir, filename);
 			if(!file.exists()) {
-				Strategy strategy = new CycleStrategy("xml_id", "xml_ref");
+				Strategy strategy = new CycleStrategy("x_id", "x_ref");
 				Serializer serializer = new Persister(strategy);
 		        try {
 					serializer.write(tweetflow, file);
@@ -100,29 +100,28 @@ public class StorageHandler {
 		
 	}
 	
-	public TweetFlow openTweetFlowFile(String filename) {
+	public TweetFlow openTweetflowFile(String filename) throws Exception {
 		checkStorageState();
 		if(mExternalStorageAvailable) {
 			final File file = new File(mFilesDir, filename);
 			if(file.exists()) {
-				Strategy strategy = new CycleStrategy("xml_id", "xml_ref");
+				Strategy strategy = new CycleStrategy("x_id", "x_ref");
 				Serializer serializer = new Persister(strategy);
-		        try {
-					TweetFlow tf = serializer.read(TweetFlow.class, file);
-					//TODO: update context, etc. for tweetflow
-					return tf;
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		        }
+				TweetFlow tf = serializer.read(TweetFlow.class, file);
+				tf.updateClosedSequences();
+				return tf;
+
 			} else {
 				//no file
 				//TODO exception
+				throw new Exception("NO FILE");
 			}
 			
 		} else {
 			//TODO throw exception/handle this
+			throw new Exception("STORAGE not available");
 		}
-		return null;
+		
 	}
 
 }

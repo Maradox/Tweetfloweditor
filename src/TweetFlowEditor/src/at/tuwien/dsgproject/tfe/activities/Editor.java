@@ -23,7 +23,9 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +42,8 @@ import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public class Editor extends ActionbarActivity {
 	
+	public final static String OPEN_FILE = "open_file_path";
+	
 	private EditorView mEditorView;
 	private TweetFlow mTweetFlow;
 	private StorageHandler mStorage;
@@ -48,17 +52,34 @@ public class Editor extends ActionbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TFE-Editor","onCreate");
         setContentView(R.layout.activity_editor);
         
         mStorage = new StorageHandler(this);
         
+        Intent i = getIntent();
+        
+
         //try to recover tweetflow
         mTweetFlow = (savedInstanceState == null) ? null :
         		(TweetFlow) savedInstanceState.getSerializable(TweetFlow.TF_ID);
         if (mTweetFlow != null) {
         	mTweetFlow.setContext(this);
         } else {
-        	mTweetFlow = new TweetFlow(this);
+            if(i.hasExtra(OPEN_FILE)) {
+            	try {
+            		mTweetFlow = mStorage.openTweetflowFile(i.getStringExtra(OPEN_FILE));
+            		mTweetFlow.setContext(this);
+            	} catch (Exception e) {
+            		Log.e("TFE", e.getMessage(), e);
+            		mTweetFlow = new TweetFlow(this);
+            		Toast.makeText(this, "Error while deserializing, creating empty TweetFlow", Toast.LENGTH_LONG).show();
+            	} 
+            	
+            } else {
+            	mTweetFlow = new TweetFlow(this);
+            	mTweetFlow.fillElements();
+            }
         }
         
         mEditorView = (EditorView) findViewById(R.id.editor_view);      
@@ -66,18 +87,40 @@ public class Editor extends ActionbarActivity {
         mEditorView.setTweetFlow(mTweetFlow);
     }	
     
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	Log.d("TFE-Editor","onSaveIS");
+    	//outState.putSerializable(TweetFlow.TF_ID, mTweetFlow);
+        super.onSaveInstanceState(outState);  
+    }
     
-    public void saveTweetFlow(View v) {
-    	mStorage.write("foo", mTweetFlow);
+    @Override
+    protected void onPause() {
+        Log.d("TFE-Editor","onPause");
+        super.onPause();
+    }
+    
+    @Override
+    protected void onStart() {
+        Log.d("TFE-Editor","onStart");
+        super.onStart();
+    }
+    
+    @Override
+    protected void onResume() {
+        Log.d("TFE-Editor","onResume");
+        super.onResume();
+    }
+    
+    @Override
+    protected void onStop() {
+        Log.d("TFE-Editor","onStop");
+        super.onStop();
     }
     
     
-    
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(TweetFlow.TF_ID, mTweetFlow);
+    public void saveTweetFlow(View v) {
+    	mStorage.write("foo", mTweetFlow);
     }
     
     

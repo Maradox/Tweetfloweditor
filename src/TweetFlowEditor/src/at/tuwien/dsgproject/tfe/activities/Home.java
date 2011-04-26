@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -100,13 +101,13 @@ public class Home extends ActionbarActivity {
         lv.setAdapter(mFileListAdapter);
         
         lv.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              final File newFile = (File)parent.getItemAtPosition(position);
-              // When clicked, show a toast with the TextView text
-              Toast.makeText(getApplicationContext(), newFile.getAbsolutePath(),
-                  Toast.LENGTH_SHORT).show();
+        	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            	final File file = (File)parent.getItemAtPosition(position);
+            	Intent i = new Intent(Home.this, Editor.class );	
+            	i.putExtra(Editor.OPEN_FILE, file.getName());
+            	Home.this.startActivity(i); 
             }
-          });
+         });
 
     }
     

@@ -21,6 +21,7 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
 import android.content.Context;
@@ -38,13 +39,18 @@ public class ServiceRequest extends AbstractElement {
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
 
-	public ServiceRequest(Context context, int id, int x, int y) {
-		super(context, id, x, y, 80, 80);
+	public ServiceRequest(@Attribute(name="mId") Integer id, 
+			@Attribute(name="mX") int x, 
+			@Attribute(name="mY") int y) {
+		super(id, x, y, 80, 80);	
+	}
+	
+	@Override
+	public void setContextAndDrawables(Context context) {
+		super.setContextAndDrawables(context);
 		final Resources res = context.getResources();
 		mShape = res.getDrawable(R.drawable.shape_service_request);
-		//mShapeBounds = new Rect(x, y, x+80, y+80);
 		mShape.setBounds(mBounds);
-		
 		setTextPaint(res);
 	}
 	
@@ -73,6 +79,7 @@ public class ServiceRequest extends AbstractElement {
         canvas.drawBitmap(selfLoopImage, mX-15, mY, null);  
 	}
 	
+	@Override
 	public void move(int xOff, int yOff) {
 		mX += xOff;
 		mY += yOff;
@@ -103,18 +110,21 @@ public class ServiceRequest extends AbstractElement {
 		}
 	}
 
+	@Override
 	public void modeSelected() {
 		mSelected = true;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_service_request_selected);
 		mShape.setBounds(mBounds);	
 	}
 	
+	@Override
 	public void modeNormal() {
 		mSelected = false;
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_service_request);
 		mShape.setBounds(mBounds);
 	}
-		
+	
+	@Override
 	public void modeMarked() {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_service_request_marked);
 		mShape.setBounds(mBounds);

@@ -23,12 +23,11 @@ package at.tuwien.dsgproject.tfe.entities;
 
 
 
+import org.simpleframework.xml.Attribute;
+
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
+
 import at.tuwien.dsgproject.tfe.R;
 
 public class OpenSequence extends AbstractElement {
@@ -54,8 +53,17 @@ public class OpenSequence extends AbstractElement {
 	private TouchFocus mTouchFocus = TouchFocus.INVALID;
 	
 
-	public OpenSequence(Context context, int id, int x, int y, int width, int height) {
-		super(context, id, x, y, width, height);
+	public OpenSequence(@Attribute(name="mId") Integer id, 
+			@Attribute(name="mX") int x, 
+			@Attribute(name="mY") int y, 
+			@Attribute(name="mWidth") int width, 
+			@Attribute(name="mHeight") int height) {
+		super(id, x, y, width, height);
+	}
+	
+	@Override
+	public void setContextAndDrawables(Context context) {
+		super.setContextAndDrawables(context);
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence);
 		mShape.setBounds(mBounds);
 	}
