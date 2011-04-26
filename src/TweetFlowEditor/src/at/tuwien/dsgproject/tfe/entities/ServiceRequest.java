@@ -36,6 +36,14 @@ public class ServiceRequest extends AbstractElement {
 	//private Rect mShapeBounds;
 	@Element
 	private String mRequestText = "@foo foo.bar ";
+	
+	//TODO add serialization annotation
+	private String user;
+	private String operation;
+	private String service;
+	private String inputdata;
+	private String condition;
+	
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
 

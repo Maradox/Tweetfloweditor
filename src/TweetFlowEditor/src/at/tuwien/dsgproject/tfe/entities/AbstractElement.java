@@ -36,6 +36,19 @@ import android.graphics.drawable.Drawable;
 import at.tuwien.dsgproject.tfe.R;
 
 public abstract class AbstractElement {
+	
+	@Attribute
+	protected Integer mId;
+	
+	//Dimensions
+	@Attribute
+	protected int mX;
+	@Attribute
+	protected int mY;
+	@Attribute
+	protected int mWidth;
+	@Attribute
+	protected int mHeight;
 
 	//TweetData
 	private String user;
@@ -47,38 +60,23 @@ public abstract class AbstractElement {
 	private String selfLoopCondition;
 	private String closedLoopCondition;
 	
-	//Gui Data
-	@Attribute
-	protected int mX;
-	@Attribute
-	protected int mY;
-	@Attribute
-	protected int mWidth;
-	@Attribute
-	protected int mHeight;
-	
-	protected boolean mSelected;
-	
-	protected Drawable mShape;
-	protected Rect mBounds;
-	
-	@Attribute
-	protected Integer mId;
-	
-	protected Context mContext;
-	
 	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
-	// @Element(required=false) //NOT as @Element, gets set by TweetFlow.updateClosedSequences() after deserialization
+	// @Element(required=false) //NOT as @Element, set with TweetFlow.updateClosedSequences() after deserialization
 	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
 	
+	protected boolean mSelected;
+
 	protected AbstractElement mLoop = null;
 	protected Boolean selfLoop = false;
 	
+	//Context and Drawables
+	protected Context mContext;
+	protected Drawable mShape;
+	protected Rect mBounds;
 	protected Bitmap selfLoopImage;
 
-	
 	AbstractElement(int id, int x, int y, int width, int height) {
 		mId = id;
 		mX = x;
