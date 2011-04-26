@@ -31,6 +31,8 @@ import org.simpleframework.xml.Root;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 @Root
 public class TweetFlow implements Serializable {
@@ -397,6 +399,10 @@ public class TweetFlow implements Serializable {
 		for(AbstractElement e : mElements.values()) {
 			e.updateClosedSequences();
 		}
+	}
+	
+	public void prepareQuickactions(QuickAction qa, EditorView view) {
+		if(mTouchElement != null) mTouchElement.fillQuickActionMenu(qa, view);
 	}
 	
 	

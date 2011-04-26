@@ -21,14 +21,6 @@
  -->
  
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-	<item android:id="@+id/undo"
-        android:icon="@drawable/editor_menue_undo"
-        android:title="Undo" />
-        
-	<item android:id="@+id/redo"
-		android:icon="@drawable/editor_menue_redo"
-        android:title="Redo" />
        
     <item android:id="@+id/create_bigloop"
 		android:icon="@drawable/editor_menue_redo"

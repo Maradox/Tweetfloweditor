@@ -29,6 +29,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class OpenSequence extends AbstractElement {
 	
@@ -76,7 +78,8 @@ public class OpenSequence extends AbstractElement {
 
 	@Override
 	public void drawSelfLoop(Canvas canvas) {
-        canvas.drawBitmap(selfLoopImage, mX-20, mY-20, null);  
+		if(mSelfLoopImage != null)
+			canvas.drawBitmap(mSelfLoopImage, mX-20, mY-20, null);  
 	}
 	
 	public boolean isFocused(int x, int y) {
@@ -223,6 +226,12 @@ public class OpenSequence extends AbstractElement {
 	public void modeMarked() {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_marked);
 		mShape.setBounds(mBounds);
+	}
+
+	@Override
+	void fillQuickActionMenu(final QuickAction qa, final EditorView view) {
+		fillCommonQuickactionItems(qa, view);
+		
 	}
 
 }

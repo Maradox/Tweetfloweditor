@@ -23,20 +23,19 @@ package at.tuwien.dsgproject.tfe.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableRow;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
-import at.tuwien.dsgproject.tfe.activities.Editor;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
+import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class ChangeDataDialog extends Dialog {
 	
-	private AbstractElement element; 
+	private ServiceRequest element; 
 	private EditorView editorView;
 	
 	private EditText user;
@@ -50,7 +49,7 @@ public class ChangeDataDialog extends Dialog {
 	
 	private TableRow rowClosedLoopCondition;
 
-	public ChangeDataDialog(Context context, EditorView editorView, AbstractElement element) {
+	public ChangeDataDialog(Context context, EditorView editorView, ServiceRequest element) {
 		super(context);
 		this.editorView = editorView;
 		this.element = element;

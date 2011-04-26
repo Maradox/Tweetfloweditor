@@ -192,21 +192,7 @@ public class Editor extends ActionbarActivity {
     			menuItem.setChecked(true);
     			mEditorView.setSnapMode(SnapMode.GRID);
     			mEditorView.redraw();
-    			break;
-    		case R.id.undo:
- 			//TODO wrong
-    			
-    			ArrayList<AbstractElement> elements = new ArrayList<AbstractElement>();
-    			for(AbstractElement element : mTweetFlow.getmElements().values()) {
-    				elements.add(element);
-    			}
-    			Toast.makeText(this," "+ TweeterParser.parseTweetFlow(elements), Toast.LENGTH_LONG).show();
-    			
-    			mEditorView.undo();
     			break;	
-    		case R.id.redo:
-    			mEditorView.redo();
-    			break;		
     		case R.id.add_open_sequence:
     			mTweetFlow.addOpenSequence();
     			mEditorView.redraw();

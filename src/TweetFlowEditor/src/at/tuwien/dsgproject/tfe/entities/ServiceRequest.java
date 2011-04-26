@@ -29,7 +29,13 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.view.View;
+import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
+import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
+import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class ServiceRequest extends AbstractElement {
 	
@@ -84,7 +90,8 @@ public class ServiceRequest extends AbstractElement {
 	
 	@Override
 	public void drawSelfLoop(Canvas canvas) {
-        canvas.drawBitmap(selfLoopImage, mX-15, mY, null);  
+		if(mSelfLoopImage != null)
+			canvas.drawBitmap(mSelfLoopImage, mX-15, mY, null);  
 	}
 	
 	@Override
@@ -138,9 +145,66 @@ public class ServiceRequest extends AbstractElement {
 		mShape.setBounds(mBounds);
 	}
 	
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getOperation() {
+		return operation;
+	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public String getInputdata() {
+		return inputdata;
+	}
+
+	public void setInputdata(String inputdata) {
+		this.inputdata = inputdata;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+	
 	@Override
 	public String toString() {
 		return "SR: "+ mId.toString();
+	}
+
+	@Override
+	void fillQuickActionMenu(final QuickAction qa, final EditorView view) {
+		ActionItem changeData = new ActionItem();
+		changeData.setTitle("Edit");
+		changeData.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+		changeData.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ChangeDataDialog changeDataDialog = new ChangeDataDialog(mContext, view , ServiceRequest.this);
+				changeDataDialog.show();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(changeData);
+		
+		fillCommonQuickactionItems(qa, view);
 	}
 	
 }

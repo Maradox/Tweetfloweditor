@@ -26,6 +26,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,7 +34,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
+import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
+import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public abstract class AbstractElement {
 	
@@ -50,15 +56,12 @@ public abstract class AbstractElement {
 	@Attribute
 	protected int mHeight;
 
-	//TweetData
-	private String user;
-	private String operation;
-	private String service;
-	private String inputdata;
-	private String condition;
+	//Loops
+	private String mSelfLoopCondition;
+	protected Boolean mSelfLoop = false;
 	
-	private String selfLoopCondition;
 	private String closedLoopCondition;
+	protected AbstractElement mLoop = null;
 	
 	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
@@ -68,14 +71,11 @@ public abstract class AbstractElement {
 	
 	protected boolean mSelected;
 
-	protected AbstractElement mLoop = null;
-	protected Boolean selfLoop = false;
-	
 	//Context and Drawables
 	protected Context mContext;
 	protected Drawable mShape;
 	protected Rect mBounds;
-	protected Bitmap selfLoopImage;
+	protected Bitmap mSelfLoopImage;
 
 	AbstractElement(int id, int x, int y, int width, int height) {
 		mId = id;
@@ -88,7 +88,7 @@ public abstract class AbstractElement {
 	
 	public void setContextAndDrawables(Context context) {
 		mContext = context;
-		selfLoopImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.loop); 
+		mSelfLoopImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.loop); 
 	}
 	
 	public void draw(Canvas canvas) {
@@ -119,14 +119,14 @@ public abstract class AbstractElement {
 		if(mLoop != null)
 			drawLoop(canvas);
 		
-		if(selfLoop) {
+		if(mSelfLoop) {
 			drawSelfLoop(canvas);
 		}
 	}
 	
 	public void drawSelfLoop(Canvas canvas) {
-		if(selfLoopImage != null)
-			canvas.drawBitmap(selfLoopImage, mX-18, mY, null);  
+		if(mSelfLoopImage != null)
+			canvas.drawBitmap(mSelfLoopImage, mX-18, mY, null);  
 	}
 	
 	public void drawLoop(Canvas canvas) {
@@ -402,60 +402,20 @@ public abstract class AbstractElement {
 		return mX;
 	}
 
-	public Boolean getSelfLoop() {
-		return selfLoop;
+	public Boolean isSelfLoop() {
+		return mSelfLoop;
 	}
 
 	public void setSelfLoop(Boolean selfLoop) {
-		this.selfLoop = selfLoop;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getOperation() {
-		return operation;
-	}
-
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
-
-	public String getService() {
-		return service;
-	}
-
-	public void setService(String service) {
-		this.service = service;
-	}
-
-	public String getInputdata() {
-		return inputdata;
-	}
-
-	public void setInputdata(String inputdata) {
-		this.inputdata = inputdata;
-	}
-
-	public String getCondition() {
-		return condition;
-	}
-
-	public void setCondition(String condition) {
-		this.condition = condition;
+		mSelfLoop = selfLoop;
 	}
 
 	public String getSelfLoopCondition() {
-		return selfLoopCondition;
+		return mSelfLoopCondition;
 	}
 
 	public void setSelfLoopCondition(String selfLoopCondition) {
-		this.selfLoopCondition = selfLoopCondition;
+		mSelfLoopCondition = selfLoopCondition;
 	}
 
 	public String getClosedLoopCondition() {
@@ -469,6 +429,57 @@ public abstract class AbstractElement {
 	public void updateClosedSequences() {
 		if(mClosedSequenceNext != null) {
 			mClosedSequenceNext.mClosedSequencePrev = this;
+		}
+	}
+	
+	abstract void fillQuickActionMenu(final QuickAction qa, final EditorView view);
+	
+	protected final void fillCommonQuickactionItems(final QuickAction qa, final EditorView view) {
+		final Resources res = mContext.getResources();
+		
+    	ActionItem delete = new ActionItem();
+    	delete.setTitle("Delete");
+    	delete.setIcon(res.getDrawable(R.drawable.chart));
+    	delete.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				view.getTweetFlow().deleteElement(mId);
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(delete);
+		
+		ActionItem bigLoop = new ActionItem();
+		bigLoop.setTitle("Big loop");
+		bigLoop.setIcon(res.getDrawable(R.drawable.production));
+		bigLoop.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				view.setCreateLoopState(mId);
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(bigLoop);
+		
+		ActionItem selfLoop = new ActionItem();
+		if(mSelfLoop) {
+			selfLoop.setTitle("Loop");
+			selfLoop.setIcon(res.getDrawable(R.drawable.production));
+			selfLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mSelfLoop = true;
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(selfLoop);	
+		} else {
+			selfLoop.setTitle("Unloop");
+			selfLoop.setIcon(res.getDrawable(R.drawable.production));
+			selfLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mSelfLoop = false;
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(selfLoop);	
 		}
 	}
 }

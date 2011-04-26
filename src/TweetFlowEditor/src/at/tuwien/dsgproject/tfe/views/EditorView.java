@@ -249,91 +249,10 @@ public class EditorView extends View {
 		}
     	
     	qa.setOnDismissListener(new OwnOnDismissListener());
+    	qa.setAnimStyle(QuickAction.ANIM_AUTO);
+    	
+    	mTweetFlow.prepareQuickactions(qa, this);
 
-
-    	ActionItem delete = new ActionItem();
-    	delete.setTitle("Delete");
-    	delete.setIcon(getResources().getDrawable(R.drawable.chart));
-    	delete.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mTweetFlow.deleteElement(mTweetFlow.getTouchElement().getId());
-				redraw();
-				qa.dismiss();
-			}
-		});
-		qa.addActionItem(delete);
-
-		ActionItem changeData = new ActionItem();
-		changeData.setTitle("Edit");
-		changeData.setIcon(getResources().getDrawable(R.drawable.production));
-		changeData.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				Toast.makeText(EditorView.this.getContext(), "Edit", Toast.LENGTH_SHORT).show();
-				ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext(),EditorView.this,mTweetFlow.getTouchElement());
-				changeDataDialog.show();
-				redraw();
-				qa.dismiss();
-			}
-		});
-		qa.addActionItem(changeData);
-
-		if(mTweetFlow.getTouchElement().isSelected()) {
-			ActionItem deselect = new ActionItem();
-			deselect.setTitle("Deselect");
-			deselect.setIcon(getResources().getDrawable(R.drawable.production));
-			deselect.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mTweetFlow.getTouchElement().modeNormal();
-					redraw();
-					qa.dismiss();
-				}
-			});
-			qa.addActionItem(deselect);
-		}	
-				
-		qa.setAnimStyle(QuickAction.ANIM_AUTO);
-		
-		ActionItem bigLoop = new ActionItem();
-		bigLoop.setTitle("Big loop");
-		bigLoop.setIcon(getResources().getDrawable(R.drawable.production));
-		bigLoop.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				setState(EDITOR_STATE.CREATE_LOOP);
-				mTweetFlow.getTouchElement().modeMarked();
-				((StateCreateLoop) mCurrState).setStartID(mTweetFlow.getTouchElement().getId());
-				redraw();
-				qa.dismiss();
-			}
-		});
-		qa.addActionItem(bigLoop);
-		
-		ActionItem selfLoop = new ActionItem();
-		if(!mTweetFlow.getTouchElement().getSelfLoop()) {
-			selfLoop.setTitle("Loop");
-			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
-			selfLoop.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mTweetFlow.getTouchElement().setSelfLoop(true);
-					redraw();
-					qa.dismiss();
-				}
-			});
-			qa.addActionItem(selfLoop);	
-		} else {
-			selfLoop.setTitle("Unloop");
-			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
-			selfLoop.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mTweetFlow.getTouchElement().setSelfLoop(false);
-					redraw();
-					qa.dismiss();
-				}
-			});
-			qa.addActionItem(selfLoop);	
-		}
-				
-		qa.setAnimStyle(QuickAction.ANIM_AUTO);
-		
 		Rect rect = new Rect();
 		rect.set(mTweetFlow.getTouchElement().getmShape().getBounds());
 		rect.offset(mOffsetX,this.getTop()+mOffsetY+24);
@@ -414,6 +333,16 @@ public class EditorView extends View {
 
 	public float getmScaleFactor() {
 		return mScaleFactor;
+	}
+	
+	public TweetFlow getTweetFlow() {
+		return mTweetFlow;
+	}
+	
+	public void setCreateLoopState(Integer id) {
+		setState(EDITOR_STATE.CREATE_LOOP);
+		mTweetFlow.getTouchElement().modeMarked();
+		((StateCreateLoop) mCurrState).setStartID(id);
 	}
 	
 	
