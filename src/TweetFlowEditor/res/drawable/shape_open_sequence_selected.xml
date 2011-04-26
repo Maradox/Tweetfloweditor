@@ -7,7 +7,7 @@
     <solid
         android:color="@color/os_background" />
     <stroke  
-   		android:width="@dimen/os_stroke_width"
+   		android:width="@dimen/os_stroke_width_selected"
 		android:color="@color/os_stroke_selected" />
 </shape>
 

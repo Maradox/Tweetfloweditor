@@ -4,9 +4,10 @@
 	<color name="os_background">@+android:color/transparent</color>
 	
 	<dimen name="os_stroke_width">2dip</dimen>
+	<dimen name="os_stroke_width_selected">4dip</dimen>
 	<dimen name="os_edge_radius">10dip</dimen>
 	
-	<color name="os_stroke_normal">@+color/blue_light</color>
+	<color name="os_stroke_normal">@+color/blue_medium</color>
 	<color name="os_stroke_marked">@+color/orange</color>
 	<color name="os_stroke_selected">@+color/blue_medium</color>
 

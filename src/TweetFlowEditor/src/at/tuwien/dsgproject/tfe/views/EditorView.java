@@ -264,11 +264,11 @@ public class EditorView extends View {
 		qa.addActionItem(delete);
 
 		ActionItem changeData = new ActionItem();
-		changeData.setTitle("Change data");
+		changeData.setTitle("Edit");
 		changeData.setIcon(getResources().getDrawable(R.drawable.production));
 		changeData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(EditorView.this.getContext(), "Change data", Toast.LENGTH_SHORT).show();
+				Toast.makeText(EditorView.this.getContext(), "Edit", Toast.LENGTH_SHORT).show();
 				ChangeDataDialog changeDataDialog = new ChangeDataDialog(getContext(),EditorView.this,mTweetFlow.getTouchElement());
 				changeDataDialog.show();
 				redraw();
@@ -294,7 +294,7 @@ public class EditorView extends View {
 		qa.setAnimStyle(QuickAction.ANIM_AUTO);
 		
 		ActionItem bigLoop = new ActionItem();
-		bigLoop.setTitle("Add big loop");
+		bigLoop.setTitle("Big loop");
 		bigLoop.setIcon(getResources().getDrawable(R.drawable.production));
 		bigLoop.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -309,7 +309,7 @@ public class EditorView extends View {
 		
 		ActionItem selfLoop = new ActionItem();
 		if(!mTweetFlow.getTouchElement().getSelfLoop()) {
-			selfLoop.setTitle("Add self loop");
+			selfLoop.setTitle("Loop");
 			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
 			selfLoop.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -320,7 +320,7 @@ public class EditorView extends View {
 			});
 			qa.addActionItem(selfLoop);	
 		} else {
-			selfLoop.setTitle("Remove self loop");
+			selfLoop.setTitle("Unloop");
 			selfLoop.setIcon(getResources().getDrawable(R.drawable.production));
 			selfLoop.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
