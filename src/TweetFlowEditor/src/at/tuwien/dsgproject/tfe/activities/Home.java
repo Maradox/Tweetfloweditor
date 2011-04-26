@@ -20,13 +20,34 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 
 public class Home extends ActionbarActivity {
     /** Called when the activity is first created. */
+	
+	private StorageHandler mStorage;
+	private ArrayList<File> mFileList;
+	private FileListAdapter mFileListAdapter;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +63,80 @@ public class Home extends ActionbarActivity {
         
         //TODO
         
+        mStorage = new StorageHandler(this);
+        mFileList = new ArrayList<File>();  
+        mFileListAdapter = new FileListAdapter(this, mFileList);
+        updateFileList();
+        prepareListView();
+        
+        
     }	
+    
+	@Override
+	protected void onResume() {
+		updateFileList();
+		super.onResume();
+	}
+    
+    private void updateFileList() {
+    	mFileList.clear();
+    	for(File f : mStorage.listFiles()) {
+			if(!f.isHidden() && !f.isDirectory()) {
+				mFileList.add(f);
+			}	
+		}
+    	mFileListAdapter.notifyDataSetChanged();
+    }
 	
+    private void prepareListView() {
+        ListView lv = (ListView) findViewById(R.id.home_file_list);
+        
+		// Set the view to be shown if the list is empty
+		LayoutInflater inflator = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View emptyView = inflator.inflate(R.layout.filelist_empty, null);
+		((ViewGroup)lv.getParent()).addView(emptyView);
+		lv.setEmptyView(emptyView);
+	
+        lv.setAdapter(mFileListAdapter);
+        
+        lv.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+              final File newFile = (File)parent.getItemAtPosition(position);
+              // When clicked, show a toast with the TextView text
+              Toast.makeText(getApplicationContext(), newFile.getAbsolutePath(),
+                  Toast.LENGTH_SHORT).show();
+            }
+          });
+
+    }
+    
+	private class FileListAdapter extends ArrayAdapter<File> {
+		
+		private ArrayList<File> mObjects;
+		
+		public FileListAdapter(Context context, ArrayList<File> list) {
+			super(context, R.layout.filelist_item, R.id.filelist_item_text, list);
+			mObjects = list;
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			View row = null;
+			
+			if(convertView == null) { 
+				LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				row = inflater.inflate(R.layout.filelist_item, parent, false);
+			} else {
+				row = convertView;
+			}
+
+			File file = mObjects.get(position);
+			TextView textView = (TextView)row.findViewById(R.id.filelist_item_text);	
+			textView.setText(file.getName());
+			
+			return row;
+		}
+
+	}
 }

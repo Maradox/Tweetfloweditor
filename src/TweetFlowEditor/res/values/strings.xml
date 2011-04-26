@@ -2,7 +2,11 @@
 <resources>
     <string name="app_name">TweetFlowEditor</string>
     <string name="editor">Editor</string>
+    <string name="editor_new">Open New</string>
+    <string name="editor_last">Open Last</string>
     <string name="timeline">Timeline</string>
     <string name="open_tweetflow">Open Tweetflow</string>
+    <string name="filelist_title">Stored TweetFlows:</string>
+    <string name="filelist_empty">No Tweetflow files found.</string>
     <string name="whatever">Whatever</string>
 </resources>

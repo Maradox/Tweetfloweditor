@@ -38,56 +38,38 @@
         android:layout_weight="1"
         android:padding="6dip"
         android:background="@android:color/white" >
+        
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <Button android:id="@+id/dashboard_btn_editor"
+            android:padding="20dip" >
+            <Button android:id="@+id/dashboard_btn_new"
                 style="@style/DashboardButton"
                 android:onClick="openEditor"
-                android:text="@string/editor"
+                android:text="@string/editor_new"
                 android:drawableTop="@drawable/dashboard_editor"/>
-            <Button android:id="@+id/dashboard_btn_tweetflow"
+            <Button android:id="@+id/dashboard_btn_last"
                 style="@style/DashboardButton"
-                android:onClick="openMyTwitter"
-                android:text="@string/timeline"
+                android:text="@string/editor_last"
                 android:drawableTop="@drawable/dashboard_foo"/>
         </LinearLayout>
         
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <Button android:id="@+id/dashboard_btn_foo"
-                style="@style/DashboardButton"
-                android:onClick="doFoo"
-                android:text="@string/open_tweetflow"
-                android:drawableTop="@drawable/dashboard_foo"/>
-            <Button android:id="@+id/dashboard_btn_foo"
-                style="@style/DashboardButton"
-                android:onClick="doFoo"
-                android:text="@string/whatever"
-                android:drawableTop="@drawable/dashboard_foo"/>
-        </LinearLayout>
+       
+        <ImageView style="@style/DashboardSeparator" />
         
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <Button android:id="@+id/dashboard_btn_foo"
-                style="@style/DashboardButton"
-                android:onClick="doFoo"
-                android:text="Foo"
-                android:drawableTop="@drawable/dashboard_foo"/>
-            <Button android:id="@+id/dashboard_btn_foo"
-                style="@style/DashboardButton"
-                android:onClick="doFoo"
-                android:text="Bar"
-                android:drawableTop="@drawable/dashboard_foo"/>
-        </LinearLayout>
+        <TextView 
+			style="@style/FileListTitle"
+        	android:text="@string/filelist_title" />
+        	
+        <ImageView style="@style/DashboardSeparator" />
+        
+		<ListView 
+			android:id="@+id/home_file_list" 
+			android:layout_width="fill_parent"
+			android:layout_height="0dp"
+			android:layout_weight="1" 
+			android:listSelector="#00000000" />
         
         
     </LinearLayout>

@@ -23,6 +23,7 @@ package at.tuwien.dsgproject.tfe.common;
 
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -67,10 +68,12 @@ public class StorageHandler {
 	}
 	
 	
-	public String[] listFiles() {
+	public File[] listFiles() {
 		checkStorageState();
-		if(mExternalStorageAvailable) return mFilesDir.list();
-		else return null;
+		if(mExternalStorageAvailable) {
+			return mFilesDir.listFiles();
+		}
+		return new File[]{};
 	}
 	
 	public void write(String filename, TweetFlow tweetflow) {
