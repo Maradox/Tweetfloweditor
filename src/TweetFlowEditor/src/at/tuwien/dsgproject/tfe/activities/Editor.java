@@ -21,8 +21,7 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
-import java.util.ArrayList;
-
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,8 +33,9 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
-import at.tuwien.dsgproject.tfe.common.TweeterParser;
-import at.tuwien.dsgproject.tfe.entities.AbstractElement;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
+import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
+import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -47,6 +47,8 @@ public class Editor extends ActionbarActivity {
 	private EditorView mEditorView;
 	private TweetFlow mTweetFlow;
 	private StorageHandler mStorage;
+	
+	public String mFileName = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -68,7 +70,8 @@ public class Editor extends ActionbarActivity {
         } else {
             if(i.hasExtra(OPEN_FILE)) {
             	try {
-            		mTweetFlow = mStorage.openTweetflowFile(i.getStringExtra(OPEN_FILE));
+            		mFileName = i.getStringExtra(OPEN_FILE);
+            		mTweetFlow = mStorage.openTweetflowFile(mFileName);
             		mTweetFlow.setContext(this);
             	} catch (Exception e) {
             		Log.e("TFE", e.getMessage(), e);
@@ -78,7 +81,7 @@ public class Editor extends ActionbarActivity {
             	
             } else {
             	mTweetFlow = new TweetFlow(this);
-            	mTweetFlow.fillElements();
+            	//mTweetFlow.fillElements();
             }
         }
         
@@ -119,8 +122,10 @@ public class Editor extends ActionbarActivity {
     }
     
     
+    //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {
-    	mStorage.write("foo", mTweetFlow);
+    	final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow, mFileName);
+    	dialog.show();
     }
     
     
@@ -134,7 +139,8 @@ public class Editor extends ActionbarActivity {
         return true;
     }
     
-    public boolean onPrepareOptionsMenu(Menu menu) {   	
+
+	public boolean onPrepareOptionsMenu(Menu menu) {   	
     	if(mTweetFlow.somethingSelected()) {
     		menu.findItem(R.id.deselect).setVisible(true);
     	} else {

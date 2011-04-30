@@ -54,7 +54,7 @@ public class TweetFlow implements Serializable {
 	@Attribute
 	private String mName = "TWeetFoo"; //TODO remove this
 	
-	@ElementMap(entry="element", key="id", attribute=true, inline=true)
+	@ElementMap(entry="element", key="id", attribute=true, inline=true, required=false, empty=true)
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
 	//public HashMap<Integer, OpenSequence> mOpenSequences;
