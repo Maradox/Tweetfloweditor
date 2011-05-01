@@ -47,12 +47,13 @@ public class TweetFlow implements Serializable {
 	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_X = 80;
 	public static final int DISTANCE_FOR_AUTO_DISCONNECTION_Y = 120;
 	
-	public static final String TF_ID = "TweetFlow";
-
 	private Context mContext;
 	
 	@Attribute
-	private String mName = "TWeetFoo"; //TODO remove this
+	private String mName = "";
+	
+	@Attribute
+	private Integer mElemCounter;
 	
 	@ElementMap(entry="element", key="id", attribute=true, inline=true, required=false, empty=true)
 	private HashMap<Integer, AbstractElement> mElements;
@@ -60,9 +61,6 @@ public class TweetFlow implements Serializable {
 	//public HashMap<Integer, OpenSequence> mOpenSequences;
 	
 	private AbstractElement mTouchElement = null;
-	
-	@Attribute
-	private Integer mElemCounter;
 	
 	public TweetFlow(Context context) {
 		this();
@@ -76,16 +74,6 @@ public class TweetFlow implements Serializable {
 		mSelected = new HashMap<Integer, AbstractElement>();
 		//mOpenSequences = new HashMap<Integer, OpenSequence>();
 	}
-	
-	
-	public void fillElements() {
-		addServiceRequest(100,100);
-		addServiceRequest(200,350);
-		addServiceRequest(300,500);
-		
-		addOpenSequence();
-	}
-	
 	
 	public void addServiceRequest(int x, int y) {
 		final ServiceRequest sr = new ServiceRequest(mElemCounter++, x-25, y-40);
@@ -403,6 +391,14 @@ public class TweetFlow implements Serializable {
 	
 	public void prepareQuickactions(QuickAction qa, EditorView view) {
 		if(mTouchElement != null) mTouchElement.fillQuickActionMenu(qa, view);
+	}
+	
+	public String getName() {
+		return mName;
+	}
+	
+	public void setName(String name) {
+		mName = name;
 	}
 	
 	

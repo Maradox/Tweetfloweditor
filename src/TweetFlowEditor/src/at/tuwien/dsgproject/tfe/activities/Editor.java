@@ -43,6 +43,9 @@ import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 public class Editor extends ActionbarActivity {
 	
 	public final static String OPEN_FILE = "open_file_path";
+	public final static String OPEN_NEW = "open_new";
+	
+	public final static String OPEN_CURRENT_FILE = ".current";
 	
 	private EditorView mEditorView;
 	private TweetFlow mTweetFlow;
@@ -54,80 +57,76 @@ public class Editor extends ActionbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TFE-Editor","onCreate");
         setContentView(R.layout.activity_editor);
         
         mStorage = new StorageHandler(this);
-        
-        Intent i = getIntent();
-        
-
-        //try to recover tweetflow
-        mTweetFlow = (savedInstanceState == null) ? null :
-        		(TweetFlow) savedInstanceState.getSerializable(TweetFlow.TF_ID);
-        if (mTweetFlow != null) {
-        	mTweetFlow.setContext(this);
-        } else {
-            if(i.hasExtra(OPEN_FILE)) {
-            	try {
-            		mFileName = i.getStringExtra(OPEN_FILE);
-            		mTweetFlow = mStorage.openTweetflowFile(mFileName);
-            		mTweetFlow.setContext(this);
-            	} catch (Exception e) {
-            		Log.e("TFE", e.getMessage(), e);
-            		mTweetFlow = new TweetFlow(this);
-            		Toast.makeText(this, "Error while deserializing, creating empty TweetFlow", Toast.LENGTH_LONG).show();
-            	} 
-            	
-            } else {
-            	mTweetFlow = new TweetFlow(this);
-            	//mTweetFlow.fillElements();
-            }
-        }
+        mFileName = null;
         
         mEditorView = (EditorView) findViewById(R.id.editor_view);      
         registerForContextMenu(mEditorView);  
-        mEditorView.setTweetFlow(mTweetFlow);
+        
+        //check if the activity is being restarted and reopen the current Tweetflow
+        if(savedInstanceState != null) {
+        	if (savedInstanceState.getBoolean(OPEN_CURRENT_FILE, false)) {
+        		Log.d("TFE-Editor","recover .current TF");
+        		mFileName = OPEN_CURRENT_FILE;	  
+        	}
+        } else {
+        	Intent i = getIntent();
+        	if(i.getBooleanExtra(OPEN_CURRENT_FILE, false)) {
+				mFileName = OPEN_CURRENT_FILE;
+				Log.v("TFE-Editor","open .current");
+        	} else if(i.hasExtra(OPEN_FILE)) {
+        		mFileName = i.getStringExtra(OPEN_FILE); 
+        		Log.v("TFE-Editor","open file "+mFileName);
+            } else if(i.getBooleanExtra(OPEN_NEW, false)){
+            	mFileName = null;
+            	Log.v("TFE-Editor","create new TF");
+            } else {
+            	Log.w("TFE-Editor", "SHOULD NOT REACH!");
+            }
+        }
+        openTweetFlow();    
     }	
+    
+    private void openTweetFlow() {
+     	if(mFileName != null) {
+     		try {
+				mTweetFlow = mStorage.openTweetflowFile(mFileName);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Toast.makeText(this, "Error opening Tweetflow, creating new Tweetflow", Toast.LENGTH_SHORT).show();
+				mTweetFlow = new TweetFlow();
+			}	
+     	} else {
+        	mTweetFlow = new TweetFlow();
+        	Toast.makeText(this, "New Tweetflow", Toast.LENGTH_SHORT).show();
+     	}
+     	mTweetFlow.setContext(this);
+     	mEditorView.setTweetFlow(mTweetFlow);
+    	
+    }
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-    	Log.d("TFE-Editor","onSaveIS");
-    	//outState.putSerializable(TweetFlow.TF_ID, mTweetFlow);
-        super.onSaveInstanceState(outState);  
-    }
-    
-    @Override
-    protected void onPause() {
-        Log.d("TFE-Editor","onPause");
-        super.onPause();
-    }
-    
-    @Override
-    protected void onStart() {
-        Log.d("TFE-Editor","onStart");
-        super.onStart();
+    	super.onSaveInstanceState(outState); 
+    	//saving Tweetflow to .current
+    	mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
+    	outState.putBoolean(OPEN_CURRENT_FILE, true);     
     }
     
     @Override
     protected void onResume() {
-        Log.d("TFE-Editor","onResume");
         super.onResume();
-    }
-    
-    @Override
-    protected void onStop() {
-        Log.d("TFE-Editor","onStop");
-        super.onStop();
-    }
-    
+        openTweetFlow();
+    }    
     
     //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {
-    	final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow, mFileName);
+    	final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow);
     	dialog.show();
     }
-    
     
     
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,7 +164,8 @@ public class Editor extends ActionbarActivity {
         
 		return true;
     }
-        
+     
+	
     public boolean onOptionsItemSelected(MenuItem menuItem) {
     	super.onOptionsItemSelected(menuItem);
     	
@@ -213,11 +213,5 @@ public class Editor extends ActionbarActivity {
     	}
     	return true;  
     }
-
-
-
-	public EditorView getEditorView() {
-		return mEditorView;
-	}
     
 }

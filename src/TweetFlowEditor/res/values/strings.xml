@@ -24,7 +24,7 @@
     <string name="app_name">TweetFlowEditor</string>
     <string name="editor">Editor</string>
     <string name="editor_new">Open New</string>
-    <string name="editor_last">Open Last</string>
+    <string name="editor_current">Open Current</string>
     <string name="timeline">Timeline</string>
     <string name="open_tweetflow">Open Tweetflow</string>
     <string name="filelist_title">Stored TweetFlows:</string>

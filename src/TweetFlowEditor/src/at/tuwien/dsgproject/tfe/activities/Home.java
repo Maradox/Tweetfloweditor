@@ -78,6 +78,13 @@ public class Home extends ActionbarActivity {
 		updateFileList();
 		super.onResume();
 	}
+	
+	public void openEditorCurrent(View view) {
+		final Context c = view.getContext();
+		Intent i = new Intent(c, Editor.class );	
+		i.putExtra(Editor.OPEN_CURRENT_FILE, true);
+		c.startActivity(i); 
+	}
     
     private void updateFileList() {
     	mFileList.clear();

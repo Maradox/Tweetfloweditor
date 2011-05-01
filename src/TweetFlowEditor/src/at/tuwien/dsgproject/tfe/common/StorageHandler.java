@@ -32,6 +32,7 @@ import org.simpleframework.xml.strategy.Strategy;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public class StorageHandler {
@@ -80,17 +81,15 @@ public class StorageHandler {
 		checkStorageState();
 		if(mExternalStorageWriteable) {
 			final File file = new File(mFilesDir, filename);
-			if(!file.exists()) {
-				Strategy strategy = new CycleStrategy("x_id", "x_ref");
-				Serializer serializer = new Persister(strategy);
-		        try {
-					serializer.write(tweetflow, file);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else {
-				//overwrite? TODO: this
+			//TODO handle existing file
+			Strategy strategy = new CycleStrategy("x_id", "x_ref");
+			Serializer serializer = new Persister(strategy);
+	        try {
+	        	Log.d("TFE-Editor","writing " + tweetflow.getName() + " to: "+filename);
+				serializer.write(tweetflow, file);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 		} else {
@@ -108,6 +107,7 @@ public class StorageHandler {
 				Strategy strategy = new CycleStrategy("x_id", "x_ref");
 				Serializer serializer = new Persister(strategy);
 				TweetFlow tf = serializer.read(TweetFlow.class, file);
+				Log.d("TFE-Editor","read "+tf.getName() + " from: "+filename);
 				tf.updateClosedSequences();
 				return tf;
 

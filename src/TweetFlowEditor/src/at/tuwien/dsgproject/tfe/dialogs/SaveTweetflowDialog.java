@@ -16,7 +16,7 @@ public class SaveTweetflowDialog extends Dialog {
 	
 	private StorageHandler mStorage;
 
-	public SaveTweetflowDialog(Context context, final TweetFlow tweetFlow, final String fileName) {
+	public SaveTweetflowDialog(Context context, final TweetFlow tweetFlow) {
 		super(context);
 		setTitle("Save Tweetflow");
 		setContentView(R.layout.dialog_save);
@@ -26,15 +26,16 @@ public class SaveTweetflowDialog extends Dialog {
 		
 		//mTweetFlow = tweetFlow;
 		mEditFilename = (EditText) findViewById(R.id.save_filename);
-		
-		if(fileName != null) mEditFilename.setText(fileName);
+		mEditFilename.setText(tweetFlow.getName());
 		
 		
 		
 		((Button) findViewById(R.id.save_dialog_save)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				mStorage.write(mEditFilename.getText().toString(), tweetFlow);
-				SaveTweetflowDialog.this.cancel();
+				final String name = mEditFilename.getText().toString();
+				tweetFlow.setName(name);
+				mStorage.write(name, tweetFlow);
+				SaveTweetflowDialog.this.dismiss();
 			}
 		});
 		

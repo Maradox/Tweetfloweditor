@@ -38,6 +38,7 @@ public class ActionbarHelper {
 	
 	public static void openEditor(Context context) {
 		Intent i = new Intent( context, Editor.class );	
+		i.putExtra(Editor.OPEN_NEW, true);
 		context.startActivity(i); 
 	}
 	

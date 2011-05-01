@@ -69,9 +69,10 @@
                 android:onClick="openEditor"
                 android:text="@string/editor_new"
                 android:drawableTop="@drawable/dashboard_editor"/>
-            <Button android:id="@+id/dashboard_btn_last"
+            <Button android:id="@+id/dashboard_btn_current"
                 style="@style/DashboardButton"
-                android:text="@string/editor_last"
+                android:onClick="openEditorCurrent"
+                android:text="@string/editor_current"
                 android:drawableTop="@drawable/dashboard_foo"/>
         </LinearLayout>
         

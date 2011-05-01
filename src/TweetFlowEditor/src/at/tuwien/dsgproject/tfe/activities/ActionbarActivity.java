@@ -33,6 +33,7 @@ public abstract class ActionbarActivity extends Activity implements Actionbar {
 
 	public void openHome(View v) {	
 		ActionbarHelper.openHome(this);
+		finish();
 	}
 	
 	public void openEditor(View v) {	
