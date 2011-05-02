@@ -119,7 +119,7 @@ public class Editor extends ActionbarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mFileName = OPEN_CURRENT_FILE;
+        //mFileName = OPEN_CURRENT_FILE;
         openTweetFlow();
     }  
     
