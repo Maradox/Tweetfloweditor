@@ -116,12 +116,12 @@ public class Editor extends ActionbarActivity {
     	outState.putBoolean(OPEN_CURRENT_FILE, true);     
     }
     
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //mFileName = OPEN_CURRENT_FILE;
-        openTweetFlow();
-    }  
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        //mFileName = OPEN_CURRENT_FILE;
+//        openTweetFlow();
+//    }  
     
     @Override
     protected void onPause() {
