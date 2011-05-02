@@ -119,8 +119,15 @@ public class Editor extends ActionbarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mFileName = OPEN_CURRENT_FILE;
         openTweetFlow();
-    }    
+    }  
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
+    } 
     
     //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {

@@ -22,7 +22,6 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,16 +60,12 @@ public class Home extends ActionbarActivity {
         if((requestToken.length() > 0) && (secretToken.length() > 0)) {
         	UserManagement.getInstance().loginAuto(requestToken,secretToken);
         }
-        
-        //TODO
-        
+ 
         mStorage = new StorageHandler(this);
         mFileList = new ArrayList<File>();  
         mFileListAdapter = new FileListAdapter(this, mFileList);
         updateFileList();
         prepareListView();
-        
-        
     }	
     
 	@Override
@@ -108,6 +103,7 @@ public class Home extends ActionbarActivity {
         lv.setAdapter(mFileListAdapter);
         
         lv.setOnItemClickListener(new OnItemClickListener() {
+        	@Override
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	final File file = (File)parent.getItemAtPosition(position);
             	Intent i = new Intent(Home.this, Editor.class );	
@@ -115,6 +111,17 @@ public class Home extends ActionbarActivity {
             	Home.this.startActivity(i); 
             }
          });
+        
+        lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+        	 @Override
+        	 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        		 final File file = (File)parent.getItemAtPosition(position);
+        		 //TODO: menu for file open/delete/rename
+        		 Toast.makeText(Home.this, "TODO: show dialog for "+file.getName(), Toast.LENGTH_SHORT).show();
+        		 return true;
+        	 }
+        		
+		});
 
     }
     

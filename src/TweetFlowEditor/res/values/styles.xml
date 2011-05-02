@@ -91,6 +91,12 @@
         <item name="android:background">@color/blue_medium</item>
     </style>
     
+    <style name="DashboardSeparatorVertical">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@color/blue_medium</item>
+    </style>
+    
     
     <style name="DashboardSpacer">
         <item name="android:layout_width">fill_parent</item>
