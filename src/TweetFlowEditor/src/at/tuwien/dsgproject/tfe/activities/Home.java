@@ -103,7 +103,7 @@ public class Home extends ActionbarActivity {
         lv.setAdapter(mFileListAdapter);
         
         lv.setOnItemClickListener(new OnItemClickListener() {
-        	@Override
+        
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	final File file = (File)parent.getItemAtPosition(position);
             	Intent i = new Intent(Home.this, Editor.class );	
@@ -113,7 +113,7 @@ public class Home extends ActionbarActivity {
          });
         
         lv.setOnItemLongClickListener(new OnItemLongClickListener() {
-        	 @Override
+        	
         	 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         		 final File file = (File)parent.getItemAtPosition(position);
         		 //TODO: menu for file open/delete/rename
