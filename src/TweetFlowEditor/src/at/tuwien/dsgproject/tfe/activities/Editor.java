@@ -33,6 +33,7 @@ import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
+import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
@@ -177,6 +178,9 @@ public class Editor extends ActionbarActivity {
     	super.onOptionsItemSelected(menuItem);
     	
     	switch (menuItem.getItemId()) {
+	    	case R.id.send_tweetflow:
+				Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow.getmElementsAsList()), Toast.LENGTH_SHORT).show();
+				break;
     		case R.id.deselect:
     			mTweetFlow.deselectAll();
     			mEditorView.redraw();

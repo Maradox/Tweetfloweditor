@@ -44,11 +44,11 @@ public class ServiceRequest extends AbstractElement {
 	private String mRequestText = "@foo foo.bar ";
 	
 	//TODO add serialization annotation
-	private String user;
-	private String operation;
-	private String service;
-	private String inputdata;
-	private String condition;
+	private String user = "";
+	private String operation = "";
+	private String service = "";
+	private String inputdata = "";
+	private String condition = "";
 	
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
@@ -81,10 +81,31 @@ public class ServiceRequest extends AbstractElement {
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		mShape.draw(canvas);
-		canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
+		
+		int diff = 25;
+		
+		if(user.length() > 0) {
+			canvas.drawText("@"+user, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		String serviceOperation = service + "." + operation;
+		if(serviceOperation.length() > 1) {
+			canvas.drawText(serviceOperation, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		if(inputdata.length() > 0) {
+			canvas.drawText("Input: "+ inputdata, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		if(condition.length() > 0) {
+			canvas.drawText("Cond.: "+condition, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		
+		/*canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
 		canvas.drawText("mbnext: "+ ((mClosedSequenceMaybeNext != null) ? mClosedSequenceMaybeNext.toString() : " null "), mX+mTextOffsetX, mY+45, mTextPaint);
 		canvas.drawText("p: "+ ((mClosedSequencePrev != null) ? mClosedSequencePrev.toString() : " N ") + 
-				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);		
+				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);		*/
 
 	}
 	

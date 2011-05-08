@@ -31,7 +31,7 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 
 	public static String parseTweetFlow(ArrayList<AbstractElement> elements) {
 		
-		String tweetFlowString = "";
+		String tweetFlowString = "TF didBegin.Tweetflow\n";
 		
 		for(AbstractElement element : elements) {
 			
@@ -50,6 +50,7 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 			}
 		}
 		
+		tweetFlowString += "TF didFinish.Tweetflow"; 
 		return tweetFlowString;
 		
 	}
@@ -59,8 +60,13 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 		String elementString = "";
 		
 		if(element instanceof ServiceRequest) {
-			elementString = element.getId() + " TF " + "_name_" + " SR @" + "_user_" 
-			+ " " + "_operation_" + "." + "_service_" + " " + "_inputdata_" + " [" + "_condition_" + "]"; 
+			elementString = "SR @" + ((ServiceRequest)element).getUser() 
+			+ " " + ((ServiceRequest)element).getOperation() + "." + ((ServiceRequest)element).getService();
+			if(((ServiceRequest)element).getInputdata().length() > 0)
+				elementString += " " + ((ServiceRequest)element).getInputdata();
+			if(((ServiceRequest)element).getCondition().length() > 0)
+				elementString += " [" + ((ServiceRequest)element).getCondition() + "]";
+
 		}
 		
 		if(element instanceof OpenSequence) {
@@ -73,17 +79,21 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 	
 	private static String createClosedSequence(AbstractElement element) {
 		
-		String elementString = " TF " + "_name_";
+		String elementString = "[";
 		
 		while(element != null) {
 		
 			if(element instanceof ServiceRequest) {
-				elementString += element.getId() + " [SR @" + "_user_" 
-				+ " " + "_operation_" + "." + "_service_" + " " + "_inputdata_" + " [" + "_condition_" + "]"; 
+				elementString += "SR @" + ((ServiceRequest)element).getUser() 
+				+ " " + ((ServiceRequest)element).getOperation() + "." + ((ServiceRequest)element).getService();
+				if(((ServiceRequest)element).getInputdata().length() > 0)
+					elementString += " " + ((ServiceRequest)element).getInputdata();
+				if(((ServiceRequest)element).getCondition().length() > 0)
+					elementString += " [" + ((ServiceRequest)element).getCondition() + "]";
 			}
 			
 			if(element instanceof OpenSequence) {
-				elementString = element.getId() + " Open sequence ";
+				elementString = element.getId() + " This cannot be done. ";	//TODO exception
 			}
 			
 			if(element.getClosedSequenceNext() != null) 
