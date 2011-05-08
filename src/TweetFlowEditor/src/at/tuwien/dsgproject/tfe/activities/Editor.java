@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
@@ -56,6 +57,7 @@ public class Editor extends ActionbarActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.v("TFE", "Editor - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         
@@ -73,21 +75,25 @@ public class Editor extends ActionbarActivity {
         	}
         } else {
         	Intent i = getIntent();
-        	if(i.getBooleanExtra(OPEN_CURRENT_FILE, false)) {
-				mFileName = OPEN_CURRENT_FILE;
-				Log.v("TFE-Editor","open .current");
-        	} else if(i.hasExtra(OPEN_FILE)) {
-        		mFileName = i.getStringExtra(OPEN_FILE); 
-        		Log.v("TFE-Editor","open file "+mFileName);
-            } else if(i.getBooleanExtra(OPEN_NEW, false)){
-            	mFileName = null;
-            	Log.v("TFE-Editor","create new TF");
-            } else {
-            	Log.w("TFE-Editor", "SHOULD NOT REACH!");
-            }
+        	getFilenameFromIntent(i);
         }
-        openTweetFlow();    
+        //openTweetFlow();    
     }	
+    
+    private void getFilenameFromIntent(Intent i) {
+    	if(i.getBooleanExtra(OPEN_CURRENT_FILE, false)) {
+			mFileName = OPEN_CURRENT_FILE;
+			Log.v("TFE-Editor","open .current");
+    	} else if(i.hasExtra(OPEN_FILE)) {
+    		mFileName = i.getStringExtra(OPEN_FILE); 
+    		Log.v("TFE-Editor","open file "+mFileName);
+        } else if(i.getBooleanExtra(OPEN_NEW, false)){
+        	mFileName = null;
+        	Log.v("TFE-Editor","create new TF");
+        } else {
+        	Log.w("TFE-Editor", "SHOULD NOT REACH!");
+        }
+    }
     
     private void openTweetFlow() {
      	if(mFileName != null) {
@@ -116,18 +122,56 @@ public class Editor extends ActionbarActivity {
     	outState.putBoolean(OPEN_CURRENT_FILE, true);     
     }
     
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        //mFileName = OPEN_CURRENT_FILE;
-//        openTweetFlow();
-//    }  
+	@Override
+	public void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		getFilenameFromIntent(intent);
+		Log.v("TFE", "Editor - onNewIntent");
+	}
+	
+    protected void onStart() {
+    	super.onStart();
+    	Log.v("TFE", "Editor - onStart");
+    }
     
+    protected void onRestart() {
+    	super.onRestart();
+    	Log.v("TFE", "Editor - onRestart");
+    }
+
+    protected void onResume() {
+    	super.onResume();
+    	openTweetFlow();
+    	Log.v("TFE", "Editor - onResume");
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
+        Log.v("TFE", "Editor - onPause");
         mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
     } 
+
+    protected void onStop() {
+    	super.onStop();
+    	Log.v("TFE", "Editor - onStop");
+    }
+
+    protected void onDestroy() {
+    	super.onDestroy();
+    	Log.v("TFE", "Editor - onDestroy");
+    }
+
+    
+    @Override
+	public void openHome(View v) {	
+		ActionbarHelper.openHome(this);
+	}
+	
+    @Override
+	public void openMyTwitter(View v) {	
+		ActionbarHelper.openMyTwitter(this);
+	}
     
     //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {

@@ -22,13 +22,9 @@ public class SaveTweetflowDialog extends Dialog {
 		setContentView(R.layout.dialog_save);
 		mStorage = new StorageHandler(context);
 		
-		
-		
 		//mTweetFlow = tweetFlow;
 		mEditFilename = (EditText) findViewById(R.id.save_filename);
 		mEditFilename.setText(tweetFlow.getName());
-		
-		
 		
 		((Button) findViewById(R.id.save_dialog_save)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {

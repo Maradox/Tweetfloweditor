@@ -22,6 +22,7 @@
 package at.tuwien.dsgproject.tfe.views;
 
 import java.util.HashMap;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,12 +35,9 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
-import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
-import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
-import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateCreateLoop;
@@ -157,15 +155,18 @@ public class EditorView extends View {
 	}
 	
 	
-    private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
-    	
+    private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {	
     	@Override
     	public boolean onDoubleTap(MotionEvent e) {
-    		mOffsetX = mOffsetY = 0;
-    		mScaleFactor = 1.f;
-    		redraw();
+    		resetView();
     		return true;
     	}
+    }
+    
+    protected void resetView() {
+		mOffsetX = mOffsetY = 0;
+		mScaleFactor = 1.f;
+		redraw();
     }
 	
 	
@@ -229,14 +230,6 @@ public class EditorView extends View {
     
     public void redraw() {
     	invalidate();
-    }
-
-    public void undo() {
-    	//TODO
-    }
-    
-    public void redo() {
-    	//TODO
     }
     
     public void openContextMenu() {    	
@@ -316,6 +309,7 @@ public class EditorView extends View {
 			s.setTweetFlow(tweetFlow);
 		}
 		rasterGridHelper.setTweetFlow(mTweetFlow);
+		resetView();
 		redraw();
 	}
 	
