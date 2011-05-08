@@ -111,10 +111,12 @@ public class ChangeDataDialog extends Dialog {
 		element.setSelfLoopCondition(selfLoopCondition.getText().toString());
 		if(element.getmLoop() != null)
 			element.setClosedLoopCondition(closedLoopCondition.getText().toString());
-		if(selfLoopCondition.getText().toString() != "") {									//TODO FAIL
-			Toast.makeText(getContext(), selfLoopCondition.getText().toString(), Toast.LENGTH_SHORT).show();	
+		if(selfLoopCondition.getText().toString().length() > 0) {			
 			element.setSelfLoop(true);			
+		} else {
+			element.setSelfLoop(false);
 		}
+			
 		editorView.redraw();
 
 	}

@@ -179,7 +179,7 @@ public class Editor extends ActionbarActivity {
     	
     	switch (menuItem.getItemId()) {
 	    	case R.id.send_tweetflow:
-				Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow.getmElementsAsList()), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow), Toast.LENGTH_SHORT).show();
 				break;
     		case R.id.deselect:
     			mTweetFlow.deselectAll();

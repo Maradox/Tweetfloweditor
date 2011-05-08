@@ -22,31 +22,49 @@
 package at.tuwien.dsgproject.tfe.common;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
+import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 
-	public static String parseTweetFlow(ArrayList<AbstractElement> elements) {
+	public static String parseTweetFlow(TweetFlow tweetFlow) {
+		
+		List<AbstractElement> elements = tweetFlow.getmElementsAsList();
 		
 		String tweetFlowString = "TF didBegin.Tweetflow\n";
 		
 		for(AbstractElement element : elements) {
 			
-			if((element.getClosedSequenceNext() == null) && (element.getClosedSequencePrev() == null)) {	// Open sequence
-				tweetFlowString += createOpenSequence(element);
+			if(element instanceof OpenSequence) {			// Is an open sequence
+				String cos = createOpenSequence(tweetFlow,(OpenSequence) element);
+				tweetFlowString += cos;
+				if(cos.length() > 0) {
+					tweetFlowString += "\n";
+				}	
+				continue;
+			}	
+			
+			if(tweetFlow.isInOpenSequence(element)) {		// Is in an open sequence
+				continue;
+			}	
+			if((element.getClosedSequenceNext() == null) && (element.getClosedSequencePrev() == null)) {	// Open sequence Request
+				tweetFlowString += createOpenSequenceRequest(element);
 				tweetFlowString += "\n";
+				continue;
 			}
 			
-			else if(element.getClosedSequencePrev() != null) {	// In the sequence
+			else if(element.getClosedSequencePrev() != null) {	// In the closed sequence
 				continue;
 			}
 			
 			else if(element.getClosedSequenceNext() != null) {	// Start of sequence
 				tweetFlowString += createClosedSequence(element);
 				tweetFlowString += "\n";
+				continue;
 			}
 		}
 		
@@ -55,7 +73,36 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 		
 	}
 	
-	private static String createOpenSequence(AbstractElement element) {
+	private static String createOpenSequence(TweetFlow tweetFlow, OpenSequence e) {
+		List<AbstractElement> list = tweetFlow.getElementsInOpenSequence(e);
+		String elementString = "";
+		
+		if(list.size() > 0) {	
+			elementString += "OpenSequence Begin\n";
+			for(AbstractElement element : list) {
+							
+				if((element.getClosedSequenceNext() == null) && (element.getClosedSequencePrev() == null)) {	// Open sequence Request
+					elementString += createOpenSequenceRequest(element);
+					elementString += "\n";
+				}
+				
+				else if(element.getClosedSequencePrev() != null) {	// In the closed sequence
+					continue;
+				}
+				
+				else if(element.getClosedSequenceNext() != null) {	// Start of sequence
+					elementString += createClosedSequence(element);
+					elementString += "\n";
+				}
+			}
+			
+			elementString += "OpenSequence End";
+		}
+		
+		return elementString;
+	}
+	
+	private static String createOpenSequenceRequest(AbstractElement element) {
 		
 		String elementString = "";
 		
@@ -74,7 +121,6 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 		}
 		
 		return elementString;
-		
 	}
 	
 	private static String createClosedSequence(AbstractElement element) {

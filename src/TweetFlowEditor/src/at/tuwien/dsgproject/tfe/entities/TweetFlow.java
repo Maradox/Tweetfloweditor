@@ -24,6 +24,7 @@ package at.tuwien.dsgproject.tfe.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.simpleframework.xml.Attribute;
@@ -74,6 +75,29 @@ public class TweetFlow implements Serializable {
 		mElements = new HashMap<Integer, AbstractElement>();
 		mSelected = new HashMap<Integer, AbstractElement>();
 		//mOpenSequences = new HashMap<Integer, OpenSequence>();
+	}
+	
+	public boolean isInOpenSequence(AbstractElement element) {
+		for(AbstractElement e : mElements.values()) {
+			if(e instanceof OpenSequence) {
+				if(element.getMiddleX() > e.getmX() && element.getMiddleX() < e.getRightX()
+						&& element.getMiddleY() > e.getTopY() &&  element.getMiddleY() < e.getBotY())
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public List<AbstractElement> getElementsInOpenSequence(OpenSequence element) {
+		List<AbstractElement> list = new ArrayList<AbstractElement>();
+		for(AbstractElement e : mElements.values()) {
+			if(e instanceof ServiceRequest) {
+				if(e.getMiddleX() > element.getmX() && e.getMiddleX() < element.getRightX()
+						&& e.getMiddleY() > element.getTopY() &&  e.getMiddleY() < element.getBotY())
+					list.add(e);
+			}
+		}
+		return list;
 	}
 	
 	public void addServiceRequest(int x, int y) {

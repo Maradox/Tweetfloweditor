@@ -101,11 +101,6 @@ public class ServiceRequest extends AbstractElement {
 			canvas.drawText("Cond.: "+condition, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;
 		}	
-		
-		/*canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
-		canvas.drawText("mbnext: "+ ((mClosedSequenceMaybeNext != null) ? mClosedSequenceMaybeNext.toString() : " null "), mX+mTextOffsetX, mY+45, mTextPaint);
-		canvas.drawText("p: "+ ((mClosedSequencePrev != null) ? mClosedSequencePrev.toString() : " N ") + 
-				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);		*/
 
 	}
 	
