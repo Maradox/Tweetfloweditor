@@ -21,7 +21,7 @@ public class StateTouchElement extends State {
 			final int offX = x - mEditorView.getLastTouchX();
 			final int offY = y - mEditorView.getLastTouchY();
 		
-			if(Math.sqrt(offX*offX + offY*offY) > mEditorView.MOVE_OFFSET) {
+			if(Math.sqrt(offX*offX + offY*offY) > EditorView.MOVE_OFFSET) {
 				if(mTweetFlow.isTouchElementSelected() &&
 						mTweetFlow.getSelectedElementsCount() > 1) {
 					mTweetFlow.moveSelected(offX, offY);

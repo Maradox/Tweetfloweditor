@@ -21,19 +21,19 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
-
-
 import org.simpleframework.xml.Attribute;
-
 import android.content.Context;
 import android.graphics.Canvas;
-
+import android.view.View;
+import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialogOpenSequence;
+import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class OpenSequence extends AbstractElement {
-	
+		
 	private final int EDGE_TOUCH_RADIUS = 20;
 	private final int CORNER_TOUCH_RADIUS = 30;
 	private final int MIN_WIDTH = 100;
@@ -227,9 +227,21 @@ public class OpenSequence extends AbstractElement {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_marked);
 		mShape.setBounds(mBounds);
 	}
-
+	
 	@Override
 	void fillQuickActionMenu(final QuickAction qa, final EditorView view) {
+		ActionItem changeData = new ActionItem();
+		changeData.setTitle("Edit");
+		changeData.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+		changeData.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ChangeDataDialogOpenSequence changeDataDialog = new ChangeDataDialogOpenSequence(mContext, view , OpenSequence.this);
+				changeDataDialog.show();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(changeData);
+		
 		fillCommonQuickactionItems(qa, view);
 		
 	}

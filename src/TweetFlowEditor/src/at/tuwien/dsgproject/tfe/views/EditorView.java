@@ -34,12 +34,9 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
-import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
-import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
-import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
 import at.tuwien.dsgproject.tfe.states.StateCreateLoop;
@@ -88,7 +85,7 @@ public class EditorView extends View {
 	// canvas offset
 	private Integer mOffsetX = 0, mOffsetY = 0;
 	// scale pivot coordinates
-	private int mScalePivotX, mScalePivotY;
+	//private int mScalePivotX, mScalePivotY;	//TODO delete comment
 	
 	private TweetFlow mTweetFlow;
 	private RasterGridHelper rasterGridHelper;
@@ -147,8 +144,8 @@ public class EditorView extends View {
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
 //            mCurrMode = TouchMode.SCALE;
 	        
-	        mScalePivotX = (int)detector.getFocusX();
-	        mScalePivotY = (int)detector.getFocusY();
+	  //      mScalePivotX = (int)detector.getFocusX();		//TODO delete
+	  //      mScalePivotY = (int)detector.getFocusY();
 
 	        invalidate();
 	        return true;
@@ -229,14 +226,6 @@ public class EditorView extends View {
     
     public void redraw() {
     	invalidate();
-    }
-
-    public void undo() {
-    	//TODO
-    }
-    
-    public void redo() {
-    	//TODO
     }
     
     public void openContextMenu() {    	

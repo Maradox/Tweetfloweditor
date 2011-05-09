@@ -21,9 +21,7 @@
 
 package at.tuwien.dsgproject.tfe.common;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;

@@ -147,8 +147,9 @@ public class Home extends ActionbarActivity {
 			}
 
 			File file = mObjects.get(position);
-			TextView textView = (TextView)row.findViewById(R.id.filelist_item_text);	
-			textView.setText(file.getName());
+			TextView textView = (TextView)row.findViewById(R.id.filelist_item_text);
+			if(file != null)
+				textView.setText(file.getName());
 			
 			return row;
 		}
