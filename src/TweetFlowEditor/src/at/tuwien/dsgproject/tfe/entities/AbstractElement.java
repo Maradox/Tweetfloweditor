@@ -451,6 +451,11 @@ public abstract class AbstractElement {
     	delete.setIcon(res.getDrawable(R.drawable.chart));
     	delete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				for(int i=0; i<view.getTweetFlow().getmElementsAsList().size(); i++) {
+					if(view.getTweetFlow().getmElementsAsList().get(i).getmLoop() == view.getTweetFlow().getmElements().get(mId)) {
+						view.getTweetFlow().getmElementsAsList().get(i).setmLoop(null);
+					}
+				}
 				view.getTweetFlow().deleteElement(mId);
 				qa.dismiss();
 			}

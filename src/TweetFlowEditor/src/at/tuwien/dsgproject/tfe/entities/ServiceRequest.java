@@ -212,16 +212,28 @@ public class ServiceRequest extends AbstractElement {
 		});
 		qa.addActionItem(changeData);
 		
-		ActionItem bigLoop = new ActionItem();
-		bigLoop.setTitle("Big loop");
-		bigLoop.setIcon(mContext.getResources().getDrawable(R.drawable.production));
-		bigLoop.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				view.setCreateLoopState(mId);
-				qa.dismiss();
-			}
-		});
-		qa.addActionItem(bigLoop);
+		if(mLoop == null) {
+			ActionItem bigLoop = new ActionItem();
+			bigLoop.setTitle("Create closed loop");
+			bigLoop.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+			bigLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					view.setCreateLoopState(mId);
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(bigLoop);
+		} else {
+			ActionItem bigLoop = new ActionItem();
+			bigLoop.setTitle("Delete closed loop");
+			bigLoop.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+			bigLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mLoop = null;
+					qa.dismiss();
+				}
+			});
+		}
 		
 		fillCommonQuickactionItems(qa, view);
 	}
