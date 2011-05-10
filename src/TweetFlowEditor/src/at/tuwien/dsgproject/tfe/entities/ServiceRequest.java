@@ -87,7 +87,7 @@ public class ServiceRequest extends AbstractElement {
 			canvas.drawText("@"+user, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;
 		}	
-		String serviceOperation = service + "." + operation;
+		String serviceOperation = operation + "." + service;
 		if(serviceOperation.length() > 1) {
 			canvas.drawText(serviceOperation, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;

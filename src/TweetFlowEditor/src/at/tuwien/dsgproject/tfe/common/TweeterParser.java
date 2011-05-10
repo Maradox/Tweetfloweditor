@@ -111,6 +111,8 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 				elementString += " " + ((ServiceRequest)element).getInputdata();
 			if(((ServiceRequest)element).getCondition().length() > 0)
 				elementString += " [" + ((ServiceRequest)element).getCondition() + "]";
+			if(element.isSelfLoop())
+				elementString += "{" + ((ServiceRequest)element).getSelfLoopCondition() + "}";
 
 		}
 		
@@ -122,18 +124,31 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 	}
 	
 	private static String createClosedSequence(AbstractElement element) {
-		
+	
 		String elementString = "[";
-		
+
 		while(element != null) {
 		
 			if(element instanceof ServiceRequest) {
+				if(element.getmLoopFrom() != null)
+					elementString += "[";
+				
 				elementString += "SR @" + ((ServiceRequest)element).getUser() 
 				+ " " + ((ServiceRequest)element).getOperation() + "." + ((ServiceRequest)element).getService();
 				if(((ServiceRequest)element).getInputdata().length() > 0)
 					elementString += " " + ((ServiceRequest)element).getInputdata();
 				if(((ServiceRequest)element).getCondition().length() > 0)
 					elementString += " [" + ((ServiceRequest)element).getCondition() + "]";
+				
+				if(element.isSelfLoop())
+					elementString += "{" + ((ServiceRequest)element).getSelfLoopCondition() + "}";
+				
+				if(element.getmLoop() != null) {
+					elementString += "] {";
+					if(element.getClosedLoopCondition().length() > 0)
+						elementString += element.getClosedLoopCondition();
+					elementString += "}";
+				}
 			}
 			
 			if(element instanceof OpenSequence) {

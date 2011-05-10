@@ -23,7 +23,10 @@ package at.tuwien.dsgproject.tfe.entities;
 
 import org.simpleframework.xml.Attribute;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
@@ -39,6 +42,7 @@ public class OpenSequence extends AbstractElement {
 	private final int MIN_WIDTH = 100;
 	private final int MIN_HEIGHT = 100;
 	
+	private Paint mTextPaint;	
 	
 	private enum TouchFocus 
 	{	TOP, 
@@ -68,12 +72,27 @@ public class OpenSequence extends AbstractElement {
 		super.setContextAndDrawables(context);
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence);
 		mShape.setBounds(mBounds);
+		final Resources res = context.getResources();
+		setTextPaint(res);
 	}
 
+	private void setTextPaint(Resources res) {
+		mTextPaint = new Paint();
+		mTextPaint.setAntiAlias(true);
+		mTextPaint.setTextSize(res.getInteger(R.integer.sr_text_size));
+		mTextPaint.setColor(res.getColor(R.color.sr_text));
+		mTextPaint.setSubpixelText(true);
+		mTextPaint.setTypeface(Typeface.DEFAULT);
+	}
+	
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		mShape.draw(canvas);
+		
+		if(getCondition().length() > 0) {
+			canvas.drawText("Cond.: "+getCondition(), getRightX()+10, mY+20, mTextPaint);
+		}
 	}
 
 	@Override

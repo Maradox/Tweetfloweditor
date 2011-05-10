@@ -32,6 +32,7 @@ public class StateCreateLoop extends State {
 				} else {
 					mTweetFlow.getmElements().get(startID).modeNormal();
 					mTweetFlow.getmElements().get(startID).setmLoop(mTweetFlow.getTouchElement());
+					mTweetFlow.getTouchElement().setmLoopFrom(mTweetFlow.getmElements().get(startID));
 					
 					if(!mTweetFlow.somethingSelected()) {
 						mEditorView.setState(EDITOR_STATE.FREE);

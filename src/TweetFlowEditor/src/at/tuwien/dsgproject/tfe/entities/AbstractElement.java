@@ -56,12 +56,13 @@ public abstract class AbstractElement {
 	protected int mHeight;
 
 	//Loops
-	private String mSelfLoopCondition;
+	private String mSelfLoopCondition = "";
 	protected Boolean mSelfLoop = false;
 	
-	private String closedLoopCondition;
+	private String closedLoopCondition = "";
 	private String condition = "";
 	protected AbstractElement mLoop = null;
+	protected AbstractElement mLoopFrom = null;
 	
 	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
@@ -390,6 +391,14 @@ public abstract class AbstractElement {
 		this.mLoop = mLoop;
 	}
 
+	public AbstractElement getmLoopFrom() {
+		return mLoopFrom;
+	}
+
+	public void setmLoopFrom(AbstractElement mLoopFrom) {
+		this.mLoopFrom = mLoopFrom;
+	}
+	
 	public void resetMaybeConnections() {
 		mClosedSequenceMaybeNext = null;
 	}
@@ -453,6 +462,7 @@ public abstract class AbstractElement {
 			public void onClick(View v) {
 				for(int i=0; i<view.getTweetFlow().getmElementsAsList().size(); i++) {
 					if(view.getTweetFlow().getmElementsAsList().get(i).getmLoop() == view.getTweetFlow().getmElements().get(mId)) {
+						view.getTweetFlow().getmElementsAsList().get(i).getmLoop().setmLoopFrom(null);
 						view.getTweetFlow().getmElementsAsList().get(i).setmLoop(null);
 					}
 				}
@@ -462,7 +472,7 @@ public abstract class AbstractElement {
 		});
 		qa.addActionItem(delete);
 		/*
-		ActionItem bigLoop = new ActionItem();
+		ActionItem bigLoop = new ActionItem();		// TODO delete
 		bigLoop.setTitle("Big loop");
 		bigLoop.setIcon(res.getDrawable(R.drawable.production));
 		bigLoop.setOnClickListener(new OnClickListener() {
