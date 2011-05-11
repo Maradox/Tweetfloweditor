@@ -46,14 +46,6 @@
 	    
 		<ImageButton 
 			style="@style/ActionBarButton"	
-			android:id="@+id/actionbarEditor"
-			android:src="@drawable/btn_editor"
-	  		android:onClick="openEditor" /> 
-	  		
-	  	<ImageView style="@style/ActionBarSeparator" />
-	    
-		<ImageButton 
-			style="@style/ActionBarButton"	
 			android:id="@+id/actionbarLogin"
 			android:src="@drawable/btn_login"
 	  		android:onClick="login" />      
