@@ -44,8 +44,8 @@ public class StateTouchVoid extends State {
 	@Override
 	public boolean handleLongClick() {
 		if(!mEditorView.scaleDetectorActive()) {
-			mTweetFlow.addServiceRequest(mEditorView.getLastTouchX(), 
-					mEditorView.getLastTouchY());
+			mTweetFlow.addServiceRequest(mEditorView.scaledLastX(), 
+					mEditorView.scaledLastY());
 			mEditorView.redraw();
 		}
 		return true;

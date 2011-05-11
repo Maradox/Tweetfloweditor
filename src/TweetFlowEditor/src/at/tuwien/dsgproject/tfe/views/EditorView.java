@@ -222,9 +222,17 @@ public class EditorView extends View {
 		return (int)((x-mOffsetX)/mScaleFactor);
 	}
 	
+	public int scaledLastX() {
+		return (int)((mLastTouchX-mOffsetX)/mScaleFactor);
+	}
+	
 	
 	public int scaledY(int y) {
 		return (int)((y-mOffsetY)/mScaleFactor);
+	}
+	
+	public int scaledLastY() {
+		return (int)((mLastTouchY-mOffsetY)/mScaleFactor);
 	}
 
     
