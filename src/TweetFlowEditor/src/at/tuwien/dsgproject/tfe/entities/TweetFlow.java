@@ -278,9 +278,7 @@ public class TweetFlow implements Serializable {
     
     public void convertMaybeIntoFixConnection() {
     	for(AbstractElement e : mElements.values()) {
-    		if(e.getClosedSequenceMaybeNext() != null)
-    			e.setClosedSequenceNext(e.getClosedSequenceMaybeNext());
-    		e.setClosedSequenceMaybeNext(null);
+    		e.convertMaybeIntoFixed();
     	}	
     }
     
