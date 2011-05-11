@@ -38,16 +38,16 @@ import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class ServiceRequest extends AbstractElement {
+
 	
-	//private Rect mShapeBounds;
-	@Element
-	private String mRequestText = "@foo foo.bar ";		//TODO delete
-	
-	//TODO add serialization annotation
-	private String user = "";
-	private String operation = "";
-	private String service = "";
-	private String inputdata = "";
+	@Element(required=false)
+	private String mUser = "";
+	@Element(required=false)
+	private String mOperation = "";
+	@Element(required=false)
+	private String mService = "";
+	@Element(required=false)
+	private String mInputdata = "";
 	
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
@@ -83,17 +83,17 @@ public class ServiceRequest extends AbstractElement {
 		
 		int diff = 25;
 		
-		if(user.length() > 0) {
-			canvas.drawText("@"+user, mX+mTextOffsetX, mY+diff, mTextPaint);
+		if(mUser.length() > 0) {
+			canvas.drawText("@"+mUser, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;
 		}	
-		String serviceOperation = operation + "." + service;
+		String serviceOperation = mOperation + "." + mService;
 		if(serviceOperation.length() > 1) {
 			canvas.drawText(serviceOperation, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;
 		}	
-		if(inputdata.length() > 0) {
-			canvas.drawText("Input: "+ inputdata, mX+mTextOffsetX, mY+diff, mTextPaint);
+		if(mInputdata.length() > 0) {
+			canvas.drawText("Input: "+ mInputdata, mX+mTextOffsetX, mY+diff, mTextPaint);
 			diff += 20;
 		}	
 		if(getCondition().length() > 0) {
@@ -114,7 +114,6 @@ public class ServiceRequest extends AbstractElement {
 		mX += xOff;
 		mY += yOff;
 		mBounds.offset(xOff, yOff);
-		//mShapeBounds.offset(xOff, yOff);
 		mShape.setBounds(mBounds);
 	}
 
@@ -161,41 +160,35 @@ public class ServiceRequest extends AbstractElement {
 	}
 	
 	public String getUser() {
-		return user;
+		return mUser;
 	}
 
 	public void setUser(String user) {
-		this.user = user;
+		mUser = user;
 	}
 
 	public String getOperation() {
-		return operation;
+		return mOperation;
 	}
 
 	public void setOperation(String operation) {
-		this.operation = operation;
+		mOperation = operation;
 	}
 
 	public String getService() {
-		return service;
+		return mService;
 	}
 
 	public void setService(String service) {
-		this.service = service;
+		mService = service;
 	}
 
 	public String getInputdata() {
-		return inputdata;
+		return mInputdata;
 	}
 
 	public void setInputdata(String inputdata) {
-		this.inputdata = inputdata;
-	}
-
-	
-	@Override
-	public String toString() {
-		return "SR: "+ mId.toString();
+		mInputdata = inputdata;
 	}
 
 	@Override
