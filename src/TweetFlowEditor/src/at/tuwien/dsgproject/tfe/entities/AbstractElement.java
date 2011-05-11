@@ -69,6 +69,7 @@ public abstract class AbstractElement {
 	// @Element(required=false) //NOT as @Element, set with TweetFlow.updateClosedSequences() after deserialization
 	protected AbstractElement mClosedSequencePrev = null;
 	protected AbstractElement mClosedSequenceMaybeNext = null;
+	protected AbstractElement mClosedSequenceMaybePrev = null;
 	
 	protected boolean mSelected;
 
@@ -293,10 +294,6 @@ public abstract class AbstractElement {
 		return mClosedSequenceMaybeNext;
 	}
 
-	public void setClosedSequenceMaybeNext(AbstractElement closedSequenceMaybeNext) {
-		mClosedSequenceMaybeNext = closedSequenceMaybeNext;
-	}
-
 	public AbstractElement getClosedSequenceNext() {
 		return mClosedSequenceNext;
 	}
@@ -308,14 +305,29 @@ public abstract class AbstractElement {
 		}
 	}
 	
+	public void convertMaybeIntoFixed() {
+		if(mClosedSequenceMaybeNext != null) {
+			setClosedSequenceNext(mClosedSequenceMaybeNext);
+			mClosedSequenceMaybeNext = null;		
+		}
+		
+		if(mClosedSequenceMaybePrev != null) {
+			setClosedSequencePrev(mClosedSequenceMaybePrev);
+			mClosedSequenceMaybePrev = null;
+		}
+	}
+	
 	
 	
 	public AbstractElement getClosedSequencePrev() {
 		return mClosedSequencePrev;
 	}
 
-	public void setClosedSequencePrev(AbstractElement mClosedSequencePrev) {
-		this.mClosedSequencePrev = mClosedSequencePrev;
+	public void setClosedSequencePrev(AbstractElement closedSequencePrev) {
+		if(closedSequencePrev != null) {
+			mClosedSequencePrev = closedSequencePrev;
+			closedSequencePrev.mClosedSequenceNext = this;
+		}
 	}
 
 	public void removeClosedSequencePrev() {
@@ -366,8 +378,10 @@ public abstract class AbstractElement {
     				candidate.mClosedSequencePrev == null) {
     			final int offY = candidate.getTopY()-getBotY();
     			//selected above e?
-    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y) {
+    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
+    					mClosedSequenceMaybeNext == null) {
     				mClosedSequenceMaybeNext = candidate;
+    				candidate.mClosedSequenceMaybePrev = this;
     			}
     		
     		} 
@@ -376,7 +390,9 @@ public abstract class AbstractElement {
     				mClosedSequencePrev == null ){
     			final int offY = getTopY()-candidate.getBotY();
     			//selected below e?
-    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y) {
+    			if(offY > 0 && offY < TweetFlow.DISTANCE_FOR_AUTO_CONNECTION_Y &&
+    					mClosedSequenceMaybePrev == null) {
+    				mClosedSequenceMaybePrev = candidate;
     				candidate.mClosedSequenceMaybeNext = this;
     			}
     		} 
@@ -401,6 +417,7 @@ public abstract class AbstractElement {
 	
 	public void resetMaybeConnections() {
 		mClosedSequenceMaybeNext = null;
+		mClosedSequenceMaybePrev = null;
 	}
 	
 	public boolean equals(AbstractElement e) {
