@@ -23,10 +23,13 @@ package at.tuwien.dsgproject.tfe.activities;
 import java.io.File;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +39,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
@@ -44,9 +46,9 @@ import at.tuwien.dsgproject.tfe.common.UserManagement;
 public class Home extends ActionbarActivity {
     /** Called when the activity is first created. */
 	
-	private StorageHandler mStorage;
+	protected StorageHandler mStorage;
 	private ArrayList<File> mFileList;
-	private FileListAdapter mFileListAdapter;
+	protected FileListAdapter mFileListAdapter;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,14 +75,20 @@ public class Home extends ActionbarActivity {
 		updateFileList();
 		super.onResume();
 	}
-	
+
 	public void openEditorCurrent(View view) {
 		final Context c = view.getContext();
 		Intent i = new Intent(c, Editor.class );	
 		i.putExtra(Editor.OPEN_CURRENT_FILE, true);
 		c.startActivity(i); 
 	}
-    
+	
+	protected void openEditorFile(File file) {
+    	Intent i = new Intent(this, Editor.class );	
+    	i.putExtra(Editor.OPEN_FILE, file.getName());
+    	Home.this.startActivity(i); 
+	}
+
     private void updateFileList() {
     	mFileList.clear();
     	for(File f : mStorage.listFiles()) {
@@ -106,9 +114,7 @@ public class Home extends ActionbarActivity {
         	@Override
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	final File file = (File)parent.getItemAtPosition(position);
-            	Intent i = new Intent(Home.this, Editor.class );	
-            	i.putExtra(Editor.OPEN_FILE, file.getName());
-            	Home.this.startActivity(i); 
+            	openEditorFile(file);
             }
          });
         
@@ -116,14 +122,33 @@ public class Home extends ActionbarActivity {
         	 @Override
         	 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         		 final File file = (File)parent.getItemAtPosition(position);
-        		 //TODO: menu for file open/delete/rename
-        		 Toast.makeText(Home.this, "TODO: show dialog for "+file.getName(), Toast.LENGTH_SHORT).show();
+        		 final CharSequence[] items = {"Open","Delete"};
+
+        		 AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+        		 builder.setTitle("Edit file:");
+        		 builder.setItems(items, new DialogInterface.OnClickListener() {
+        		     public void onClick(DialogInterface dialog, int item) {
+        		         switch(item) {
+        		         case 0:
+        		        	 openEditorFile(file);
+        		        	 break;
+        		         case 1:
+        		        	 file.delete();
+        		        	 updateFileList();
+        		        	 break;
+        		         default:
+        		        	 Log.w("TFE", "invalid file dialog item");
+        		         }
+        		     }
+        		 });
+        		 builder.show();
         		 return true;
         	 }
         		
 		});
-
     }
+    
+    
     
 	private class FileListAdapter extends ArrayAdapter<File> {
 		

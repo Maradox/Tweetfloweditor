@@ -24,6 +24,7 @@ package at.tuwien.dsgproject.tfe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
@@ -33,7 +34,6 @@ public abstract class ActionbarActivity extends Activity implements Actionbar {
 
 	public void openHome(View v) {	
 		ActionbarHelper.openHome(this);
-		finish();
 	}
 	
 	public void openEditor(View v) {	
