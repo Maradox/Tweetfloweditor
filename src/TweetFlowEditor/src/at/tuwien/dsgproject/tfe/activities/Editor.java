@@ -57,7 +57,6 @@ public class Editor extends ActionbarActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	Log.v("TFE", "Editor - onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         
@@ -83,15 +82,12 @@ public class Editor extends ActionbarActivity {
     private void getFilenameFromIntent(Intent i) {
     	if(i.getBooleanExtra(OPEN_CURRENT_FILE, false)) {
 			mFileName = OPEN_CURRENT_FILE;
-			Log.v("TFE-Editor","open .current");
     	} else if(i.hasExtra(OPEN_FILE)) {
     		mFileName = i.getStringExtra(OPEN_FILE); 
-    		Log.v("TFE-Editor","open file "+mFileName);
         } else if(i.getBooleanExtra(OPEN_NEW, false)){
         	mFileName = null;
-        	Log.v("TFE-Editor","create new TF");
         } else {
-        	Log.w("TFE-Editor", "SHOULD NOT REACH!");
+        	Log.w("TFE-Editor", "invalid intent content!");
         }
     }
     
@@ -126,52 +122,20 @@ public class Editor extends ActionbarActivity {
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		getFilenameFromIntent(intent);
-		Log.v("TFE", "Editor - onNewIntent");
 	}
 	
-    protected void onStart() {
-    	super.onStart();
-    	Log.v("TFE", "Editor - onStart");
-    }
-    
-    protected void onRestart() {
-    	super.onRestart();
-    	Log.v("TFE", "Editor - onRestart");
-    }
-
     protected void onResume() {
     	super.onResume();
     	openTweetFlow();
-    	Log.v("TFE", "Editor - onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v("TFE", "Editor - onPause");
         mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
     } 
 
-    protected void onStop() {
-    	super.onStop();
-    	Log.v("TFE", "Editor - onStop");
-    }
 
-    protected void onDestroy() {
-    	super.onDestroy();
-    	Log.v("TFE", "Editor - onDestroy");
-    }
-
-    
-    @Override
-	public void openHome(View v) {	
-		ActionbarHelper.openHome(this);
-	}
-	
-    @Override
-	public void openMyTwitter(View v) {	
-		ActionbarHelper.openMyTwitter(this);
-	}
     
     //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {
