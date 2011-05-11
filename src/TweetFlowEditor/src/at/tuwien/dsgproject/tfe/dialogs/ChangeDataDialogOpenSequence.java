@@ -42,6 +42,7 @@ public class ChangeDataDialogOpenSequence extends Dialog {
 		this.editorView = editorView;
 		this.element = element;
 		this.setContentView(R.layout.dialog_changedata_opensequence);
+		setTitle("Edit open sequence");
 		
 		condition = (EditText) findViewById(R.id.dialog_condition);
 		selfLoopCondition = (EditText) findViewById(R.id.dialog_selfloopcondition);

@@ -52,6 +52,7 @@ public class ChangeDataDialogServiceRequest extends Dialog {
 		this.editorView = editorView;
 		this.element = element;
 		this.setContentView(R.layout.dialog_changedata_servicerequest);
+		setTitle("Edit service request");
 		
 		user = (EditText) findViewById(R.id.dialog_user);
 		operation = (EditText) findViewById(R.id.dialog_operation);

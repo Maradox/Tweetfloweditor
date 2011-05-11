@@ -227,13 +227,6 @@ public abstract class AbstractElement {
 		mBounds.offset(xOff, yOff);
 		mShape.setBounds(mBounds);
 	}
-//	
-//	public void moveOn(int centerX, int centerY) {
-//		mX = centerX-mWidth/2;
-//		mY = centerY-mHeight/2;
-//		mBounds.set(centerX-mWidth/2, centerY-mHeight/2, centerX+mWidth/2, centerY+mHeight/2);
-//		mShape.setBounds(mBounds);
-//	}
 	
 	abstract public boolean isFocused(int x, int y);
 	
@@ -368,7 +361,7 @@ public abstract class AbstractElement {
     	}
 	}
     
-    //TODO: reorder to improve performance
+
     public void checkMaybeConnections(AbstractElement candidate) {
     	final int offX = getMiddleX()-candidate.getMiddleX();
 		//selected element above new candidate to be cs next
@@ -488,40 +481,5 @@ public abstract class AbstractElement {
 			}
 		});
 		qa.addActionItem(delete);
-		/*
-		ActionItem bigLoop = new ActionItem();		// TODO delete
-		bigLoop.setTitle("Big loop");
-		bigLoop.setIcon(res.getDrawable(R.drawable.production));
-		bigLoop.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				view.setCreateLoopState(mId);
-				qa.dismiss();
-			}
-		});
-		qa.addActionItem(bigLoop);
-		*/
-		/*
-		ActionItem selfLoop = new ActionItem();
-		if(mSelfLoop) {
-			selfLoop.setTitle("Loop");
-			selfLoop.setIcon(res.getDrawable(R.drawable.production));
-			selfLoop.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mSelfLoop = true;
-					qa.dismiss();
-				}
-			});
-			qa.addActionItem(selfLoop);	
-		} else {
-			selfLoop.setTitle("Unloop");
-			selfLoop.setIcon(res.getDrawable(R.drawable.production));
-			selfLoop.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					mSelfLoop = false;
-					qa.dismiss();
-				}
-			});
-			qa.addActionItem(selfLoop);	
-		}*/
 	}
 }

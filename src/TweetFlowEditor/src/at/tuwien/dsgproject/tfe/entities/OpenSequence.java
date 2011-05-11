@@ -102,9 +102,6 @@ public class OpenSequence extends AbstractElement {
 	}
 	
 	public boolean isFocused(int x, int y) {
-		
-		//TODO make this ugly ***** go away :(
-		
 		if(Math.abs(x - mX) < CORNER_TOUCH_RADIUS && 
 				Math.abs(y - mY) < CORNER_TOUCH_RADIUS) {
 			mTouchFocus = TouchFocus.TOP_LEFT;
