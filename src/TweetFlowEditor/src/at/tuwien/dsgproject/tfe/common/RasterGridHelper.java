@@ -90,9 +90,10 @@ public class RasterGridHelper {
 	}
 	
 	public ArrayList<Integer> createRasterLines() {
+		float scale = editorView.getmScaleFactor();
 		ArrayList<Integer> gridLines = new ArrayList<Integer>();
 		
-		for(int i=0; i<horizontalRasterCT; i++) {
+		for(int i=0; i<horizontalRasterCT/scale; i++) {
 			gridLines.add((Integer)(i*RASTER_HORIZONTAL_WIDTH - RASTER_HORIZONTAL_WIDTH/2 + mOffsetX % RASTER_HORIZONTAL_WIDTH - mOffsetX));
 		}
 		

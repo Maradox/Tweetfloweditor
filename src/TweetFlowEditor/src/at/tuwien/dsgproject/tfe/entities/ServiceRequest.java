@@ -32,7 +32,7 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
-import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialogServiceRequest;
 import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -41,14 +41,13 @@ public class ServiceRequest extends AbstractElement {
 	
 	//private Rect mShapeBounds;
 	@Element
-	private String mRequestText = "@foo foo.bar ";
+	private String mRequestText = "@foo foo.bar ";		//TODO delete
 	
 	//TODO add serialization annotation
-	private String user;
-	private String operation;
-	private String service;
-	private String inputdata;
-	private String condition;
+	private String user = "";
+	private String operation = "";
+	private String service = "";
+	private String inputdata = "";
 	
 	private Paint mTextPaint;
 	private final int mTextOffsetX = 90;
@@ -81,10 +80,26 @@ public class ServiceRequest extends AbstractElement {
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		mShape.draw(canvas);
-		canvas.drawText(mRequestText + toString(), mX+mTextOffsetX, mY+25, mTextPaint);
-		canvas.drawText("mbnext: "+ ((mClosedSequenceMaybeNext != null) ? mClosedSequenceMaybeNext.toString() : " null "), mX+mTextOffsetX, mY+45, mTextPaint);
-		canvas.drawText("p: "+ ((mClosedSequencePrev != null) ? mClosedSequencePrev.toString() : " N ") + 
-				"n : "+ ((mClosedSequenceNext != null) ? mClosedSequenceNext.toString() : " N "), mX+mTextOffsetX, mY+65, mTextPaint);		
+		
+		int diff = 25;
+		
+		if(user.length() > 0) {
+			canvas.drawText("@"+user, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		String serviceOperation = operation + "." + service;
+		if(serviceOperation.length() > 1) {
+			canvas.drawText(serviceOperation, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		if(inputdata.length() > 0) {
+			canvas.drawText("Input: "+ inputdata, mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
+		if(getCondition().length() > 0) {
+			canvas.drawText("Cond.: "+getCondition(), mX+mTextOffsetX, mY+diff, mTextPaint);
+			diff += 20;
+		}	
 
 	}
 	
@@ -177,13 +192,6 @@ public class ServiceRequest extends AbstractElement {
 		this.inputdata = inputdata;
 	}
 
-	public String getCondition() {
-		return condition;
-	}
-
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
 	
 	@Override
 	public String toString() {
@@ -197,12 +205,35 @@ public class ServiceRequest extends AbstractElement {
 		changeData.setIcon(mContext.getResources().getDrawable(R.drawable.production));
 		changeData.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				ChangeDataDialog changeDataDialog = new ChangeDataDialog(mContext, view , ServiceRequest.this);
+				ChangeDataDialogServiceRequest changeDataDialog = new ChangeDataDialogServiceRequest(mContext, view , ServiceRequest.this);
 				changeDataDialog.show();
 				qa.dismiss();
 			}
 		});
 		qa.addActionItem(changeData);
+		
+		if(mLoop == null) {
+			ActionItem bigLoop = new ActionItem();
+			bigLoop.setTitle("Create closed loop");
+			bigLoop.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+			bigLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					view.setCreateLoopState(mId);
+					qa.dismiss();
+				}
+			});
+			qa.addActionItem(bigLoop);
+		} else {
+			ActionItem bigLoop = new ActionItem();
+			bigLoop.setTitle("Delete closed loop");
+			bigLoop.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+			bigLoop.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					mLoop = null;
+					qa.dismiss();
+				}
+			});
+		}
 		
 		fillCommonQuickactionItems(qa, view);
 	}

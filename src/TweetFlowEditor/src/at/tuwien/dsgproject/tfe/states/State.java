@@ -3,7 +3,6 @@ package at.tuwien.dsgproject.tfe.states;
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
-import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
 public abstract class State {
 

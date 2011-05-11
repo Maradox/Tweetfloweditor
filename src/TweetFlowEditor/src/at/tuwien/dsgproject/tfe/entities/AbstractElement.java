@@ -56,11 +56,13 @@ public abstract class AbstractElement {
 	protected int mHeight;
 
 	//Loops
-	private String mSelfLoopCondition;
+	private String mSelfLoopCondition = "";
 	protected Boolean mSelfLoop = false;
 	
-	private String closedLoopCondition;
+	private String closedLoopCondition = "";
+	private String condition = "";
 	protected AbstractElement mLoop = null;
+	protected AbstractElement mLoopFrom = null;
 	
 	@Element(required=false)
 	protected AbstractElement mClosedSequenceNext = null;
@@ -389,6 +391,14 @@ public abstract class AbstractElement {
 		this.mLoop = mLoop;
 	}
 
+	public AbstractElement getmLoopFrom() {
+		return mLoopFrom;
+	}
+
+	public void setmLoopFrom(AbstractElement mLoopFrom) {
+		this.mLoopFrom = mLoopFrom;
+	}
+	
 	public void resetMaybeConnections() {
 		mClosedSequenceMaybeNext = null;
 	}
@@ -431,6 +441,15 @@ public abstract class AbstractElement {
 		}
 	}
 	
+	
+	public String getCondition() {
+		return condition;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
 	abstract void fillQuickActionMenu(final QuickAction qa, final EditorView view);
 	
 	protected final void fillCommonQuickactionItems(final QuickAction qa, final EditorView view) {
@@ -441,13 +460,19 @@ public abstract class AbstractElement {
     	delete.setIcon(res.getDrawable(R.drawable.chart));
     	delete.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				for(int i=0; i<view.getTweetFlow().getmElementsAsList().size(); i++) {
+					if(view.getTweetFlow().getmElementsAsList().get(i).getmLoop() == view.getTweetFlow().getmElements().get(mId)) {
+						view.getTweetFlow().getmElementsAsList().get(i).getmLoop().setmLoopFrom(null);
+						view.getTweetFlow().getmElementsAsList().get(i).setmLoop(null);
+					}
+				}
 				view.getTweetFlow().deleteElement(mId);
 				qa.dismiss();
 			}
 		});
 		qa.addActionItem(delete);
-		
-		ActionItem bigLoop = new ActionItem();
+		/*
+		ActionItem bigLoop = new ActionItem();		// TODO delete
 		bigLoop.setTitle("Big loop");
 		bigLoop.setIcon(res.getDrawable(R.drawable.production));
 		bigLoop.setOnClickListener(new OnClickListener() {
@@ -457,7 +482,8 @@ public abstract class AbstractElement {
 			}
 		});
 		qa.addActionItem(bigLoop);
-		
+		*/
+		/*
 		ActionItem selfLoop = new ActionItem();
 		if(mSelfLoop) {
 			selfLoop.setTitle("Loop");
@@ -479,6 +505,6 @@ public abstract class AbstractElement {
 				}
 			});
 			qa.addActionItem(selfLoop);	
-		}
+		}*/
 	}
 }

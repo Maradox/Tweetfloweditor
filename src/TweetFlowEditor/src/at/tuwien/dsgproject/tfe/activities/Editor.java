@@ -21,7 +21,6 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,9 +33,8 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
-import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialog;
+import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
-import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -185,6 +183,9 @@ public class Editor extends ActionbarActivity {
     	super.onOptionsItemSelected(menuItem);
     	
     	switch (menuItem.getItemId()) {
+	    	case R.id.send_tweetflow:
+				Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow), Toast.LENGTH_SHORT).show();
+				break;
     		case R.id.deselect:
     			mTweetFlow.deselectAll();
     			mEditorView.redraw();

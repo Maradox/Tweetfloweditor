@@ -111,7 +111,7 @@ public class Home extends ActionbarActivity {
         lv.setAdapter(mFileListAdapter);
         
         lv.setOnItemClickListener(new OnItemClickListener() {
-        	@Override
+        
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             	final File file = (File)parent.getItemAtPosition(position);
             	openEditorFile(file);
@@ -119,7 +119,7 @@ public class Home extends ActionbarActivity {
          });
         
         lv.setOnItemLongClickListener(new OnItemLongClickListener() {
-        	 @Override
+        	
         	 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         		 final File file = (File)parent.getItemAtPosition(position);
         		 final CharSequence[] items = {"Open","Delete"};
@@ -172,8 +172,9 @@ public class Home extends ActionbarActivity {
 			}
 
 			File file = mObjects.get(position);
-			TextView textView = (TextView)row.findViewById(R.id.filelist_item_text);	
-			textView.setText(file.getName());
+			TextView textView = (TextView)row.findViewById(R.id.filelist_item_text);
+			if(file != null)
+				textView.setText(file.getName());
 			
 			return row;
 		}

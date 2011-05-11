@@ -21,24 +21,28 @@
 
 package at.tuwien.dsgproject.tfe.entities;
 
-
-
 import org.simpleframework.xml.Attribute;
-
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
-
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.view.View;
+import android.view.View.OnClickListener;
 import at.tuwien.dsgproject.tfe.R;
+import at.tuwien.dsgproject.tfe.dialogs.ChangeDataDialogOpenSequence;
+import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
 public class OpenSequence extends AbstractElement {
-	
+		
 	private final int EDGE_TOUCH_RADIUS = 20;
 	private final int CORNER_TOUCH_RADIUS = 30;
 	private final int MIN_WIDTH = 100;
 	private final int MIN_HEIGHT = 100;
 	
+	private Paint mTextPaint;	
 	
 	private enum TouchFocus 
 	{	TOP, 
@@ -68,12 +72,27 @@ public class OpenSequence extends AbstractElement {
 		super.setContextAndDrawables(context);
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence);
 		mShape.setBounds(mBounds);
+		final Resources res = context.getResources();
+		setTextPaint(res);
 	}
 
+	private void setTextPaint(Resources res) {
+		mTextPaint = new Paint();
+		mTextPaint.setAntiAlias(true);
+		mTextPaint.setTextSize(res.getInteger(R.integer.sr_text_size));
+		mTextPaint.setColor(res.getColor(R.color.sr_text));
+		mTextPaint.setSubpixelText(true);
+		mTextPaint.setTypeface(Typeface.DEFAULT);
+	}
+	
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
 		mShape.draw(canvas);
+		
+		if(getCondition().length() > 0) {
+			canvas.drawText("Cond.: "+getCondition(), getRightX()+10, mY+20, mTextPaint);
+		}
 	}
 
 	@Override
@@ -227,9 +246,21 @@ public class OpenSequence extends AbstractElement {
 		mShape = mContext.getResources().getDrawable(R.drawable.shape_open_sequence_marked);
 		mShape.setBounds(mBounds);
 	}
-
+	
 	@Override
 	void fillQuickActionMenu(final QuickAction qa, final EditorView view) {
+		ActionItem changeData = new ActionItem();
+		changeData.setTitle("Edit");
+		changeData.setIcon(mContext.getResources().getDrawable(R.drawable.production));
+		changeData.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ChangeDataDialogOpenSequence changeDataDialog = new ChangeDataDialogOpenSequence(mContext, view , OpenSequence.this);
+				changeDataDialog.show();
+				qa.dismiss();
+			}
+		});
+		qa.addActionItem(changeData);
+		
 		fillCommonQuickactionItems(qa, view);
 		
 	}

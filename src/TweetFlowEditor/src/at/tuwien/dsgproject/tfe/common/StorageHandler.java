@@ -23,13 +23,10 @@ package at.tuwien.dsgproject.tfe.common;
 
 
 import java.io.File;
-import java.util.ArrayList;
-
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.strategy.CycleStrategy;
 import org.simpleframework.xml.strategy.Strategy;
-
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;

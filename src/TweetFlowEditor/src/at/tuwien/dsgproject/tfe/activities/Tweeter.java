@@ -88,17 +88,8 @@ public class Tweeter extends ActionbarListviewActivity {
 			return entry;
 		}
 
-		public List<Status> getUserTimeline() {
-			return userTimeline;
-		}
-
 		public void setUserTimeline(List<Status> userTimeline) {
 			this.userTimeline = userTimeline;
 		}
-
-		
-	
-
 	}
-	
 }
