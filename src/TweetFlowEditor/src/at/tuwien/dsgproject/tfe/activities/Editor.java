@@ -221,7 +221,10 @@ public class Editor extends ActionbarActivity {
     			break;		
     		case R.id.create_bigloop:
     			mEditorView.setState(EDITOR_STATE.CREATE_LOOP);
-    			break;		
+    			break;
+    		case R.id.save:
+    			saveTweetFlow(mEditorView);
+    			break;
     			
     		default:	
     			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
