@@ -55,7 +55,7 @@ public class Home extends ActionbarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         
-        SharedPreferences settings = getPreferences(0);
+        SharedPreferences settings = getSharedPreferences("TFE", MODE_PRIVATE);
         String requestToken = settings.getString("requestToken", "");
         String secretToken = settings.getString("secretToken", "");
         

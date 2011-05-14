@@ -21,6 +21,8 @@
 
 package at.tuwien.dsgproject.tfe.common;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -79,7 +81,7 @@ public class UserManagement {
 	}
 
 	public void sendTweeterMessage(String message) throws TwitterException {
-		twitter.updateStatus(message);
+		if(twitter!=null) twitter.updateStatus(message);
 	}
 	
 	public String getConsumerkey() {
@@ -106,40 +108,43 @@ public class UserManagement {
 		return requestToken;
 	}
 
-	public void setRequestToken(RequestToken requestToken) {
-		this.requestToken = requestToken;
-	}
 
 	public AccessToken getAccessToken() {
 		return accessToken;
 	}
 
-	public void setAccessToken(AccessToken accessToken) {
-		this.accessToken = accessToken;
-	}
 
 	public boolean isLoggedIn() {
 		return loggedIn;
 	}
 
-	public void setLoggedIn(boolean loggedIn) {
-		this.loggedIn = loggedIn;
-	}
 
 	public String getReqToken() {
 		return reqToken;
 	}
 
-	public void setReqToken(String reqToken) {
-		this.reqToken = reqToken;
-	}
 
 	public String getSecretToken() {
 		return secretToken;
 	}
-
-	public void setSecretToken(String secretToken) {
-		this.secretToken = secretToken;
+	
+	public void logout(Context context) {
+		loggedIn = false;
+		//TODO: proper logout ??
+		requestToken = null;
+		accessToken = null;
+		
+		reqToken = null;
+		secretToken = null;
+		
+		twitter = null;
+		
+		SharedPreferences settings = context.getSharedPreferences("TFE", Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.remove("requestToken");
+	    editor.remove("secretToken");
+	    editor.commit();
+		
 	}
 	
 	

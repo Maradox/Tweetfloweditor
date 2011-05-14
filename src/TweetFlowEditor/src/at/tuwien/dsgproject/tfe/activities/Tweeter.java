@@ -40,9 +40,7 @@ public class Tweeter extends ActionbarListviewActivity {
     	super.onStart();
     	if(UserManagement.getInstance().isLoggedIn()) {
     		updateData();
-    	} else {
-			Toast.makeText(this, "You have to login first", Toast.LENGTH_LONG).show();
-		}
+    	}
     }
     
     public void updateData() {

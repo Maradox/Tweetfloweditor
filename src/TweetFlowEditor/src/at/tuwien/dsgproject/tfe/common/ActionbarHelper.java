@@ -24,11 +24,14 @@ package at.tuwien.dsgproject.tfe.common;
 import twitter4j.TwitterException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.Toast;
+import at.tuwien.dsgproject.tfe.activities.ActionbarActivity;
 import at.tuwien.dsgproject.tfe.activities.Editor;
 import at.tuwien.dsgproject.tfe.activities.Home;
 import at.tuwien.dsgproject.tfe.activities.Tweeter;
+import at.tuwien.dsgproject.tfe.dialogs.LogoutDialog;
 
 public class ActionbarHelper {
 	public static void openHome(Context context) {	
@@ -43,22 +46,33 @@ public class ActionbarHelper {
 	}
 	
 	public static void openMyTwitter(Context context) {
-		try {
-			Intent i = new Intent( context, Tweeter.class );
-			context.startActivity(i); 	
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		if(UserManagement.getInstance().isLoggedIn()) {
+			try {
+				Intent i = new Intent( context, Tweeter.class );
+				context.startActivity(i); 	
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		} else {
+			Toast.makeText(context, "You have to login first!", Toast.LENGTH_LONG).show();
+		}
 	}
 	
 	public static void login(Context context) {
-		try {
-			String authUrl = UserManagement.getInstance().login();
-			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
-		} catch (TwitterException e) {
-			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+    	if(!UserManagement.getInstance().isLoggedIn()) {
+    		try {
+    			String authUrl = UserManagement.getInstance().login();
+    			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+    		} catch (TwitterException e) {
+    			//TODO
+    			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+    		}
+    	} else {
+			LogoutDialog dialog = new LogoutDialog(context);
+			dialog.show();
 		}
+		
 	}
 	
 	public static void onNewIntent(Intent intent, Context context) {
@@ -70,5 +84,11 @@ public class ActionbarHelper {
 				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 			}
 		}
+		//TODO error handling??
+		SharedPreferences settings = context.getSharedPreferences("TFE", Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putString("requestToken", UserManagement.getInstance().getReqToken());
+	    editor.putString("secretToken", UserManagement.getInstance().getSecretToken());
+	    editor.commit();
 	}
 }

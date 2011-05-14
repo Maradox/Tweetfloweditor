@@ -52,12 +52,5 @@ public abstract class ActionbarActivity extends Activity implements Actionbar {
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		ActionbarHelper.onNewIntent(intent, this);
-		
-		SharedPreferences settings = getPreferences(0);
-	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putString("requestToken", UserManagement.getInstance().getReqToken());
-	    editor.putString("secretToken", UserManagement.getInstance().getSecretToken());
-	    editor.commit();
-
 	}
 }

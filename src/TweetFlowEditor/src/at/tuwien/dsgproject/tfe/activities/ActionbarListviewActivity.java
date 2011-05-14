@@ -23,12 +23,14 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
+import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.Actionbar;
 
 
-public abstract class ActionbarListviewActivity extends ListActivity implements Actionbar{
+public abstract class ActionbarListviewActivity extends ListActivity implements Actionbar {
 	public void openHome(View v) {	
 		ActionbarHelper.openHome(this);
 	}
