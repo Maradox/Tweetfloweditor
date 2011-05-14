@@ -76,7 +76,6 @@ public abstract class State {
 	    }    
     }
     
-    
     public boolean handleLongClick() {
     	return false;
     }
@@ -85,15 +84,5 @@ public abstract class State {
 		this.mTweetFlow = tweetFlow;
 	}
     
-    
-	
-	
-	
-//	final protected int scaleX(int x) {
-//		return (int)((x-editorView.mPosX)/editorView.mScaleFactor);
-//	}
-//	
-//	final protected int scaleY(int y) {
-//		return (int)((y-editorView.mPosY)/editorView.mScaleFactor);
-//	}
+
 }
