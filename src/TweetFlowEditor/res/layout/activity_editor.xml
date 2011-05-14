@@ -47,7 +47,7 @@
 		<ImageButton 
 			style="@style/ActionBarButton"	
 			android:id="@+id/actionbarSaveTweetflow"
-			android:src="@drawable/btn_twitter"
+			android:src="@drawable/ab_save"
 	  		android:onClick="saveTweetFlow" />  
 
         <ImageView style="@style/ActionBarSeparator" />

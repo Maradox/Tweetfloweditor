@@ -32,22 +32,14 @@
         	style="@style/ActionBarText"
 			android:id="@+id/actionbar_text"
 			android:text="@string/app_name" />
-
-        <ImageView style="@style/ActionBarSeparator" />
-	    
-		<ImageButton 
-			style="@style/ActionBarButton"	
-			android:id="@+id/actionbarEditor"
-			android:src="@drawable/btn_editor"
-			android:onClick="openEditor" />
 			
 		<ImageView style="@style/ActionBarSeparator" />
 	    
 		<ImageButton 
 			style="@style/ActionBarButton"	
-			android:id="@+id/actionbarMyTwitter"
-			android:src="@drawable/btn_twitter"
-	  		android:onClick="openMyTwitter" />    
+			android:id="@+id/actionbarLogin"
+			android:src="@drawable/btn_login"
+	  		android:onClick="login" />    
     
 	</LinearLayout> <!-- ActionBar -->
 	
@@ -68,17 +60,17 @@
                 style="@style/DashboardButton"
                 android:onClick="openEditor"
                 android:text="@string/editor_new"
-                android:drawableTop="@drawable/dashboard_editor"/>
+                android:drawableTop="@drawable/dashboard_new"/>
             <Button android:id="@+id/dashboard_btn_current"
                 style="@style/DashboardButton"
                 android:onClick="openEditorCurrent"
                 android:text="@string/editor_current"
-                android:drawableTop="@drawable/dashboard_foo"/>
+                android:drawableTop="@drawable/dashboard_last"/>
             <Button android:id="@+id/dashboard_btn_timeline"
                 style="@style/DashboardButton"
                 android:onClick="openMyTwitter"
                 android:text="@string/timeline"
-                android:drawableTop="@drawable/dashboard_foo"/>
+                android:drawableTop="@drawable/dashboard_twitter"/>
         </LinearLayout>
         
        
