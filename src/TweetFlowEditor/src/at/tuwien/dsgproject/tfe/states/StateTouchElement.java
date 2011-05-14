@@ -52,12 +52,8 @@ public class StateTouchElement extends State {
 	@Override
 	public boolean handleLongClick() {
 		if(!mEditorView.scaleDetectorActive()) {
-			if(mTweetFlow.isTextFocused(mEditorView.getLastTouchX(), mEditorView.getLastTouchY())) {
-				Toast.makeText(mEditorView.getContext(), "edit text", Toast.LENGTH_SHORT).show();
-			} else {
-				mEditorView.openContextMenu();
-			}
-			
+			mEditorView.openContextMenu();
+	
 			if(!mTweetFlow.somethingSelected()) {
 				mEditorView.setState(EDITOR_STATE.FREE);
 			} else {
@@ -66,7 +62,6 @@ public class StateTouchElement extends State {
 			}
 			
 			mTweetFlow.unmarkTouchElement();
-			
 			
 		}
 		return true;
