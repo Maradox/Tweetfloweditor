@@ -25,18 +25,17 @@ public class StateMoveGrid extends State {
 		final int pointerIndex = event.findPointerIndex(mEditorView.getActivePointerId());
         final int x = (int)event.getX(pointerIndex);
         final int y = (int)event.getY(pointerIndex);
-        
-        if(!isRunning) {
-        	int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.scaledX(mEditorView.getLastTouchX()));
+        final int offX = x - mEditorView.getLastTouchX();
+		final int offY = y - mEditorView.getLastTouchY();
+		
+        if(!isRunning && Math.sqrt(offX*offX + offY*offY) > EditorView.MOVE_OFFSET) {
+        	final int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.scaledX(x));
     		gridElements = rasterGridHelper.getElementsOnGrid(xGrid);
     		isRunning = true;
         }
         
-        if(!mEditorView.scaleDetectorActive()) {
-	        final int offX = x - mEditorView.getLastTouchX();
-			final int offY = y - mEditorView.getLastTouchY();
-			
-			float scale = mEditorView.getmScaleFactor();		
+        if(isRunning && !mEditorView.scaleDetectorActive()) {
+			final float scale = mEditorView.getmScaleFactor();		
 			mTweetFlow.moveGridElements(gridElements,(int) (offX / scale),(int) (offY / scale));
 			mEditorView.redraw();
         }
@@ -62,6 +61,16 @@ public class StateMoveGrid extends State {
 			mEditorView.setState(EDITOR_STATE.SELECTED);
 		}
 		mEditorView.redraw();
+	}
+	
+	@Override
+	public boolean handleLongClick() {
+		if(!mEditorView.scaleDetectorActive()) {
+			mTweetFlow.addServiceRequest(mEditorView.scaledLastX(), 
+					mEditorView.scaledLastY());
+			mEditorView.redraw();
+		}
+		return true;
 	}
 	
 	

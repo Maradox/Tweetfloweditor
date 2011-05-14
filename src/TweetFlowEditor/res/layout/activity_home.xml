@@ -63,7 +63,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="20dip" >
+            android:padding="10dip" >
             <Button android:id="@+id/dashboard_btn_new"
                 style="@style/DashboardButton"
                 android:onClick="openEditor"
@@ -73,6 +73,11 @@
                 style="@style/DashboardButton"
                 android:onClick="openEditorCurrent"
                 android:text="@string/editor_current"
+                android:drawableTop="@drawable/dashboard_foo"/>
+            <Button android:id="@+id/dashboard_btn_timeline"
+                style="@style/DashboardButton"
+                android:onClick="openMyTwitter"
+                android:text="@string/timeline"
                 android:drawableTop="@drawable/dashboard_foo"/>
         </LinearLayout>
         
