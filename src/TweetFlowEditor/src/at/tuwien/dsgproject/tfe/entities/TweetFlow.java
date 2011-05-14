@@ -402,13 +402,13 @@ public class TweetFlow implements Serializable {
 	}
 	
 	
-	public boolean isTextFocused(int x, int y) {
-		if(mTouchElement != null) {
-			return mTouchElement.isTextFocused(x, y);
-		} else {
-			return false;
-		}
-	}
+//	public boolean isTextFocused(int x, int y) {
+//		if(mTouchElement != null) {
+//			return mTouchElement.isTextFocused(x, y);
+//		} else {
+//			return false;
+//		}
+//	}
 	
 	public int getSelectedElementsCount() {
 		return mSelected.size();

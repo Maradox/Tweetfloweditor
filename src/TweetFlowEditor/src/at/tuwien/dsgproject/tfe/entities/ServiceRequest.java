@@ -119,25 +119,23 @@ public class ServiceRequest extends AbstractElement {
 
 	@Override
 	public boolean isFocused(int x, int y) {
-		//TODO when is it focused? only touch on circle, or text also?
-		//FIXME ugly hack
-		if( x > mX && x < mX + 400 && y > mY && y < mY + mHeight) {
+		if( x > mX && x < mX + mWidth && y > mY && y < mY + mHeight) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
-	@Override
-	public boolean isTextFocused(int x, int y) {
-		//TODO: ugly hack for testing
-		if( x > mX+mTextOffsetX && x < mX + 400 &&
-				y > mY && y < mY + mHeight) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	@Override
+//	public boolean isTextFocused(int x, int y) {
+//		//TODO: ugly hack for testing
+//		if( x > mX+mTextOffsetX && x < mX + 400 &&
+//				y > mY && y < mY + mHeight) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	@Override
 	public void modeSelected() {

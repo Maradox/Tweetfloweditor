@@ -230,9 +230,9 @@ public abstract class AbstractElement {
 	
 	abstract public boolean isFocused(int x, int y);
 	
-	public boolean isTextFocused(int x, int y) {
-		return false;
-	}
+//	public boolean isTextFocused(int x, int y) {
+//		return false;
+//	}
 
 	// elements have 3 visual states:
 	// - normal
