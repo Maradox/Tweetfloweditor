@@ -55,7 +55,7 @@
 		<ImageButton 
 			style="@style/ActionBarButton"	
 			android:id="@+id/actionbarMyTwitter"
-			android:src="@drawable/btn_twitter"
+			android:src="@drawable/ab_tweet"
 	  		android:onClick="openMyTwitter" />    
     
 	</LinearLayout> <!-- ActionBar -->
