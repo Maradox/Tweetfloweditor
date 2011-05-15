@@ -28,9 +28,10 @@ public class StateMoveGrid extends State {
         final int offX = x - mEditorView.getLastTouchX();
 		final int offY = y - mEditorView.getLastTouchY();
 		
+    	final int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.scaledX(x));
+		gridElements = rasterGridHelper.getElementsOnGrid(xGrid);
+		
         if(!isRunning && Math.sqrt(offX*offX + offY*offY) > EditorView.MOVE_OFFSET) {
-        	final int xGrid = rasterGridHelper.getTouchOnGrid(mEditorView.scaledX(x));
-    		gridElements = rasterGridHelper.getElementsOnGrid(xGrid);
     		isRunning = true;
         }
         
@@ -46,12 +47,15 @@ public class StateMoveGrid extends State {
 	public void onActionUp(MotionEvent event) {
 		super.onActionUp(event);
 		
-		if(mEditorView.getSnapMode() == SnapMode.GRID && rasterGridHelper.isThereGridNearGridHorizontal(gridElements)) {
+		if(mEditorView.getSnapMode() == SnapMode.GRID && 
+				rasterGridHelper.isThereGridNearGridHorizontal(gridElements)) {
 			int gridX = rasterGridHelper.findGridNearGridHorizontal(gridElements);
 			final int offX = gridX - gridElements.get(0).getMiddleX();
 			mTweetFlow.moveGridElements(gridElements,offX, 0);
+			
 		}
 		isRunning = false;
+		
 		mTweetFlow.convertMaybeIntoFixConnection();
 		
 		mTweetFlow.setTouchElementModeNormal();

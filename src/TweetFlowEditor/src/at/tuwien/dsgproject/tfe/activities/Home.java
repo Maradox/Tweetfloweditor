@@ -125,7 +125,7 @@ public class Home extends ActionbarActivity {
         		 final CharSequence[] items = {"Open","Delete"};
 
         		 AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-        		 builder.setTitle("Edit file:");
+        		 builder.setTitle("Edit "+file.getName()+":");
         		 builder.setItems(items, new DialogInterface.OnClickListener() {
         		     public void onClick(DialogInterface dialog, int item) {
         		         switch(item) {

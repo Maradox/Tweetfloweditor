@@ -141,8 +141,9 @@ public class RasterGridHelper {
 	}
 	
 	public boolean isThereGridNearGridHorizontal(ArrayList<ServiceRequest> gridElements) {
-		if(gridElements.isEmpty())
-			return false;
+		if(gridElements == null) return false;
+		
+		if(gridElements.isEmpty()) return false;
 		
 		int x = gridElements.get(0).getMiddleX();
 		int xDiff = Integer.MAX_VALUE;
