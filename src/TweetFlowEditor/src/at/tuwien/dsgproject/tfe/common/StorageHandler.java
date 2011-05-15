@@ -65,6 +65,15 @@ public class StorageHandler {
 		}
 	}
 	
+	public boolean isReadable() {
+		checkStorageState();
+		return mExternalStorageAvailable;
+	}
+	
+	public boolean isWriteable() {
+		checkStorageState();
+		return mExternalStorageWriteable;
+	}
 	
 	public File[] listFiles() {
 		checkStorageState();
@@ -82,18 +91,12 @@ public class StorageHandler {
 			Strategy strategy = new CycleStrategy("x_id", "x_ref");
 			Serializer serializer = new Persister(strategy);
 	        try {
-	        	Log.d("TFE-Editor","writing " + tweetflow.getName() + " to: "+filename);
 				serializer.write(tweetflow, file);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e("TFE", e.getMessage());
 			}
 
-		} else {
-			//TODO: show/throw
 		}
-		
-		
 	}
 	
 	public TweetFlow openTweetflowFile(String filename) throws Exception {
@@ -104,21 +107,11 @@ public class StorageHandler {
 				Strategy strategy = new CycleStrategy("x_id", "x_ref");
 				Serializer serializer = new Persister(strategy);
 				TweetFlow tf = serializer.read(TweetFlow.class, file);
-				Log.d("TFE-Editor","read "+tf.getName() + " from: "+filename);
 				tf.updateClosedSequences();
 				return tf;
-
-			} else {
-				//no file
-				//TODO exception
-				throw new Exception("NO FILE");
 			}
-			
-		} else {
-			//TODO throw exception/handle this
-			throw new Exception("STORAGE not available");
 		}
-		
+		return new TweetFlow();
 	}
 
 }

@@ -137,8 +137,12 @@ public class Editor extends ActionbarActivity {
     
     //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {
-    	final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow);
-    	dialog.show();
+    	if(mStorage.isWriteable()) {
+    		final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow);
+        	dialog.show();
+    	} else {
+    		Toast.makeText(this, "Cannot write to external storage.", Toast.LENGTH_LONG);
+    	}
     }
     
     

@@ -39,6 +39,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
@@ -91,11 +92,16 @@ public class Home extends ActionbarActivity {
 
     private void updateFileList() {
     	mFileList.clear();
-    	for(File f : mStorage.listFiles()) {
-			if(!f.isHidden() && !f.isDirectory()) {
-				mFileList.add(f);
-			}	
-		}
+    	mStorage.checkStorageState();
+    	if(mStorage.isReadable()) {
+	    	for(File f : mStorage.listFiles()) {
+				if(!f.isHidden() && !f.isDirectory()) {
+					mFileList.add(f);
+				}	
+			}
+    	} else {
+    		Toast.makeText(this, "Cannot read from external Storage!", Toast.LENGTH_LONG);
+    	}
     	mFileListAdapter.notifyDataSetChanged();
     }
 	
