@@ -145,6 +145,10 @@ public class Editor extends ActionbarActivity {
     	}
     }
     
+    public void sendTweetFlow(View v) {
+    	Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow), Toast.LENGTH_SHORT).show();
+    }
+    
     
     public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
@@ -188,7 +192,7 @@ public class Editor extends ActionbarActivity {
     	
     	switch (menuItem.getItemId()) {
 	    	case R.id.send_tweetflow:
-				Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow), Toast.LENGTH_SHORT).show();
+				sendTweetFlow(mEditorView);
 				break;
     		case R.id.deselect:
     			mTweetFlow.deselectAll();
