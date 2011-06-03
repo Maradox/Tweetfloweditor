@@ -28,7 +28,6 @@ public class TweetView extends View{
 
 	public TweetView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 }

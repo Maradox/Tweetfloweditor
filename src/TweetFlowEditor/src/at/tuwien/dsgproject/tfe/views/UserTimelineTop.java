@@ -23,6 +23,7 @@ package at.tuwien.dsgproject.tfe.views;
 
 import twitter4j.TwitterException;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -45,8 +46,7 @@ public class UserTimelineTop extends RelativeLayout {
 					UserManagement.getInstance().sendTweeterMessage("sendTweeterMessage works at: "+ System.currentTimeMillis());
 					((Tweeter) context).updateData();
 				} catch (TwitterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Log.e("TFE-Timeline", e.getMessage());
 				}
 			}			
 		});

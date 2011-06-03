@@ -11,7 +11,6 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public class SaveTweetflowDialog extends Dialog {
 	
-	//private final TweetFlow mTweetFlow;
 	private final EditText mEditFilename;
 	
 	private StorageHandler mStorage;
@@ -22,7 +21,6 @@ public class SaveTweetflowDialog extends Dialog {
 		setContentView(R.layout.dialog_save);
 		mStorage = new StorageHandler(context);
 		
-		//mTweetFlow = tweetFlow;
 		mEditFilename = (EditText) findViewById(R.id.save_filename);
 		mEditFilename.setText(tweetFlow.getName());
 		

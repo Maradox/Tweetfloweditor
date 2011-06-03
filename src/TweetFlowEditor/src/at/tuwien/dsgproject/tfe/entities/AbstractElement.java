@@ -56,12 +56,18 @@ public abstract class AbstractElement {
 	protected int mHeight;
 
 	//Loops
+	@Element(required=false)
 	private String mSelfLoopCondition = "";
+	@Element(required=false)
 	protected Boolean mSelfLoop = false;
 	
+	@Element(required=false)
 	private String closedLoopCondition = "";
+	@Element(required=false)
 	private String condition = "";
+	@Element(required=false)
 	protected AbstractElement mLoop = null;
+	@Element(required=false)
 	protected AbstractElement mLoopFrom = null;
 	
 	@Element(required=false)

@@ -2,14 +2,15 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.UserTimelineEntry;
@@ -49,8 +50,7 @@ public class Tweeter extends ActionbarListviewActivity {
 			adapter.setUserTimeline(userTimeline);
 			adapter.notifyDataSetChanged();
 		} catch (TwitterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("TFE-Tweeter", e.getMessage());
 		}
     }
 

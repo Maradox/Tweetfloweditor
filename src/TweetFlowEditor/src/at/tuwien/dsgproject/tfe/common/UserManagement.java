@@ -32,10 +32,12 @@ import twitter4j.http.RequestToken;
 
 public class UserManagement {
 	private static UserManagement instance;
-	private final static String consumerKey = "XDzRCbsjZCHD1WPkVoU8g"; 		
-	private final static String consumerSecret = "PXcaRO74YOZegeQWxen8l2pGZKHHvAbPQvNGqP4Ajk"; 
 
-	private final String CALLBACKURL = "T4JOAuth://main";
+	private final static String CONSUMER_KEY = "XDzRCbsjZCHD1WPkVoU8g"; 		
+	private final static String CONSUMER_SECRET = "PXcaRO74YOZegeQWxen8l2pGZKHHvAbPQvNGqP4Ajk"; 
+		
+	private static final String CALLBACKURL = "T4JOAuth://main";
+
 	private Twitter twitter;
 	private RequestToken requestToken;
 	private AccessToken accessToken;
@@ -56,15 +58,16 @@ public class UserManagement {
 	
 	public String login() throws TwitterException {
 		twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(UserManagement.getInstance().getConsumerkey(), UserManagement.getInstance().getConsumersecret());
-		requestToken = twitter.getOAuthRequestToken(UserManagement.getInstance().getCALLBACKURL());
+		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+		requestToken = twitter.getOAuthRequestToken(CALLBACKURL);
 		String authUrl = requestToken.getAuthorizationURL();
 		return authUrl;
 	}
 	
 	public void loginIntent(Uri uri) throws TwitterException {
 		String verifier = uri.getQueryParameter("oauth_verifier");
-		accessToken = UserManagement.getInstance().getTwitter().getOAuthAccessToken(UserManagement.getInstance().getRequestToken(),verifier);
+		accessToken = UserManagement.getInstance().
+				getTwitter().getOAuthAccessToken(UserManagement.getInstance().getRequestToken(),verifier);
 		reqToken = accessToken.getToken();
 		secretToken = accessToken.getTokenSecret();		
 		twitter.setOAuthAccessToken(accessToken);
@@ -74,25 +77,13 @@ public class UserManagement {
 	public void loginAuto(String requestToken, String secretToken) {
 		twitter = new TwitterFactory().getInstance();
 		accessToken = new AccessToken(requestToken, secretToken);
-		twitter.setOAuthConsumer(consumerKey, consumerSecret);
+		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		twitter.setOAuthAccessToken(accessToken);
 		loggedIn = true;
 	}
 
 	public void sendTweeterMessage(String message) throws TwitterException {
 		if(twitter!=null) twitter.updateStatus(message);
-	}
-	
-	public String getConsumerkey() {
-		return consumerKey;
-	}
-
-	public String getConsumersecret() {
-		return consumerSecret;
-	}
-
-	public String getCALLBACKURL() {
-		return CALLBACKURL;
 	}
 
 	public Twitter getTwitter() {
@@ -129,7 +120,6 @@ public class UserManagement {
 	
 	public void logout(Context context) {
 		loggedIn = false;
-		//TODO: proper logout ??
 		requestToken = null;
 		accessToken = null;
 		

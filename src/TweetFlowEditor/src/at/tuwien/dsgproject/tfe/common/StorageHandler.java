@@ -87,7 +87,6 @@ public class StorageHandler {
 		checkStorageState();
 		if(mExternalStorageWriteable) {
 			final File file = new File(mFilesDir, filename);
-			//TODO handle existing file
 			Strategy strategy = new CycleStrategy("x_id", "x_ref");
 			Serializer serializer = new Persister(strategy);
 	        try {

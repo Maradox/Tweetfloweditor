@@ -1,7 +1,6 @@
 package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
-import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
@@ -57,12 +56,10 @@ public class StateTouchElement extends State {
 			if(!mTweetFlow.somethingSelected()) {
 				mEditorView.setState(EDITOR_STATE.FREE);
 			} else {
-				mEditorView.setState(EDITOR_STATE.SELECTED);
-				
+				mEditorView.setState(EDITOR_STATE.SELECTED);	
 			}
 			
-			mTweetFlow.unmarkTouchElement();
-			
+			mTweetFlow.unmarkTouchElement();			
 		}
 		return true;
 	}

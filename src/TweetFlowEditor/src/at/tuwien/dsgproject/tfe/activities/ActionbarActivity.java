@@ -23,11 +23,8 @@ package at.tuwien.dsgproject.tfe.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
-import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.Actionbar;
 
 public abstract class ActionbarActivity extends Activity implements Actionbar {

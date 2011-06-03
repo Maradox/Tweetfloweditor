@@ -4,11 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import at.tuwien.dsgproject.tfe.R;
-import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
-import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
 public class LogoutDialog extends Dialog {
 	
