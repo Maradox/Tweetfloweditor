@@ -31,9 +31,6 @@ public abstract class State {
     		break;
     	 
     	case MotionEvent.ACTION_CANCEL:
-//    		mEditorView.setState(EDITOR_STATE.FREE);
-//    		mEditorView.invalidatePointerId();
-    		//TODO handle different than action_up???
     		onActionUp(event);
     		break;
     		 	

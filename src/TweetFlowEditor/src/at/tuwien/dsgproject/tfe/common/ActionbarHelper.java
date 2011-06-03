@@ -21,16 +21,13 @@
 
 package at.tuwien.dsgproject.tfe.common;
 
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.http.RequestToken;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
-import at.tuwien.dsgproject.tfe.activities.ActionbarActivity;
 import at.tuwien.dsgproject.tfe.activities.Editor;
 import at.tuwien.dsgproject.tfe.activities.Home;
 import at.tuwien.dsgproject.tfe.activities.Tweeter;
@@ -54,8 +51,7 @@ public class ActionbarHelper {
 				Intent i = new Intent( context, Tweeter.class );
 				context.startActivity(i); 	
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.e("TFE", e.getMessage());
 			} 
 		} else {
 			Toast.makeText(context, "You have to login first!", Toast.LENGTH_LONG).show();
@@ -68,8 +64,7 @@ public class ActionbarHelper {
     			String authUrl = UserManagement.getInstance().login();
     			context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
     		} catch (TwitterException e) {
-    			//TODO
-    			Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+    			Toast.makeText(context, "Error while logging in.", Toast.LENGTH_LONG).show();
     		}
     	} else {
 			LogoutDialog dialog = new LogoutDialog(context);
@@ -84,10 +79,10 @@ public class ActionbarHelper {
 			try {
 				UserManagement.getInstance().loginIntent(uri);
 			} catch (TwitterException e) {
-				Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+				Log.e("TFE", e.getMessage());
 			}
 		}
-		//TODO error handling??
+
 		SharedPreferences settings = context.getSharedPreferences("TFE", Context.MODE_PRIVATE);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putString("requestToken", UserManagement.getInstance().getReqToken());

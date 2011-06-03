@@ -118,7 +118,6 @@ public class UserManagement {
 	
 	public void logout(Context context) {
 		loggedIn = false;
-		//TODO: proper logout ??
 		requestToken = null;
 		accessToken = null;
 		

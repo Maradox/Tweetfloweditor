@@ -118,7 +118,6 @@ public class EditorView extends View {
 		mAvailableStates.put(EDITOR_STATE.MOVE_GRID, new StateMoveGrid(this, mTweetFlow));
 		mAvailableStates.put(EDITOR_STATE.CREATE_LOOP, new StateCreateLoop(this, mTweetFlow));
 		
-		//TODO: just as a security measure
 		for(EDITOR_STATE s : EDITOR_STATE.values()) {
 			if (!mAvailableStates.containsKey(s)) {
 				Toast.makeText(EditorView.this.getContext(), "STATE MISSING IN AVAILABLE STATES", Toast.LENGTH_SHORT).show();
@@ -143,10 +142,6 @@ public class EditorView extends View {
 	        
 	        // Don't let the object get too small or too large.
 	        mScaleFactor = Math.max(0.5f, Math.min(mScaleFactor, 3.0f));
-//            mCurrMode = TouchMode.SCALE;
-	        
-	  //      mScalePivotX = (int)detector.getFocusX();		//TODO delete
-	  //      mScalePivotY = (int)detector.getFocusY();
 
 	        invalidate();
 	        return true;
@@ -175,19 +170,10 @@ public class EditorView extends View {
 		super.onDraw(canvas);
 	
 		canvas.drawText(mCurrState.toString(), 10, 10, new Paint(Color.BLACK));
-		//TODO: check how to handle save/restore with our lines
+
 		canvas.save();
 		canvas.translate(mOffsetX, mOffsetY);
     	canvas.scale(mScaleFactor, mScaleFactor);
-		//canvas.scale(mScaleFactor, mScaleFactor, mScalePivotX, mScalePivotY);
-    	
-
-
-		//TODO: check for possible optimizations (eg. invalidate/redraw only for changed elements)
-	    //TODO: clipping
-//		for (OpenSequence os : mOpenSequences.values()) {
-//			os.draw(canvas);
-//		}
 		
      	rasterGridHelper.setOffset(mOffsetX,mOffsetY);
     	rasterGridHelper.draw(canvas);
@@ -209,7 +195,6 @@ public class EditorView extends View {
     
     public void setState(EDITOR_STATE state) {
     	if(!mAvailableStates.containsKey(state)) {
-    		//TODO should not occur, check if all states are assigned in prepareStates()
     		Toast.makeText(getContext(), "INVALID STATE", Toast.LENGTH_SHORT).show();
     	} else {
     		mCurrState = mAvailableStates.get(state);

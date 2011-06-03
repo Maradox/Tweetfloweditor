@@ -125,17 +125,6 @@ public class ServiceRequest extends AbstractElement {
 			return false;
 		}
 	}
-	
-//	@Override
-//	public boolean isTextFocused(int x, int y) {
-//		//TODO: ugly hack for testing
-//		if( x > mX+mTextOffsetX && x < mX + 400 &&
-//				y > mY && y < mY + mHeight) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
 
 	@Override
 	public void modeSelected() {

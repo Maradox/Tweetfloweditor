@@ -60,7 +60,6 @@ public class TweetFlow implements Serializable {
 	@ElementMap(entry="element", key="id", attribute=true, inline=true, required=false, empty=true)
 	private HashMap<Integer, AbstractElement> mElements;
 	private HashMap<Integer, AbstractElement> mSelected;
-	//public HashMap<Integer, OpenSequence> mOpenSequences;
 	
 	private AbstractElement mTouchElement = null;
 	
@@ -177,7 +176,6 @@ public class TweetFlow implements Serializable {
 
     
     private void updateMoveSelectedConnections() {
-    	//TODO: needed?
 		resetAllMaybeConnections();
     	for(AbstractElement selected : mSelected.values()) {
     		updateSelectedElementConnections(selected);
@@ -185,7 +183,6 @@ public class TweetFlow implements Serializable {
     }
     
     private void updateMoveGridConnections(ArrayList<ServiceRequest> gridElements) {
-    	//TODO: needed?
 		resetAllMaybeConnections();
     	for(AbstractElement e : gridElements) {
     		updateElementConnections(e);
@@ -195,7 +192,6 @@ public class TweetFlow implements Serializable {
     private void updateTouchElementConnections() {
     	mTouchElement.checkRemoveNext();
     	mTouchElement.checkRemovePrev();
-    	//TODO: needed?
     	resetAllMaybeConnections();
     	
     	if(!(mTouchElement instanceof OpenSequence)) {
@@ -401,14 +397,6 @@ public class TweetFlow implements Serializable {
 		this.mElements = mElements;
 	}
 	
-	
-//	public boolean isTextFocused(int x, int y) {
-//		if(mTouchElement != null) {
-//			return mTouchElement.isTextFocused(x, y);
-//		} else {
-//			return false;
-//		}
-//	}
 	
 	public int getSelectedElementsCount() {
 		return mSelected.size();

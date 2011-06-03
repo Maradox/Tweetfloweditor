@@ -31,7 +31,6 @@ import android.view.View;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
-import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
@@ -94,7 +93,6 @@ public class Editor extends ActionbarActivity {
      		try {
 				mTweetFlow = mStorage.openTweetflowFile(mFileName);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				Toast.makeText(this, "Error opening Tweetflow, creating new Tweetflow", Toast.LENGTH_SHORT).show();
 				mTweetFlow = new TweetFlow();
@@ -134,8 +132,6 @@ public class Editor extends ActionbarActivity {
     } 
 
 
-    
-    //TODO maybe add both dialogs to the activity
     public void saveTweetFlow(View v) {
     	if(mStorage.isWriteable()) {
     		final SaveTweetflowDialog dialog = new SaveTweetflowDialog(this, mTweetFlow);
