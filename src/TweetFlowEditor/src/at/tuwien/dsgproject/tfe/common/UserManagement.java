@@ -34,7 +34,6 @@ public class UserManagement {
 	private static UserManagement instance;
 	private final static String CONSUMER_KEY = "XDzRCbsjZCHD1WPkVoU8g"; 		
 	private final static String CONSUMER_SECRET = "PXcaRO74YOZegeQWxen8l2pGZKHHvAbPQvNGqP4Ajk"; 
-
 		
 	private static final String CALLBACKURL = "T4JOAuth://main";
 	private Twitter twitter;
@@ -59,7 +58,7 @@ public class UserManagement {
 		twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
 		requestToken = twitter.getOAuthRequestToken(CALLBACKURL);
-		String authUrl = requestToken.getAuthenticationURL();
+		String authUrl = requestToken.getAuthorizationURL();
 		return authUrl;
 	}
 	
