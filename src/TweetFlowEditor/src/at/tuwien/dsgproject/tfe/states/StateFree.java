@@ -6,6 +6,16 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateFree
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * This is the 'normal' state if no touch-input is active and no
+ * elements are selected.
+ */
 public class StateFree extends State {
 		
 	private RasterGridHelper rasterGridHelper;

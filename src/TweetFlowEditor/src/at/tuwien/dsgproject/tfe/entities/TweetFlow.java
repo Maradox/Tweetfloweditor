@@ -36,6 +36,16 @@ import android.graphics.Canvas;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * TweetFlow
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * TweetFlow contains a collection of all Tweetflow-Elements and handles
+ * operations/touch-events on the elements
+ */
 @Root
 public class TweetFlow implements Serializable {
 	

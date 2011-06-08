@@ -35,6 +35,16 @@ import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * RasterGridHelper
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * RasterGridHelper handles the drawing of the rasterlines and
+ * the snapping of service-request elements to this lines
+ */
 public class RasterGridHelper {
 	
 	public final int RASTER_HORIZONTAL_WIDTH;

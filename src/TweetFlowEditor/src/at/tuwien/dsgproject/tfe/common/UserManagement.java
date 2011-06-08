@@ -30,6 +30,15 @@ import twitter4j.TwitterFactory;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
+
+/**
+ * UserManagement
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * UserManagement handles the Twitter authentication via oauth using the Twitter4j framework
+ */
 public class UserManagement {
 	private static UserManagement instance;
 

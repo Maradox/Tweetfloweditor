@@ -49,6 +49,16 @@ import at.tuwien.dsgproject.tfe.states.StateSelected;
 import at.tuwien.dsgproject.tfe.states.StateTouchElement;
 import at.tuwien.dsgproject.tfe.states.StateTouchVoid;
 
+
+/**
+ * EditorView
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * This view implements the graphical TweetFlow editor, the handling of
+ * touch-input and all menues to change/select Tweetflow elements.
+ */
 public class EditorView extends View {
 	
 	public enum EDITOR_STATE {

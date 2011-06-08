@@ -6,6 +6,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateMoveElement
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * This state is used to move a single element
+ */
 public class StateMoveElement extends State {
 		
 	private RasterGridHelper rasterGridHelper;

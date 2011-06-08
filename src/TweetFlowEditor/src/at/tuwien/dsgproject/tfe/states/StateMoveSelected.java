@@ -7,6 +7,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateMoveSelected
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * StateMoveSelected is used to move all selected elements
+ */
 public class StateMoveSelected extends State {
 		
 	private RasterGridHelper rasterGridHelper;

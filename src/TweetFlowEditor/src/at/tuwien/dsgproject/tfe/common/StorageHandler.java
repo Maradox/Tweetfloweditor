@@ -32,6 +32,16 @@ import android.os.Environment;
 import android.util.Log;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
+
+/**
+ * StorageHandler
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * StorageHandler checks if the external storage is available and writable
+ * and handles the (de)serialization using the Simple framework
+ */
 public class StorageHandler {
 	
 	public static final String TWEETFLOW_STORAGE_DIR = "Tweetfloweditor";

@@ -16,6 +16,15 @@ import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.views.UserTimelineEntry;
 import at.tuwien.dsgproject.tfe.views.UserTimelineTop;
 
+
+/**
+ * Tweeter
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Tweeter shows all previous tweets in a listview
+ */
 public class Tweeter extends ActionbarListviewActivity {
 	
 	private TweetAdapter adapter;

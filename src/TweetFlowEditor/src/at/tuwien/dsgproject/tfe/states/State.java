@@ -4,6 +4,16 @@ import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * State
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Abstract Base Class for the state pattern used to handle touch-input
+ * according to the current editor-state.
+ */
 public abstract class State {
 
 	protected EditorView mEditorView;	

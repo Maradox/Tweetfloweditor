@@ -5,6 +5,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateTouchElement
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Used if the center of a touch-action is on an element
+ */
 public class StateTouchElement extends State {
 	
 	public StateTouchElement(EditorView editorView, TweetFlow tweetFlow) {

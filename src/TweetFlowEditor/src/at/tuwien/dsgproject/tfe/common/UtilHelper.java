@@ -25,6 +25,14 @@ import java.io.InputStream;
 import java.net.URL;
 import android.graphics.drawable.Drawable;
 
+/**
+ * UtilHelper
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * helpermethods that belong nowhere else
+ */
 public class UtilHelper {
 	
 	public static Drawable getImageFromUrl(URL url, String imageName) {
@@ -32,7 +40,7 @@ public class UtilHelper {
 			InputStream inputStream = (InputStream) (url).getContent();
 			Drawable drawable = Drawable.createFromStream(inputStream, imageName);
 			return drawable;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

@@ -21,10 +21,7 @@
 
 package at.tuwien.dsgproject.tfe.common;
 
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.http.RequestToken;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +33,14 @@ import at.tuwien.dsgproject.tfe.activities.Home;
 import at.tuwien.dsgproject.tfe.activities.Tweeter;
 import at.tuwien.dsgproject.tfe.dialogs.LogoutDialog;
 
+/**
+ * ActionbarHelper
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * ActionbarHelper implements all onTouch methods for Actionbar buttons
+ */
 public class ActionbarHelper {
 	public static void openHome(Context context) {	
 		Intent i = new Intent( context, Home.class );

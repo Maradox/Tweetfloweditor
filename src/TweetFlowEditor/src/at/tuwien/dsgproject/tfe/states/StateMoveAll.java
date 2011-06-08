@@ -5,6 +5,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateMoveAll
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * StateMoveAll is used to move all elements 
+ */
 public class StateMoveAll extends State {
 		
 	public StateMoveAll(EditorView editorView, TweetFlow tweetFlow) {

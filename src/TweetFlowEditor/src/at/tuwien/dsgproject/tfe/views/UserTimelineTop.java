@@ -32,6 +32,15 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.activities.Tweeter;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 
+
+/**
+ * UserTimelineTop
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Layout Class for the Tweet-List
+ */
 public class UserTimelineTop extends RelativeLayout {
 	
 	public UserTimelineTop(final Context context) {

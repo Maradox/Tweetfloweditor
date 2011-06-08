@@ -32,6 +32,15 @@ import android.widget.TextView;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.UtilHelper;
 
+
+/**
+ * UserTimelineEntry
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Layout Class of a single element in the Tweet-List
+ */
 public class UserTimelineEntry extends RelativeLayout {
 	
 	public UserTimelineEntry(URL imageUrl, String owner,String message, Date date, Context context) {

@@ -9,6 +9,15 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
+
+/**
+ * SaveTweetflowDialog
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * A dialog to save the currently opened Tweetflow to the phones external storage
+ */
 public class SaveTweetflowDialog extends Dialog {
 	
 	private final EditText mEditFilename;

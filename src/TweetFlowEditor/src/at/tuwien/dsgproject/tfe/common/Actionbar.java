@@ -19,11 +19,20 @@
  *  along with Tweetfloweditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.tuwien.dsgproject.tfe.views;
+package at.tuwien.dsgproject.tfe.common;
 
 import android.content.Intent;
 import android.view.View;
 
+
+/**
+ * Actionbar
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * all required methods for touch-action on actionbar icons
+ */
 public interface Actionbar {
 	/**
 	 * Called when the Home button in the Action Bar is pressed

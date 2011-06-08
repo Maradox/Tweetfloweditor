@@ -9,6 +9,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateMoveGrid
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * StateMoveGrid is used to move all elements on the same grid-line
+ */
 public class StateMoveGrid extends State {
 		
 	private RasterGridHelper rasterGridHelper;

@@ -37,8 +37,16 @@ import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
-public class ServiceRequest extends AbstractElement {
 
+/**
+ * ServiceRequest
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * A service request object
+ */
+public class ServiceRequest extends AbstractElement {
 	
 	@Element(required=false)
 	private String mUser = "";

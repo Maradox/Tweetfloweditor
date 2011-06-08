@@ -7,6 +7,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateCreateLoop
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * State used to create big loops using several elements
+ */
 public class StateCreateLoop extends State {
 		
 	private RasterGridHelper rasterGridHelper;

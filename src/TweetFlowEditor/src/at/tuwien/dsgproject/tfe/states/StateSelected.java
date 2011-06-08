@@ -6,6 +6,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateSelected
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Used if an element has been selected 
+ */
 public class StateSelected extends State {
 	
 	private RasterGridHelper rasterGridHelper;

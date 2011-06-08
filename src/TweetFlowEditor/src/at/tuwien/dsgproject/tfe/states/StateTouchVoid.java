@@ -5,6 +5,15 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+
+/**
+ * StateTouchVoid
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Used if the center of a touch-action is on the empty canvas
+ */
 public class StateTouchVoid extends State {
 		
 	public StateTouchVoid(EditorView editorView, TweetFlow tweetFlow) {

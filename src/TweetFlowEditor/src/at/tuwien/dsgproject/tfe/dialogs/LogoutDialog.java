@@ -7,6 +7,15 @@ import android.widget.Button;
 import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 
+
+/**
+ * LogoutDialog
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * A dialog logout the current twitter user
+ */
 public class LogoutDialog extends Dialog {
 	
 	public LogoutDialog(Context context) {

@@ -44,6 +44,16 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.UserManagement;
 
+
+/**
+ * Home
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * the main activity launched at program start; i provides a 
+ * listview to open/delete saved Tweetflows
+ */
 public class Home extends ActionbarActivity {
     /** Called when the activity is first created. */
 	

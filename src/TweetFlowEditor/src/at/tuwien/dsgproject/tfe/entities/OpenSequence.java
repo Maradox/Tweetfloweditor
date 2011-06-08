@@ -35,6 +35,15 @@ import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * OpenSequence
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * An open sequence object
+ */
 public class OpenSequence extends AbstractElement {
 		
 	private final int EDGE_TOUCH_RADIUS = 20;

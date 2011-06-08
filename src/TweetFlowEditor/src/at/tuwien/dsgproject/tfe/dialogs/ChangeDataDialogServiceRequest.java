@@ -31,6 +31,15 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * ChangeDataDialogServiceRequest
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * A dialog to edit all parameters of service requests
+ */
 public class ChangeDataDialogServiceRequest extends Dialog {
 	
 	private ServiceRequest element; 

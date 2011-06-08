@@ -24,6 +24,16 @@ package at.tuwien.dsgproject.tfe.views;
 import android.content.Context;
 import android.view.View;
 
+
+/**
+ * EditorView
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * This view implements the graphical TweetFlow editor, the handling of
+ * touch-input and all menues to change/select Tweetflow elements.
+ */
 public class TweetView extends View{
 
 	public TweetView(Context context) {

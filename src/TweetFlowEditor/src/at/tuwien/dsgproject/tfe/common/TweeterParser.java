@@ -27,6 +27,16 @@ import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 
+
+/**
+ * TweeterParser
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * TweeterParser creates formatted strings that can be sent via twitter
+ * from the Java object
+ */
 public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 
 	public static String parseTweetFlow(TweetFlow tweetFlow) {

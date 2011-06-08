@@ -24,9 +24,17 @@ package at.tuwien.dsgproject.tfe.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
+import at.tuwien.dsgproject.tfe.common.Actionbar;
 import at.tuwien.dsgproject.tfe.common.ActionbarHelper;
-import at.tuwien.dsgproject.tfe.views.Actionbar;
 
+/**
+ * ActionbarActivity
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * abstract activity that implements methods used for the top actionbar
+ */
 public abstract class ActionbarActivity extends Activity implements Actionbar {
 
 	public void openHome(View v) {	

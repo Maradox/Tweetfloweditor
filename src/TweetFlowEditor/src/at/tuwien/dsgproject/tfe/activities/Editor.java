@@ -40,6 +40,14 @@ import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 import at.tuwien.dsgproject.tfe.views.EditorView.EDITOR_STATE;
 
+/**
+ * Editor
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * the Editor activity contains an EditorView to draw Tweetflows
+ */
 public class Editor extends ActionbarActivity {
 	
 	public final static String OPEN_FILE = "open_file_path";

@@ -30,6 +30,15 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.entities.OpenSequence;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * ChangeDataDialogOpenSequence
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * A dialog to edit all parameters of open sequences
+ */
 public class ChangeDataDialogOpenSequence extends Dialog {
 	
 	private OpenSequence element; 

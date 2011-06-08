@@ -40,6 +40,15 @@ import at.tuwien.dsgproject.tfe.quickAction.ActionItem;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.views.EditorView;
 
+
+/**
+ * AbstractElement
+ * 
+ * @author Matthias Neumayr
+ * @author Martin Perebner
+ * 
+ * Abstract Base Class of all Tweetflow-Elements like ServiceRequest & OpenSequence
+ */
 public abstract class AbstractElement {
 	
 	@Attribute
