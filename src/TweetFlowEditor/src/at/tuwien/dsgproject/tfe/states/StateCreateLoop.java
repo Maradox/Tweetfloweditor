@@ -2,7 +2,6 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -45,7 +44,9 @@ public class StateCreateLoop extends State {
 				
 				mEditorView.redraw();	
 			}	
-		} else if (rasterGridHelper.getRasterOn() && rasterGridHelper.getSnapMode() == SnapMode.GRID && rasterGridHelper.isTouchOnGrid(x))	{
+		} else if (rasterGridHelper.getRasterOn() && 
+				rasterGridHelper.getSnapMode() == RasterGridHelper.SNAP_GRID && 
+				rasterGridHelper.isTouchOnGrid(x))	{
 			mEditorView.setState(EDITOR_STATE.MOVE_GRID);	
 			mEditorView.redraw();
 			startID = null;

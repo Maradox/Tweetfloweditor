@@ -46,10 +46,6 @@
     <item android:id="@+id/save"
         android:icon="@drawable/editor_menue_save"
         android:title="Save" />
-          
-    <item android:id="@+id/open"
-        android:icon="@drawable/editor_menue_open"
-        android:title="Open" /> 
         
 	<item android:id="@+id/snapping"
         android:title="Snapping" >

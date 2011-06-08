@@ -21,7 +21,9 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,7 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.R;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
+import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.TweeterParser;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
@@ -111,7 +113,7 @@ public class Editor extends ActionbarActivity {
     	super.onSaveInstanceState(outState); 
     	//saving Tweetflow to .current
     	mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
-    	outState.putBoolean(OPEN_CURRENT_FILE, true);     
+    	outState.putBoolean(OPEN_CURRENT_FILE, true);    
     }
     
 	@Override
@@ -129,6 +131,12 @@ public class Editor extends ActionbarActivity {
     protected void onPause() {
         super.onPause();
         mStorage.write(OPEN_CURRENT_FILE, mTweetFlow);
+        
+		SharedPreferences settings = getSharedPreferences("TFE", Context.MODE_PRIVATE);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putInt("snapmode", mEditorView.getSnapMode());
+	    editor.putBoolean("raster", mEditorView.isRasterOn());
+	    editor.commit();
     } 
 
 
@@ -172,11 +180,11 @@ public class Editor extends ActionbarActivity {
     		menu.findItem(R.id.raster_remove).setVisible(false);
         }
         
-    	if(mEditorView.getSnapMode() == SnapMode.NOTHING)
+    	if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_OFF)
     		menu.findItem(R.id.snapping_nothing).setChecked(true);
-    	else if(mEditorView.getSnapMode() == SnapMode.RASTER) 
+    	else if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_RASTER) 
         	menu.findItem(R.id.snapping_raster).setChecked(true);
-        else if(mEditorView.getSnapMode() == SnapMode.GRID) 
+        else if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_GRID) 
         	menu.findItem(R.id.snapping_grid).setChecked(true);
         
 		return true;
@@ -206,17 +214,17 @@ public class Editor extends ActionbarActivity {
     			break;
     		case R.id.snapping_nothing:
     			menuItem.setChecked(true);
-    			mEditorView.setSnapMode(SnapMode.NOTHING);
+    			mEditorView.setSnapMode(RasterGridHelper.SNAP_OFF);
     			mEditorView.redraw();
     			break;
     		case R.id.snapping_raster:
     			menuItem.setChecked(true);
-    			mEditorView.setSnapMode(SnapMode.RASTER);
+    			mEditorView.setSnapMode(RasterGridHelper.SNAP_RASTER);
     			mEditorView.redraw();
     			break;
     		case R.id.snapping_grid:
     			menuItem.setChecked(true);
-    			mEditorView.setSnapMode(SnapMode.GRID);
+    			mEditorView.setSnapMode(RasterGridHelper.SNAP_GRID);
     			mEditorView.redraw();
     			break;	
     		case R.id.add_open_sequence:

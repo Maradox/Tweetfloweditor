@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.entities.ServiceRequest;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -47,7 +46,7 @@ public class StateMoveGrid extends State {
 	public void onActionUp(MotionEvent event) {
 		super.onActionUp(event);
 		
-		if(mEditorView.getSnapMode() == SnapMode.GRID && 
+		if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_GRID && 
 				rasterGridHelper.isThereGridNearGridHorizontal(gridElements)) {
 			int gridX = rasterGridHelper.findGridNearGridHorizontal(gridElements);
 			final int offX = gridX - gridElements.get(0).getMiddleX();

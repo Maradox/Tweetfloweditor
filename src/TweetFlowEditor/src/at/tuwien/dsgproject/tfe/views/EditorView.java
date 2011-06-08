@@ -36,7 +36,6 @@ import android.view.View;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.quickAction.QuickAction;
 import at.tuwien.dsgproject.tfe.states.State;
@@ -256,11 +255,11 @@ public class EditorView extends View {
 		rasterGridHelper.setRasterOn(rasterOn);
 	}
 
-	public SnapMode getSnapMode() {
+	public int getSnapMode() {
 		return rasterGridHelper.getSnapMode();
 	}
 	
-	public void setSnapMode(SnapMode snapMode) {
+	public void setSnapMode(int snapMode) {
 		rasterGridHelper.setSnapMode(snapMode);
 	}
 	

@@ -2,7 +2,6 @@ package at.tuwien.dsgproject.tfe.states;
 
 import android.view.MotionEvent;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
-import at.tuwien.dsgproject.tfe.common.RasterGridHelper.SnapMode;
 import at.tuwien.dsgproject.tfe.entities.AbstractElement;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -37,7 +36,7 @@ public class StateMoveSelected extends State {
 	public void onActionUp(MotionEvent event) {
 		super.onActionUp(event);
 		
-		if(mEditorView.getSnapMode() == SnapMode.RASTER) {
+		if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_RASTER) {
 			for(AbstractElement e : mTweetFlow.getmSelected().values()) {
 				int rasterX = rasterGridHelper.findRasterHorizontal(e.getMiddleX());
 				int offX = rasterX - e.getMiddleX();
@@ -46,7 +45,7 @@ public class StateMoveSelected extends State {
 			}	
 		}	
 		
-		else if(mEditorView.getSnapMode() == SnapMode.GRID) {
+		else if(mEditorView.getSnapMode() == RasterGridHelper.SNAP_GRID) {
 			for(AbstractElement e : mTweetFlow.getmSelected().values()) {
 				if(rasterGridHelper.isThereGridNearElementHorizontal(e)){
 					int gridX = rasterGridHelper.findGridNearElementHorizontal(e);

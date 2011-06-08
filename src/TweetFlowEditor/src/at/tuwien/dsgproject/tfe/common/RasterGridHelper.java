@@ -24,6 +24,7 @@ package at.tuwien.dsgproject.tfe.common;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -40,16 +41,14 @@ public class RasterGridHelper {
 	
 	private boolean rasterOn = true;
 	private int horizontalRasterCT;
-	public Integer mOffsetX, mOffsetY;	
+	private Integer mOffsetX, mOffsetY;	
 	private TweetFlow tweetFlow;
-	public SnapMode snapMode = SnapMode.GRID;
+	private int snapMode;
 	private EditorView editorView;
 				
-	public enum SnapMode {	
-		NOTHING,
-		RASTER,
-		GRID
-	}
+	public static final int SNAP_OFF = 0;
+	public static final int SNAP_RASTER = 1;
+	public static final int SNAP_GRID = 2;
 	
 	public RasterGridHelper(Context context, TweetFlow tweetFlow, Integer mOffsetX, Integer mOffsetY, EditorView editorView) {
 		this.mOffsetX = mOffsetX;
@@ -57,6 +56,10 @@ public class RasterGridHelper {
 		this.tweetFlow = tweetFlow;
 		RASTER_HORIZONTAL_WIDTH = context.getResources().getInteger(R.integer.raster_horiz_width);
 		this.editorView = editorView;
+		
+		SharedPreferences settings = context.getSharedPreferences("TFE", Context.MODE_PRIVATE);
+	    snapMode = settings.getInt("snapmode", 0);
+	    rasterOn = settings.getBoolean("raster", false);
 	}
 	
 	public void draw(Canvas canvas) {
@@ -67,7 +70,7 @@ public class RasterGridHelper {
 			paint.setPathEffect( new DashPathEffect(new float[] { 10, 3, 6, 3 },1) );
 			float scale = editorView.getmScaleFactor();
 						
-			if((snapMode == SnapMode.NOTHING) || (snapMode == SnapMode.RASTER)) {
+			if((snapMode == SNAP_OFF) || (snapMode == SNAP_RASTER)) {
 				paint.setColor(Color.BLUE);
 			
 				ArrayList<Integer> gridLines = createRasterLines();
@@ -77,7 +80,7 @@ public class RasterGridHelper {
 		    	}
 			}	
 
-			if(snapMode == SnapMode.GRID) {
+			if(snapMode == SNAP_GRID) {
 				paint.setColor(Color.RED);
 		
 				for(AbstractElement e : tweetFlow.getmElements().values()) {
@@ -303,11 +306,11 @@ public class RasterGridHelper {
 		this.rasterOn = rasterOn;
 	}
 
-	public SnapMode getSnapMode() {
+	public int getSnapMode() {
 		return snapMode;
 	}
 
-	public void setSnapMode(SnapMode snapMode) {
+	public void setSnapMode(int snapMode) {
 		this.snapMode = snapMode;
 	}
 	
