@@ -26,13 +26,12 @@ import android.view.View;
 
 
 /**
- * EditorView
+ * TweetView
  * 
  * @author Matthias Neumayr
  * @author Martin Perebner
  * 
- * This view implements the graphical TweetFlow editor, the handling of
- * touch-input and all menues to change/select Tweetflow elements.
+ * This View is used to show the list of tweeted messages.
  */
 public class TweetView extends View{
 
