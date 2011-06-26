@@ -86,13 +86,14 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 		String elementString = "";
 		
 		if(list.size() > 0) {	
-			elementString += "OpenSequence Begin\n";
+			//elementString += "OpenSequence Begin\n";
 			elementString += "[";
 			for(AbstractElement element : list) {
 							
 				if((element.getClosedSequenceNext() == null) && (element.getClosedSequencePrev() == null)) {	// Open sequence Request
 					elementString += createOpenSequenceRequest(element);
-					elementString += "\n";
+					if(list.indexOf(element) != list.size()-1)
+						elementString += "\n";
 				}
 				
 				else if(element.getClosedSequencePrev() != null) {	// In the closed sequence
@@ -101,7 +102,8 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 				
 				else if(element.getClosedSequenceNext() != null) {	// Start of sequence
 					elementString += createClosedSequence(element);
-					elementString += "\n";
+					if(list.indexOf(element) != list.size()-1)
+						elementString += "\n";
 				}
 			}
 			
@@ -112,7 +114,7 @@ public abstract class TweeterParser {	//Todo Not-supported exception schreiben
 			if(e.isSelfLoop())
 				elementString += "{" + e.getSelfLoopCondition() + "}";
 			
-			elementString += "OpenSequence End";
+		//	elementString += "OpenSequence End";
 		}
 		
 		return elementString;

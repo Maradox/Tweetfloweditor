@@ -21,6 +21,10 @@
 
 package at.tuwien.dsgproject.tfe.activities;
 
+import java.util.StringTokenizer;
+
+import twitter4j.TwitterException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +39,7 @@ import at.tuwien.dsgproject.tfe.R;
 import at.tuwien.dsgproject.tfe.common.RasterGridHelper;
 import at.tuwien.dsgproject.tfe.common.StorageHandler;
 import at.tuwien.dsgproject.tfe.common.TweeterParser;
+import at.tuwien.dsgproject.tfe.common.UserManagement;
 import at.tuwien.dsgproject.tfe.dialogs.SaveTweetflowDialog;
 import at.tuwien.dsgproject.tfe.entities.TweetFlow;
 import at.tuwien.dsgproject.tfe.views.EditorView;
@@ -158,7 +163,18 @@ public class Editor extends ActionbarActivity {
     }
     
     public void sendTweetFlow(View v) {
-    	Toast.makeText(this, TweeterParser.parseTweetFlow(mTweetFlow), Toast.LENGTH_SHORT).show();
+    	String tweetMessage = TweeterParser.parseTweetFlow(mTweetFlow);
+    	
+    	StringTokenizer tweetTokens = new StringTokenizer(tweetMessage, "\n");
+    	while ( tweetTokens.hasMoreTokens() )
+    	{
+    		try {
+				UserManagement.getInstance().sendTweeterMessage(tweetTokens.nextToken());
+				Toast.makeText(this, tweetMessage, Toast.LENGTH_SHORT).show();
+			} catch (TwitterException e) {
+				Toast.makeText(this, "An error occured. Please login.", Toast.LENGTH_SHORT).show();
+			}
+    	}
     }
     
     
