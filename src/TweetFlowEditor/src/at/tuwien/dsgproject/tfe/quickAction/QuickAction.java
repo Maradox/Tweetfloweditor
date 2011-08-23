@@ -247,10 +247,11 @@ public class QuickAction extends CustomPopupWindow {
 		
 		for (int i = 0; i < actionList.size(); i++) {
 			title 		= actionList.get(i).getTitle();
-			icon 		= actionList.get(i).getIcon();
+			//icon 		= actionList.get(i).getIcon();	// For icon
 			listener	= actionList.get(i).getListener();
 	
-			view 		= getActionItem(title, icon, listener);
+			//view 		= getActionItem(title, icon, listener);
+			view 		= getActionItem(title, null, listener);
 		
 			view.setFocusable(true);
 			view.setClickable(true);

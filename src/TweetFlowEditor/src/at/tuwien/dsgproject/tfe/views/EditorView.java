@@ -178,7 +178,7 @@ public class EditorView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 	
-		canvas.drawText(mCurrState.toString(), 10, 10, new Paint(Color.BLACK));
+	//	canvas.drawText(mCurrState.toString(), 10, 10, new Paint(Color.BLACK)); For testing
 
 		canvas.save();
 		canvas.translate(mOffsetX, mOffsetY);

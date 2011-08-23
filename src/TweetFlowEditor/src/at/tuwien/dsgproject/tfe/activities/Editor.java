@@ -263,7 +263,6 @@ public class Editor extends ActionbarActivity {
     			break;
     			
     		default:	
-    			Toast.makeText(this, menuItem.getTitle(), Toast.LENGTH_SHORT).show();
     	  
     	}
     	return true;  

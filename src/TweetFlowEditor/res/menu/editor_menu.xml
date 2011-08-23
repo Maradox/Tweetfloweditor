@@ -58,6 +58,20 @@
         </menu>
     </item>
 	
-
+	<item android:id="@+id/context_information"
+          android:title="Context information" >
+        <!-- "file" submenu -->
+        <menu>
+            <item android:id="@+id/image"
+                  android:title="Add image" />
+            <item android:id="@+id/video"
+                  android:title="Add video" />
+            <item android:id="@+id/gps"
+                  android:title="Add gps-info" />
+            <item android:id="@+id/url"
+                  android:title="Add url" />            
+        </menu>
+    </item>
+	
     
 </menu>
